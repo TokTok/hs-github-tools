@@ -12,7 +12,8 @@ import qualified Text.Tabular.Html     as Html
 
 
 data PullRequestInfo = PullRequestInfo
-  { reviewStatus :: [Review.Status]
+  { repoName     :: GitHub.Name GitHub.Repo
+  , reviewStatus :: [Review.Status]
   , pullRequest  :: GitHub.PullRequest
   }
 
@@ -25,7 +26,12 @@ formatPR True  = prettyHtml . Html.render toHtml toHtml toHtml . prToTable
 prToTable :: [PullRequestInfo] -> Table String String String
 prToTable prs = Table rowNames columnNames rows
   where
-    rowNames = Group NoLine $ map (Header . show . GitHub.pullRequestNumber . pullRequest) prs
+    rowNames = Group NoLine $ map (Header . getRowName) prs
+    getRowName pr =
+      let repo num = getRepoName pr ++ " " ++ num in
+      repo . show . GitHub.pullRequestNumber . pullRequest $ pr
+
+    getRepoName = Text.unpack . GitHub.untagName . repoName
 
     columnNames =  Group SingleLine
       [ Header "branch"

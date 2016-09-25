@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
+import           Control.Monad           (join)
 import           Control.Monad.Catch     (throwM)
 import qualified Data.ByteString         as BS
 import qualified Data.Text               as Text
@@ -11,7 +12,7 @@ import           Network.HTTP.Client     (Manager, newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
 import           System.Environment      (getEnv, lookupEnv)
 
-import           PullRequestInfo         (PullRequestInfo (..))
+import           PullRequestInfo         (PullRequestInfo (PullRequestInfo))
 import qualified PullRequestInfo
 import qualified Review
 
@@ -34,10 +35,30 @@ getFullPr auth mgr owner repo simplePr = do
     $ simplePr
 
 
+getPrsForRepo
+  :: GitHub.Auth
+  -> Manager
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> IO [PullRequestInfo]
+getPrsForRepo auth mgr ownerName repoName = do
+  -- Get PR list.
+  putStrLn $ "getting PR list for " ++
+    Text.unpack (GitHub.untagName ownerName) ++
+    "/" ++
+    Text.unpack (GitHub.untagName repoName)
+  simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
+  fullPrs <- mapM (getFullPr auth mgr ownerName repoName) simplePRs
+
+  -- Fetch and parse HTML pages for each PR.
+  prHtmls <- mapM (Review.fetchHtml mgr) simplePRs
+  return $ zipWith (PullRequestInfo repoName . Review.approvalsFromHtml) prHtmls fullPrs
+
+
 main :: IO ()
 main = do
+  let orgName = "TokTok"
   let ownerName = "TokTok"
-  let repoName = "toxcore"
 
   -- Get auth token from $HOME/.github-token.
   home <- getEnv "HOME"
@@ -50,17 +71,12 @@ main = do
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
-  -- Get PR list.
-  putStrLn $ "getting PR list for " ++
-    Text.unpack (GitHub.untagName ownerName) ++
-    "/" ++
-    Text.unpack (GitHub.untagName repoName)
-  simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-  fullPrs <- mapM (getFullPr auth mgr ownerName repoName) simplePRs
+  -- Get repo list.
+  putStrLn $ "getting repo list for " ++ Text.unpack (GitHub.untagName ownerName)
+  repos <- V.toList <$> request auth mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
+  let repoNames = map GitHub.repoName repos
 
-  -- Fetch and parse HTML pages for each PR.
-  prHtmls <- mapM (Review.fetchHtml mgr) simplePRs
-  let infos = zipWith (PullRequestInfo . Review.approvalsFromHtml) prHtmls fullPrs
+  infos <- join <$> mapM (getPrsForRepo auth mgr ownerName) repoNames
 
   -- Pretty-print table with information.
   putStrLn $ PullRequestInfo.formatPR wantHtml infos
