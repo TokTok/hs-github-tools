@@ -23,11 +23,20 @@ import qualified Text.Tabular.AsciiArt   as Table
 data Approval
   = Approved
   | Rejected
-  deriving (Read, Show)
+  deriving (Show)
+
+data ReviewStatus = ReviewStatus
+  { reviewerName    :: BS.ByteString
+  , _reviewerStatus :: Approval
+  }
+
+instance Show ReviewStatus where
+  show (ReviewStatus name Approved) = '+' : read (show name)
+  show (ReviewStatus name Rejected) = '-' : read (show name)
 
 data PullRequestInfo = PullRequestInfo
-  { reviewDone  :: String
-  , pullRequest :: GitHub.PullRequest
+  { reviewStatus :: [ReviewStatus]
+  , pullRequest  :: GitHub.PullRequest
   }
 
 
@@ -65,18 +74,18 @@ collectDiscussionItems = reverse . go []
       foldl go acc body
 
 
-extractApprovals :: [(BS.ByteString, BS.ByteString)] -> [(BS.ByteString, Approval)]
+extractApprovals :: [(BS.ByteString, BS.ByteString)] -> [ReviewStatus]
 extractApprovals = foldl extract []
   where
     extract acc (cls, name)
-      | BS.isInfixOf "is-rejected" cls = (name, Rejected) : acc
-      | BS.isInfixOf "is-approved" cls = (name, Approved) : acc
+      | BS.isInfixOf "is-rejected" cls = ReviewStatus name Rejected : acc
+      | BS.isInfixOf "is-approved" cls = ReviewStatus name Approved : acc
       | otherwise = acc
 
 
-approvalsFromHtml :: BS.ByteString -> [(BS.ByteString, Approval)]
+approvalsFromHtml :: BS.ByteString -> [ReviewStatus]
 approvalsFromHtml =
-  List.nubBy (\x y -> fst x == fst y)
+  List.nubBy (\x y -> reviewerName x == reviewerName y)
   . extractApprovals
   . collectDiscussionItems
   . TagBranch "xml" []
@@ -85,9 +94,19 @@ approvalsFromHtml =
 
 parseHtml :: BS.ByteString -> GitHub.PullRequest -> PullRequestInfo
 parseHtml body pr = PullRequestInfo
-  { reviewDone = show $ approvalsFromHtml body
-  , pullRequest = pr
+  { reviewStatus = approvalsFromHtml body
+  , pullRequest  = pr
   }
+
+
+getFullPr :: GitHub.Auth -> Manager -> GitHub.SimplePullRequest -> IO GitHub.PullRequest
+getFullPr auth mgr simplePr = do
+  putStrLn $ "getting PR info for #" ++ show (GitHub.simplePullRequestNumber simplePr)
+  request auth mgr
+    . GitHub.pullRequestR ownerName repoName
+    . GitHub.Id
+    . GitHub.simplePullRequestNumber
+    $ simplePr
 
 
 main :: IO ()
@@ -101,9 +120,12 @@ main = do
   mgr <- newManager tlsManagerSettings
 
   -- Get PR list.
-  putStrLn "getting PR list from GitHub API"
+  putStrLn $ "getting PR list for " ++
+    Text.unpack (GitHub.untagName ownerName) ++
+    "/" ++
+    Text.unpack (GitHub.untagName repoName)
   simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-  fullPrs <- mapM (request auth mgr . GitHub.pullRequestR ownerName repoName. GitHub.Id . GitHub.simplePullRequestNumber) simplePRs
+  fullPrs <- mapM (getFullPr auth mgr) simplePRs
 
   -- Fetch and parse HTML pages for each PR.
   prHtmls <- mapM (fetchHtml mgr) simplePRs
@@ -132,14 +154,18 @@ prToTable prs = Table rowNames columnNames rows
 
     rows = map (\pr ->
       [ getPrAuthor $ pullRequest pr
-      , show $ GitHub.pullRequestTitle $ pullRequest pr
-      , show $ Maybe.fromMaybe False $ GitHub.pullRequestMergeable $ pullRequest pr
-      , show $ GitHub.pullRequestMergeableState $ pullRequest pr
-      , reviewDone pr
+      , getPrTitle $ pullRequest pr
+      , getPrMergeable $ pullRequest pr
+      , getPrMergeableState $ pullRequest pr
+      , show $ reviewStatus pr
       ]) prs
+
+    getPrTitle = Text.unpack . GitHub.pullRequestTitle
+    getPrMergeable = show . Maybe.fromMaybe False . GitHub.pullRequestMergeable
+    getPrMergeableState = Text.unpack . GitHub.pullRequestMergeableState
 
     getPrAuthor =
       Text.unpack
-      . GitHub.untagName
-      . GitHub.simpleUserLogin
-      . GitHub.pullRequestUser
+        . GitHub.untagName
+        . GitHub.simpleUserLogin
+        . GitHub.pullRequestUser
