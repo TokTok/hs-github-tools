@@ -42,13 +42,6 @@ data PullRequestInfo = PullRequestInfo
   }
 
 
-ownerName :: GitHub.Name GitHub.Owner
-ownerName = "TokTok"
-
-repoName :: GitHub.Name GitHub.Repo
-repoName = "toxcore"
-
-
 request :: GitHub.Auth -> Manager -> GitHub.Request k a -> IO a
 request auth mgr req = do
   possiblePRs <- GitHub.executeRequestWithMgr mgr auth req
@@ -101,11 +94,11 @@ parseHtml body pr = PullRequestInfo
   }
 
 
-getFullPr :: GitHub.Auth -> Manager -> GitHub.SimplePullRequest -> IO GitHub.PullRequest
-getFullPr auth mgr simplePr = do
+getFullPr :: GitHub.Auth -> Manager -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> GitHub.SimplePullRequest -> IO GitHub.PullRequest
+getFullPr auth mgr owner repo simplePr = do
   putStrLn $ "getting PR info for #" ++ show (GitHub.simplePullRequestNumber simplePr)
   request auth mgr
-    . GitHub.pullRequestR ownerName repoName
+    . GitHub.pullRequestR owner repo
     . GitHub.Id
     . GitHub.simplePullRequestNumber
     $ simplePr
@@ -113,6 +106,9 @@ getFullPr auth mgr simplePr = do
 
 main :: IO ()
 main = do
+  let ownerName = "TokTok"
+  let repoName = "toxcore"
+
   -- Get auth token from $HOME/.github-token.
   home <- getEnv "HOME"
   token <- BS.init <$> BS.readFile (home ++ "/.github-token")
@@ -130,7 +126,7 @@ main = do
     "/" ++
     Text.unpack (GitHub.untagName repoName)
   simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-  fullPrs <- mapM (getFullPr auth mgr) simplePRs
+  fullPrs <- mapM (getFullPr auth mgr ownerName repoName) simplePRs
 
   -- Fetch and parse HTML pages for each PR.
   prHtmls <- mapM (fetchHtml mgr) simplePRs
