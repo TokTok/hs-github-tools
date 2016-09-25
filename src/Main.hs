@@ -151,7 +151,7 @@ prToTable prs = Table rowNames columnNames rows
     rowNames = Group NoLine $ map (Header . show . GitHub.pullRequestNumber . pullRequest) prs
 
     columnNames =  Group SingleLine
-      [ Header "user"
+      [ Header "branch"
       , Header "title"
       , Header "mergeable"
       , Header "mergeable_state"
@@ -159,7 +159,7 @@ prToTable prs = Table rowNames columnNames rows
       ]
 
     rows = map (\pr ->
-      [ getPrAuthor $ pullRequest pr
+      [ getPrBranch $ pullRequest pr
       , getPrTitle $ pullRequest pr
       , getPrMergeable $ pullRequest pr
       , getPrMergeableState $ pullRequest pr
@@ -168,10 +168,9 @@ prToTable prs = Table rowNames columnNames rows
 
     getPrTitle = Text.unpack . GitHub.pullRequestTitle
     getPrMergeable = show . Maybe.fromMaybe False . GitHub.pullRequestMergeable
-    getPrMergeableState = Text.unpack . GitHub.pullRequestMergeableState
+    getPrMergeableState = show . GitHub.pullRequestMergeableState
 
-    getPrAuthor =
+    getPrBranch =
       Text.unpack
-        . GitHub.untagName
-        . GitHub.simpleUserLogin
-        . GitHub.pullRequestUser
+        . GitHub.pullRequestCommitLabel
+        . GitHub.pullRequestHead
