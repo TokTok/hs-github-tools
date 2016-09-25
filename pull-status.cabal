@@ -20,6 +20,7 @@ executable pull-status
     , exceptions
     , github
     , groom
+    , html
     , http-client
     , http-client-tls
     , tabular

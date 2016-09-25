@@ -13,11 +13,13 @@ import qualified GitHub.Data.Id          as GitHub
 import           Network.HTTP.Client     (Manager, httpLbs, newManager,
                                           parseRequest, responseBody)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
-import           System.Environment      (getEnv)
+import           System.Environment      (getEnv, lookupEnv)
+import           Text.Html               (prettyHtml, toHtml)
 import           Text.HTML.TagSoup.Tree  (TagTree (..), parseTree)
 import           Text.Tabular            (Header (..), Properties (..),
                                           Table (..))
-import qualified Text.Tabular.AsciiArt   as Table
+import qualified Text.Tabular.AsciiArt   as AsciiArt
+import qualified Text.Tabular.Html       as Html
 
 
 data Approval
@@ -116,6 +118,9 @@ main = do
   token <- BS.init <$> BS.readFile (home ++ "/.github-token")
   let auth = GitHub.OAuth token
 
+  -- Check if we need to produce HTML or ASCII art.
+  wantHtml <- not . null <$> lookupEnv "GITHUB_WANT_HTML"
+
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
@@ -132,11 +137,12 @@ main = do
   let infos = zipWith parseHtml prHtmls fullPrs
 
   -- Pretty-print table with information.
-  putStrLn $ formatPR infos
+  putStrLn $ formatPR wantHtml infos
 
 
-formatPR :: [PullRequestInfo] -> String
-formatPR = Table.render id id id . prToTable
+formatPR :: Bool -> [PullRequestInfo] -> String
+formatPR False = AsciiArt.render id id id . prToTable
+formatPR True  = prettyHtml . Html.render toHtml toHtml toHtml . prToTable
 
 
 prToTable :: [PullRequestInfo] -> Table String String String
