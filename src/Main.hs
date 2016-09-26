@@ -25,7 +25,12 @@ import qualified Text.Tabular.Html       as Html
 data Approval
   = Approved
   | Rejected
+  | Unknown
   deriving (Show)
+
+data AssignedList = AssignedList
+  { assignedName :: BS.ByteString 
+  }
 
 data ReviewStatus = ReviewStatus
   { reviewerName    :: BS.ByteString
@@ -35,12 +40,15 @@ data ReviewStatus = ReviewStatus
 instance Show ReviewStatus where
   show (ReviewStatus name Approved) = '+' : read (show name)
   show (ReviewStatus name Rejected) = '-' : read (show name)
+  show (ReviewStatus name Unknown)  = '?' : read (show name)
+
+instance Show AssignedList where 
+  show (AssignedList name) = read $ show name
 
 data PullRequestInfo = PullRequestInfo
   { reviewStatus :: [ReviewStatus]
   , pullRequest  :: GitHub.PullRequest
   }
-
 
 request :: GitHub.Auth -> Manager -> GitHub.Request k a -> IO a
 request auth mgr req = do
@@ -68,6 +76,17 @@ collectDiscussionItems = reverse . go []
     go acc (TagBranch _ _ body) =
       foldl go acc body
 
+collectAssigned :: TagTree BS.ByteString -> [(BS.ByteString, BS.ByteString)]
+collectAssigned = reverse . go []
+  where
+    go acc TagLeaf {} = acc
+
+    go acc (TagBranch "span" _ (_ : TagBranch "p" _ (_ : TagBranch "a" [("class", cls)] name : _) : _))
+      | BS.isInfixOf "assignee" cls = do
+        putStrLn $ "assigned " ++ name 
+        (cls, BS.tail name) : acc
+    go acc (TagBranch _ _ body) =
+      foldl go acc body
 
 extractApprovals :: [(BS.ByteString, BS.ByteString)] -> [ReviewStatus]
 extractApprovals = foldl extract []
@@ -77,8 +96,14 @@ extractApprovals = foldl extract []
       | BS.isInfixOf "is-approved" cls = ReviewStatus name Approved : acc
       | otherwise = acc
 
+extractAssigned :: [(BS.ByteString, BS.ByteString)] -> [AssignedList]
+extractAssigned = foldl extract []
+  where
+    extract acc (cls, name)
+      | cls = AssignedList name : acc
+      | otherwise = acc
 
-approvalsFromHtml :: BS.ByteString -> [ReviewStatus]
+approvalsFromHtml :: BS.ByteString -> [AssignedList]
 approvalsFromHtml =
   List.nubBy (\x y -> reviewerName x == reviewerName y)
   . extractApprovals
@@ -86,6 +111,13 @@ approvalsFromHtml =
   . TagBranch "xml" []
   . parseTree
 
+assignedFromHmtl :: BS.ByteString -> [AssignedList]
+assignedFromHmtl =
+  List.nubBy (\x y -> assignedName x == assignedName y)
+  . extractAssigned
+  . collectAssigned
+  . TagBranch "xml" []
+  . parseTree
 
 parseHtml :: BS.ByteString -> GitHub.PullRequest -> PullRequestInfo
 parseHtml body pr = PullRequestInfo
@@ -152,6 +184,7 @@ prToTable prs = Table rowNames columnNames rows
       , Header "mergeable"
       , Header "mergeable_state"
       , Header "review_status"
+      , Header "assigned"
       ]
 
     rows = map (\pr ->
@@ -160,6 +193,7 @@ prToTable prs = Table rowNames columnNames rows
       , getPrMergeable $ pullRequest pr
       , getPrMergeableState $ pullRequest pr
       , show $ reviewStatus pr
+      , show $ assignedList pr
       ]) prs
 
     getPrTitle = Text.unpack . GitHub.pullRequestTitle
