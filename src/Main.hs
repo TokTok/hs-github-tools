@@ -17,7 +17,11 @@ import qualified PullRequestInfo
 import qualified Review
 
 
-request :: GitHub.Auth -> Manager -> GitHub.Request k a -> IO a
+request
+  :: GitHub.Auth
+  -> Manager
+  -> GitHub.Request k a
+  -> IO a
 request auth mgr req = do
   possiblePRs <- GitHub.executeRequestWithMgr mgr auth req
   case possiblePRs of
@@ -25,7 +29,13 @@ request auth mgr req = do
     Right res -> return res
 
 
-getFullPr :: GitHub.Auth -> Manager -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> GitHub.SimplePullRequest -> IO GitHub.PullRequest
+getFullPr
+  :: GitHub.Auth
+  -> Manager
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> GitHub.SimplePullRequest
+  -> IO GitHub.PullRequest
 getFullPr auth mgr owner repo simplePr = do
   putStrLn $ "getting PR info for #" ++ show (GitHub.simplePullRequestNumber simplePr)
   request auth mgr
@@ -33,6 +43,24 @@ getFullPr auth mgr owner repo simplePr = do
     . GitHub.Id
     . GitHub.simplePullRequestNumber
     $ simplePr
+
+
+getPrInfo
+  :: GitHub.Auth
+  -> Manager
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> GitHub.SimplePullRequest
+  -> IO ([Review.Status], GitHub.PullRequest)
+getPrInfo auth mgr ownerName repoName pr = do
+  -- Use assignees as the initial approvals list, all responses unknown.
+  let assignees = V.toList $ GitHub.simplePullRequestAssignees pr
+  let initApprovals = map (Review.Status Review.Unknown . GitHub.untagName . GitHub.simpleUserLogin) assignees
+  -- Fetch and parse HTML pages for this PR.
+  approvals <- Review.approvalsFromHtml initApprovals <$> Review.fetchHtml mgr pr
+  -- Get more information that is only in the PullRequest response.
+  fullPr <- getFullPr auth mgr ownerName repoName pr
+  return (approvals, fullPr)
 
 
 getPrsForRepo
@@ -48,11 +76,10 @@ getPrsForRepo auth mgr ownerName repoName = do
     "/" ++
     Text.unpack (GitHub.untagName repoName)
   simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-  fullPrs <- Parallel.mapM (getFullPr auth mgr ownerName repoName) simplePRs
 
-  -- Fetch and parse HTML pages for each PR.
-  prHtmls <- Parallel.mapM (Review.fetchHtml mgr) simplePRs
-  return $ zipWith (PullRequestInfo repoName . Review.approvalsFromHtml) prHtmls fullPrs
+  prInfos <- Parallel.mapM (getPrInfo auth mgr ownerName repoName) simplePRs
+
+  return $ map (uncurry $ PullRequestInfo repoName) prInfos
 
 
 main :: IO ()
