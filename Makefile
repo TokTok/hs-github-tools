@@ -1,3 +1,5 @@
+export GITHUB_TOKEN := $(shell cat ~/.github-token)
+
 run: dist/build/pull-status/pull-status
 	$<
 

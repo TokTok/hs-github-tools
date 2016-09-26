@@ -3,7 +3,8 @@ module Main (main) where
 
 import           Control.Monad           (join)
 import           Control.Monad.Catch     (throwM)
-import qualified Data.ByteString         as BS
+import qualified Control.Monad.Parallel  as Parallel
+import qualified Data.ByteString.Char8   as BS8
 import qualified Data.Text               as Text
 import qualified Data.Vector             as V
 import qualified GitHub
@@ -48,10 +49,10 @@ getPrsForRepo auth mgr ownerName repoName = do
     "/" ++
     Text.unpack (GitHub.untagName repoName)
   simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-  fullPrs <- mapM (getFullPr auth mgr ownerName repoName) simplePRs
+  fullPrs <- Parallel.mapM (getFullPr auth mgr ownerName repoName) simplePRs
 
   -- Fetch and parse HTML pages for each PR.
-  prHtmls <- mapM (Review.fetchHtml mgr) simplePRs
+  prHtmls <- Parallel.mapM (Review.fetchHtml mgr) simplePRs
   return $ zipWith (PullRequestInfo repoName . Review.approvalsFromHtml) prHtmls fullPrs
 
 
@@ -60,9 +61,8 @@ main = do
   let orgName = "TokTok"
   let ownerName = "TokTok"
 
-  -- Get auth token from $HOME/.github-token.
-  home <- getEnv "HOME"
-  token <- BS.init <$> BS.readFile (home ++ "/.github-token")
+  -- Get auth token from the $GITHUB_TOKEN environment variable.
+  token <- BS8.pack <$> getEnv "GITHUB_TOKEN"
   let auth = GitHub.OAuth token
 
   -- Check if we need to produce HTML or ASCII art.
@@ -76,7 +76,7 @@ main = do
   repos <- V.toList <$> request auth mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
   let repoNames = map GitHub.repoName repos
 
-  infos <- join <$> mapM (getPrsForRepo auth mgr ownerName) repoNames
+  infos <- join <$> Parallel.mapM (getPrsForRepo auth mgr ownerName) repoNames
 
   -- Pretty-print table with information.
   putStrLn $ PullRequestInfo.formatPR wantHtml infos

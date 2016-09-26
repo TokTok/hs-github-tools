@@ -23,6 +23,7 @@ executable pull-status
     , html
     , http-client
     , http-client-tls
+    , monad-parallel
     , tabular
     , tagsoup
     , text
