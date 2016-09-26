@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import           Control.Monad           (join)
 import           Control.Monad.Catch     (throwM)
 import qualified Control.Monad.Parallel  as Parallel
 import qualified Data.ByteString.Char8   as BS8
@@ -76,7 +75,7 @@ main = do
   repos <- V.toList <$> request auth mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
   let repoNames = map GitHub.repoName repos
 
-  infos <- join <$> Parallel.mapM (getPrsForRepo auth mgr ownerName) repoNames
+  infos <- Parallel.mapM (getPrsForRepo auth mgr ownerName) repoNames
 
   -- Pretty-print table with information.
   putStrLn $ PullRequestInfo.formatPR wantHtml infos

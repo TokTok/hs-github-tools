@@ -1,5 +1,6 @@
 module PullRequestInfo where
 
+import           Control.Monad         (join)
 import qualified Data.Maybe            as Maybe
 import qualified Data.Text             as Text
 import qualified GitHub
@@ -18,15 +19,19 @@ data PullRequestInfo = PullRequestInfo
   }
 
 
-formatPR :: Bool -> [PullRequestInfo] -> String
+formatPR :: Bool -> [[PullRequestInfo]] -> String
 formatPR False = AsciiArt.render id id id . prToTable
 formatPR True  = prettyHtml . Html.render toHtml toHtml toHtml . prToTable
 
 
-prToTable :: [PullRequestInfo] -> Table String String String
-prToTable prs = Table rowNames columnNames rows
+prToTable :: [[PullRequestInfo]] -> Table String String String
+prToTable prss = Table rowNames columnNames rows
   where
-    rowNames = Group NoLine $ map (Header . getRowName) prs
+    rowNames = Group SingleLine
+      . map (Group NoLine . map (Header . getRowName))
+      . filter (not . null)
+      $ prss
+
     getRowName pr =
       let repo num = getRepoName pr ++ " " ++ num in
       repo . show . GitHub.pullRequestNumber . pullRequest $ pr
@@ -42,12 +47,12 @@ prToTable prs = Table rowNames columnNames rows
       ]
 
     rows = map (\pr ->
-      [ getPrBranch $ pullRequest pr
-      , getPrTitle $ pullRequest pr
-      , getPrMergeable $ pullRequest pr
+      [ getPrBranch         $ pullRequest pr
+      , getPrTitle          $ pullRequest pr
+      , getPrMergeable      $ pullRequest pr
       , getPrMergeableState $ pullRequest pr
       , show $ reviewStatus pr
-      ]) prs
+      ]) $ join prss
 
     getPrTitle = Text.unpack . GitHub.pullRequestTitle
     getPrMergeable = show . Maybe.fromMaybe False . GitHub.pullRequestMergeable
