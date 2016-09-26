@@ -3,6 +3,7 @@ module PullRequestInfo where
 import           Control.Monad         (join)
 import qualified Data.Maybe            as Maybe
 import qualified Data.Text             as Text
+import           Data.Time.Clock       (UTCTime, diffUTCTime)
 import qualified GitHub
 import qualified Review
 import           Text.Html             (prettyHtml, toHtml)
@@ -19,13 +20,13 @@ data PullRequestInfo = PullRequestInfo
   }
 
 
-formatPR :: Bool -> [[PullRequestInfo]] -> String
-formatPR False = AsciiArt.render id id id . prToTable
-formatPR True  = prettyHtml . Html.render toHtml toHtml toHtml . prToTable
+formatPR :: Bool -> UTCTime -> [[PullRequestInfo]] -> String
+formatPR False now = AsciiArt.render id id id . prToTable now
+formatPR True  now = prettyHtml . Html.render toHtml toHtml toHtml . prToTable now
 
 
-prToTable :: [[PullRequestInfo]] -> Table String String String
-prToTable prss = Table rowNames columnNames rows
+prToTable :: UTCTime -> [[PullRequestInfo]] -> Table String String String
+prToTable now prss = Table rowNames columnNames rows
   where
     rowNames = Group SingleLine
       . map (Group NoLine . map (Header . getRowName))
@@ -40,6 +41,7 @@ prToTable prss = Table rowNames columnNames rows
 
     columnNames =  Group SingleLine
       [ Header "branch"
+      , Header "age"
       , Header "title"
       , Header "mergeable"
       , Header "mergeable_state"
@@ -48,6 +50,7 @@ prToTable prss = Table rowNames columnNames rows
 
     rows = map (\pr ->
       [ getPrBranch         $ pullRequest pr
+      , getPrAge            $ pullRequest pr
       , getPrTitle          $ pullRequest pr
       , getPrMergeable      $ pullRequest pr
       , getPrMergeableState $ pullRequest pr
@@ -62,3 +65,10 @@ prToTable prss = Table rowNames columnNames rows
       Text.unpack
         . GitHub.pullRequestCommitLabel
         . GitHub.pullRequestHead
+
+    getPrAge =
+      (++ "d") . show . diffInDays now . GitHub.pullRequestCreatedAt
+
+
+diffInDays :: UTCTime -> UTCTime -> Int
+diffInDays a b = round $ diffUTCTime a b / (60 * 60 * 24)

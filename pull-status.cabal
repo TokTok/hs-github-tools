@@ -27,6 +27,7 @@ executable pull-status
     , tabular
     , tagsoup
     , text
+    , time
     , vector
   hs-source-dirs:      src
   default-language:    Haskell2010

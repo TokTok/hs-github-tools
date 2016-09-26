@@ -5,6 +5,7 @@ import           Control.Monad.Catch     (throwM)
 import qualified Control.Monad.Parallel  as Parallel
 import qualified Data.ByteString.Char8   as BS8
 import qualified Data.Text               as Text
+import           Data.Time.Clock         (getCurrentTime)
 import qualified Data.Vector             as V
 import qualified GitHub
 import qualified GitHub.Data.Id          as GitHub
@@ -105,4 +106,5 @@ main = do
   infos <- Parallel.mapM (getPrsForRepo auth mgr ownerName) repoNames
 
   -- Pretty-print table with information.
-  putStrLn $ PullRequestInfo.formatPR wantHtml infos
+  now <- getCurrentTime
+  putStrLn $ PullRequestInfo.formatPR wantHtml now infos
