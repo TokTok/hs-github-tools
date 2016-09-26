@@ -56,8 +56,10 @@ extractApprovals = foldl extract []
 
 approvalsFromHtml :: BS.ByteString -> [Status]
 approvalsFromHtml =
-  List.nubBy (\x y -> reviewerName x == reviewerName y)
+  nubWith reviewerName
   . extractApprovals
   . collectDiscussionItems
   . TagBranch "xml" []
   . parseTree
+  where
+    nubWith f = List.nubBy (\x y -> f x == f y)
