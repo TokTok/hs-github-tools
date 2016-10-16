@@ -12,6 +12,7 @@ import qualified GitHub.Data.Id          as GitHub
 import           Network.HTTP.Client     (Manager, newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
 import           System.Environment      (getEnv, lookupEnv)
+import           System.IO               (hPutStrLn, stderr)
 
 import           PullRequestInfo         (PullRequestInfo (PullRequestInfo))
 import qualified PullRequestInfo
@@ -38,7 +39,7 @@ getFullPr
   -> GitHub.SimplePullRequest
   -> IO GitHub.PullRequest
 getFullPr auth mgr owner repo simplePr = do
-  putStrLn $ "getting PR info for #" ++ show (GitHub.simplePullRequestNumber simplePr)
+  hPutStrLn stderr $ "getting PR info for #" ++ show (GitHub.simplePullRequestNumber simplePr)
   request auth mgr
     . GitHub.pullRequestR owner repo
     . GitHub.Id
@@ -72,7 +73,7 @@ getPrsForRepo
   -> IO [PullRequestInfo]
 getPrsForRepo auth mgr ownerName repoName = do
   -- Get PR list.
-  putStrLn $ "getting PR list for " ++
+  hPutStrLn stderr $ "getting PR list for " ++
     Text.unpack (GitHub.untagName ownerName) ++
     "/" ++
     Text.unpack (GitHub.untagName repoName)
@@ -99,7 +100,7 @@ main = do
   mgr <- newManager tlsManagerSettings
 
   -- Get repo list.
-  putStrLn $ "getting repo list for " ++ Text.unpack (GitHub.untagName ownerName)
+  hPutStrLn stderr $ "getting repo list for " ++ Text.unpack (GitHub.untagName ownerName)
   repos <- V.toList <$> request auth mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
   let repoNames = map GitHub.repoName repos
 

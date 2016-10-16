@@ -10,6 +10,7 @@ import qualified GitHub
 import           Network.HTTP.Client    (Manager, httpLbs, parseRequest,
                                          responseBody)
 import           Text.HTML.TagSoup.Tree (TagTree (..), parseTree)
+import           System.IO               (hPutStrLn, stderr)
 
 
 data Approval
@@ -32,7 +33,7 @@ instance Show Status where
 fetchHtml :: Manager -> GitHub.SimplePullRequest -> IO Text
 fetchHtml mgr pr = do
   let url = Text.unpack $ GitHub.getUrl $ GitHub.simplePullRequestHtmlUrl pr
-  putStrLn $ "fetching " ++ url
+  hPutStrLn stderr $ "fetching " ++ url
   req <- parseRequest url
   decodeUtf8 . LBS.toStrict . responseBody <$> httpLbs req mgr
 
