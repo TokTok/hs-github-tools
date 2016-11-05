@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
+import           Control.Applicative     ((<$>))
 import           Control.Monad.Catch     (throwM)
 import qualified Control.Monad.Parallel  as Parallel
 import qualified Data.ByteString.Char8   as BS8
@@ -93,7 +94,7 @@ main = do
   let auth = GitHub.OAuth token
 
   -- Check if we need to produce HTML or ASCII art.
-  wantHtml <- not . null <$> lookupEnv "GITHUB_WANT_HTML"
+  wantHtml <- (/= Nothing) <$> lookupEnv "GITHUB_WANT_HTML"
 
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings

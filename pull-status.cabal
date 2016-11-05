@@ -1,6 +1,7 @@
 name:                pull-status
 version:             0.1.0
 synopsis:            Github Pull Request status tool
+description:         Github Pull Request status tool
 homepage:            https://toktok.github.io/
 license:             AGPL-3
 license-file:        LICENSE
@@ -10,6 +11,10 @@ category:            Development
 build-type:          Simple
 cabal-version:       >=1.10
 
+source-repository head
+  type:             git
+  location:         https://github.com/TokTok/pull-status.git
+
 executable pull-status
   main-is:             Main.hs
   ghc-options:
@@ -18,7 +23,7 @@ executable pull-status
       base >= 4 && < 5
     , bytestring
     , exceptions
-    , github
+    , github          >= 0.15.0
     , groom
     , html
     , http-client

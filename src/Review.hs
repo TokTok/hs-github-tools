@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Review where
 
+import           Control.Applicative    ((<$>))
 import qualified Data.ByteString.Lazy   as LBS
 import qualified Data.List              as List
 import           Data.Text              (Text)
