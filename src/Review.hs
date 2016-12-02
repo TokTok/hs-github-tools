@@ -10,7 +10,8 @@ import           Data.Text.Encoding     (decodeUtf8)
 import qualified GitHub
 import           Network.HTTP.Client    (Manager, httpLbs, parseRequest,
                                          responseBody)
-import           Text.HTML.TagSoup.Tree (TagTree (..), parseTree)
+import           Text.HTML.TagSoup      (parseTags)
+import           Text.HTML.TagSoup.Tree (TagTree (..), tagTree)
 
 
 data Approval
@@ -64,6 +65,7 @@ approvalsFromHtml statuses =
   . extractApprovals statuses
   . collectDiscussionItems
   . TagBranch "xml" []
-  . parseTree
+  . tagTree
+  . parseTags
   where
     nubWith f = List.nubBy (\x y -> f x == f y)
