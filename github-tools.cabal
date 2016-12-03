@@ -15,7 +15,7 @@ description:
 
 source-repository head
   type:             git
-  location:         https://github.com/TokTok/pull-status.git
+  location:         https://github.com/TokTok/github-tools.git
 
 executable pull-status
   main-is:             pull-status.hs
