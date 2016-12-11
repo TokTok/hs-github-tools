@@ -1,5 +1,5 @@
 name:                github-tools
-version:             0.1.0
+version:             0.1.1
 synopsis:            Various Github helper utilities.
 homepage:            https://toktok.github.io/
 license:             AGPL-3

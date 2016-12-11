@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 module Requests where
 
 import           Control.Monad.Catch (throwM)
@@ -6,12 +7,18 @@ import           Network.HTTP.Client (Manager)
 
 
 request
-  :: GitHub.Auth
+  :: Maybe GitHub.Auth
   -> Manager
-  -> GitHub.Request k a
+  -> GitHub.Request GitHub.RO a
   -> IO a
 request auth mgr req = do
-  response <- GitHub.executeRequestWithMgr mgr auth req
+  response <- executeRequest
   case response of
     Left  err -> throwM err
     Right res -> return res
+
+  where
+    executeRequest =
+      case auth of
+        Nothing -> GitHub.executeRequestWithMgr' mgr req
+        Just tk -> GitHub.executeRequestWithMgr mgr tk req

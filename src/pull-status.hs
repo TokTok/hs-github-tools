@@ -26,7 +26,7 @@ getFullPr
   -> GitHub.SimplePullRequest
   -> IO GitHub.PullRequest
 getFullPr auth mgr owner repo simplePr = do
-  request auth mgr
+  request (Just auth) mgr
     . GitHub.pullRequestR owner repo
     . GitHub.Id
     . GitHub.simplePullRequestNumber
@@ -59,7 +59,7 @@ getPrsForRepo
   -> IO [PullRequestInfo]
 getPrsForRepo auth mgr ownerName repoName = do
   -- Get PR list.
-  simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
+  simplePRs <- V.toList <$> request (Just auth) mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
 
   prInfos <- Parallel.mapM (getPrInfo auth mgr ownerName repoName) simplePRs
 
@@ -82,7 +82,7 @@ main = do
   mgr <- newManager tlsManagerSettings
 
   -- Get repo list.
-  repos <- V.toList <$> request auth mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
+  repos <- V.toList <$> request (Just auth) mgr (GitHub.organizationReposR orgName GitHub.RepoPublicityAll GitHub.FetchAll)
   let repoNames = map GitHub.repoName repos
 
   infos <- Parallel.mapM (getPrsForRepo auth mgr ownerName) repoNames

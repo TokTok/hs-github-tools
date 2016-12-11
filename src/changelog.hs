@@ -16,7 +16,7 @@ import qualified Data.Vector             as V
 import qualified GitHub
 import           Network.HTTP.Client     (newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
-import           System.Environment      (getArgs, getEnv)
+import           System.Environment      (getArgs, lookupEnv)
 -- import           Text.Groom              (groom)
 
 import           Requests
@@ -129,8 +129,7 @@ makeChangeLog ownerName repoName pulls issues =
 fetchChangeLog :: GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> IO ChangeLog
 fetchChangeLog ownerName repoName = do
   -- Get auth token from the $GITHUB_TOKEN environment variable.
-  token <- BS8.pack <$> getEnv "GITHUB_TOKEN"
-  let auth = GitHub.OAuth token
+  auth <- fmap (GitHub.OAuth . BS8.pack) <$> lookupEnv "GITHUB_TOKEN"
 
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
