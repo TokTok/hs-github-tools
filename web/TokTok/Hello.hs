@@ -4,13 +4,12 @@
 {-# LANGUAGE PolyKinds         #-}
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
+module TokTok.Hello (app) where
 
-import           Data.Aeson               (FromJSON, ToJSON)
-import           Data.Monoid              ((<>))
-import           Data.Text                (Text, toUpper)
-import           GHC.Generics             (Generic)
-import           Network.Wai.Handler.Warp (Port, run)
-import           System.Environment       (getArgs)
+import           Data.Aeson   (FromJSON, ToJSON)
+import           Data.Monoid  ((<>))
+import           Data.Text    (Text, toUpper)
+import           GHC.Generics (Generic)
 
 import           Servant
 
@@ -46,30 +45,16 @@ testApi = Proxy
 -- Each handler runs in the 'Handler' monad.
 server :: Server TestApi
 server = helloH :<|> postGreetH :<|> deleteGreetH
+  where
+    helloH name Nothing      = helloH name (Just False)
+    helloH name (Just False) = return . Greet $ "Hello, " <> name
+    helloH name (Just True)  = return . Greet . toUpper $ "Hello, " <> name
 
-  where helloH name Nothing = helloH name (Just False)
-        helloH name (Just False) = return . Greet $ "Hello, " <> name
-        helloH name (Just True) = return . Greet . toUpper $ "Hello, " <> name
+    postGreetH greet = return greet
 
-        postGreetH greet = return greet
-
-        deleteGreetH _ = return NoContent
+    deleteGreetH _ = return NoContent
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
-test :: Application
-test = serve testApi server
-
--- Run the server.
---
--- 'run' comes from Network.Wai.Handler.Warp
-runTestServer :: Port -> IO ()
-runTestServer port = run port test
-
--- Put this all to work!
-main :: IO ()
-main = do
-  args <- getArgs
-  case args of
-    [port] -> runTestServer $ read port
-    _      -> runTestServer 8001
+app :: Application
+app = serve testApi server
