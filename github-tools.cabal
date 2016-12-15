@@ -80,14 +80,16 @@ executable webservice
     , aeson
     , bytestring
     , case-insensitive
+    , cryptohash
     , github            >= 0.15.0
-    , github-types
-    , github-webhook-handler
     , http-types
     , servant
     , servant-server
     , text
-    , uuid-types
+    , time
+    , unordered-containers
+    , uuid
+    , vector
     , wai
     , wai-extra
     , warp
