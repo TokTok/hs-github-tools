@@ -194,18 +194,30 @@ webhookPayloadParser eventType x =
 -- CommitCommentEvent
 
 data CommitCommentEvent = CommitCommentEvent
-    { commitCommentEventComment :: Value
+    { commitCommentEventAction       :: Text
+    , commitCommentEventComment      :: CommitComment
+    , commitCommentEventRepository   :: Repository
+    , commitCommentEventSender       :: User
+    , commitCommentEventOrganization :: Organization
     } deriving (Eq, Show, Read)
 
 instance FromJSON CommitCommentEvent where
     parseJSON (Object x) = CommitCommentEvent
-        <$> x .: "comment"
+        <$> x .: "action"
+        <*> x .: "comment"
+        <*> x .: "repository"
+        <*> x .: "sender"
+        <*> x .: "organization"
 
     parseJSON _ = fail "CommitCommentEvent"
 
 instance ToJSON CommitCommentEvent where
     toJSON CommitCommentEvent{..} = object
-        [ "comment"         .= commitCommentEventComment
+        [ "action"       .= commitCommentEventAction
+        , "comment"      .= commitCommentEventComment
+        , "repository"   .= commitCommentEventRepository
+        , "sender"       .= commitCommentEventSender
+        , "organization" .= commitCommentEventOrganization
         ]
 
 
