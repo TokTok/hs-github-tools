@@ -12,63 +12,9 @@ import qualified Data.List           as List
 import           Data.Monoid         ((<>))
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
-import           Data.Time           (UTCTime)
 
 import           GitHub.Types.Base
 
-
-
--- | All events which can be produced by GitHub.
---
--- See https://developer.github.com/v3/activity/events/
-data Event = Event
-    { eventId        :: !Text
-    , eventActor     :: !Actor
-    , eventRepo      :: !Repo
-    , eventCreatedAt :: !UTCTime
-    , eventPublic    :: !Bool
-    , eventPayload   :: !Payload
-    } deriving (Eq, Show, Read)
-
-instance FromJSON Event where
-    parseJSON (Object o) = do
-        eventType <- o .: "type"
-
-        Event
-            <$> o .: "id"
-            <*> o .: "actor"
-            <*> o .: "repo"
-            <*> o .: "created_at"
-            <*> o .: "public"
-            <*> (eventPayloadParser eventType =<< o .: "payload")
-
-    parseJSON _ = fail "Event"
-
-
-data Actor = Actor
-    { actorId    :: !Integer
-    , actorLogin :: !Text
-    } deriving (Eq, Show, Read)
-
-instance FromJSON Actor where
-    parseJSON (Object o) = Actor
-        <$> o .: "id"
-        <*> o .: "login"
-
-    parseJSON _ = fail "Actor"
-
-
-data Repo = Repo
-    { repoId   :: !Integer
-    , repoName :: !Text
-    } deriving (Eq, Show, Read)
-
-instance FromJSON Repo where
-    parseJSON (Object o) = Repo
-        <$> o .: "id"
-        <*> o .: "name"
-
-    parseJSON _ = fail "Repo"
 
 
 data Payload
@@ -90,6 +36,7 @@ data Payload
     | MemberEventPayload                   MemberEvent
     | PublicEventPayload                   Value
     | StatusEventPayload                   StatusEvent
+    | MilestoneEventPayload                MilestoneEvent
     deriving (Eq, Show, Read)
 
 
@@ -112,6 +59,7 @@ instance ToJSON Payload where
     toJSON (MemberEventPayload                   x) = toJSON x
     toJSON (PublicEventPayload                   x) = toJSON x
     toJSON (StatusEventPayload                   x) = toJSON x
+    toJSON (MilestoneEventPayload                x) = toJSON x
 
 
 eventPayloadParsers :: [(Text, Text, Value -> Parser Payload)]
@@ -169,6 +117,9 @@ eventPayloadParsers =
 
     , ( "StatusEvent", "status"
       , fmap StatusEventPayload . parseJSON)
+
+    , ( "MilestoneEvent", "milestone"
+      , fmap MilestoneEventPayload . parseJSON)
     ]
 
 
@@ -194,30 +145,33 @@ webhookPayloadParser eventType x =
 -- CommitCommentEvent
 
 data CommitCommentEvent = CommitCommentEvent
-    { commitCommentEventAction       :: Text
-    , commitCommentEventComment      :: CommitComment
+    { commitCommentEventOrganization :: Organization
     , commitCommentEventRepository   :: Repository
     , commitCommentEventSender       :: User
-    , commitCommentEventOrganization :: Organization
+
+    , commitCommentEventAction       :: Text
+    , commitCommentEventComment      :: CommitComment
     } deriving (Eq, Show, Read)
 
 instance FromJSON CommitCommentEvent where
     parseJSON (Object x) = CommitCommentEvent
-        <$> x .: "action"
-        <*> x .: "comment"
+        <$> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
-        <*> x .: "organization"
+
+        <*> x .: "action"
+        <*> x .: "comment"
 
     parseJSON _ = fail "CommitCommentEvent"
 
 instance ToJSON CommitCommentEvent where
     toJSON CommitCommentEvent{..} = object
-        [ "action"       .= commitCommentEventAction
-        , "comment"      .= commitCommentEventComment
+        [ "organization" .= commitCommentEventOrganization
         , "repository"   .= commitCommentEventRepository
         , "sender"       .= commitCommentEventSender
-        , "organization" .= commitCommentEventOrganization
+
+        , "action"       .= commitCommentEventAction
+        , "comment"      .= commitCommentEventComment
         ]
 
 
@@ -225,27 +179,30 @@ instance ToJSON CommitCommentEvent where
 -- DeploymentEvent
 
 data DeploymentEvent = DeploymentEvent
-    { deploymentEventDeployment   :: Deployment
+    { deploymentEventOrganization :: Organization
     , deploymentEventRepository   :: Repository
     , deploymentEventSender       :: User
-    , deploymentEventOrganization :: Organization
+
+    , deploymentEventDeployment   :: Deployment
     } deriving (Eq, Show, Read)
 
 instance FromJSON DeploymentEvent where
     parseJSON (Object x) = DeploymentEvent
-        <$> x .: "deployment"
+        <$> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
-        <*> x .: "organization"
+
+        <*> x .: "deployment"
 
     parseJSON _ = fail "DeploymentEvent"
 
 instance ToJSON DeploymentEvent where
     toJSON DeploymentEvent{..} = object
-        [ "deployment"   .= deploymentEventDeployment
+        [ "organization" .= deploymentEventOrganization
         , "repository"   .= deploymentEventRepository
         , "sender"       .= deploymentEventSender
-        , "organization" .= deploymentEventOrganization
+
+        , "deployment"   .= deploymentEventDeployment
         ]
 
 
@@ -253,30 +210,33 @@ instance ToJSON DeploymentEvent where
 -- DeploymentStatusEvent
 
 data DeploymentStatusEvent = DeploymentStatusEvent
-    { deploymentStatusEventDeploymentStatus :: DeploymentStatus
-    , deploymentStatusEventDeployment       :: Deployment
+    { deploymentStatusEventOrganization     :: Organization
     , deploymentStatusEventRepository       :: Repository
-    , deploymentStatusEventOrganization     :: Organization
     , deploymentStatusEventSender           :: User
+
+    , deploymentStatusEventDeployment       :: Deployment
+    , deploymentStatusEventDeploymentStatus :: DeploymentStatus
     } deriving (Eq, Show, Read)
 
 instance FromJSON DeploymentStatusEvent where
     parseJSON (Object x) = DeploymentStatusEvent
-        <$> x .: "deployment_status"
-        <*> x .: "deployment"
+        <$> x .: "organization"
         <*> x .: "repository"
-        <*> x .: "organization"
         <*> x .: "sender"
+
+        <*> x .: "deployment"
+        <*> x .: "deployment_status"
 
     parseJSON _ = fail "DeploymentStatusEvent"
 
 instance ToJSON DeploymentStatusEvent where
     toJSON DeploymentStatusEvent{..} = object
-        [ "deployment_status"  .= deploymentStatusEventDeploymentStatus
-        , "deployment"         .= deploymentStatusEventDeployment
+        [ "organization"       .= deploymentStatusEventOrganization
         , "repository"         .= deploymentStatusEventRepository
-        , "organization"       .= deploymentStatusEventOrganization
         , "sender"             .= deploymentStatusEventSender
+
+        , "deployment"         .= deploymentStatusEventDeployment
+        , "deployment_status"  .= deploymentStatusEventDeploymentStatus
         ]
 
 
@@ -284,63 +244,66 @@ instance ToJSON DeploymentStatusEvent where
 -- PushEvent
 
 data PushEvent = PushEvent
-    { pushEventRef             :: Text
-    , pushEventBefore          :: Text
+    { pushEventOrganization    :: Organization
+    , pushEventRepository      :: Repository
+    , pushEventSender          :: User
+
     , pushEventAfter           :: Text
+    , pushEventBaseRef         :: Maybe Text
+    , pushEventBefore          :: Text
+    , pushEventCommits         :: [PushCommit]
+    , pushEventCompare         :: Text
     , pushEventCreated         :: Bool
     , pushEventDeleted         :: Bool
-    , pushEventForced          :: Bool
-    , pushEventRefName         :: Maybe Text
-    , pushEventBaseRef         :: Maybe Text
-    , pushEventCompare         :: Text
     , pushEventDistinctCommits :: Maybe [PushCommit]
-    , pushEventCommits         :: [PushCommit]
+    , pushEventForced          :: Bool
     , pushEventHeadCommit      :: Maybe PushCommit
-    , pushEventRepository      :: Repository
     , pushEventPusher          :: Pusher
-    , pushEventOrganization    :: Organization
-    , pushEventSender          :: User
+    , pushEventRef             :: Text
+    , pushEventRefName         :: Maybe Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON PushEvent where
     parseJSON (Object x) = PushEvent
-        <$> x .: "ref"
-        <*> x .: "before"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
         <*> x .: "after"
+        <*> x .: "base_ref"
+        <*> x .: "before"
+        <*> x .: "commits"
+        <*> x .: "compare"
         <*> x .: "created"
         <*> x .: "deleted"
-        <*> x .: "forced"
-        <*> x .:? "ref_name"
-        <*> x .: "base_ref"
-        <*> x .: "compare"
         <*> x .:? "distinct_commits"
-        <*> x .: "commits"
+        <*> x .: "forced"
         <*> x .: "head_commit"
-        <*> x .: "repository"
         <*> x .: "pusher"
-        <*> x .: "organization"
-        <*> x .: "sender"
+        <*> x .: "ref"
+        <*> x .:? "ref_name"
 
     parseJSON _ = fail "PushEvent"
 
 instance ToJSON PushEvent where
     toJSON PushEvent{..} = object
-        [ "ref"              .= pushEventRef
-        , "before"           .= pushEventBefore
+        [ "organization"     .= pushEventOrganization
+        , "repository"       .= pushEventRepository
+        , "sender"           .= pushEventSender
+
         , "after"            .= pushEventAfter
+        , "base_ref"         .= pushEventBaseRef
+        , "before"           .= pushEventBefore
+        , "commits"          .= pushEventCommits
+        , "compare"          .= pushEventCompare
         , "created"          .= pushEventCreated
         , "deleted"          .= pushEventDeleted
-        , "forced"           .= pushEventForced
-        , "ref_name"         .= pushEventRefName
-        , "base_ref"         .= pushEventBaseRef
-        , "compare"          .= pushEventCompare
         , "distinct_commits" .= pushEventDistinctCommits
-        , "commits"          .= pushEventCommits
+        , "forced"           .= pushEventForced
         , "head_commit"      .= pushEventHeadCommit
-        , "repository"       .= pushEventRepository
         , "pusher"           .= pushEventPusher
-        , "organization"     .= pushEventOrganization
-        , "sender"           .= pushEventSender
+        , "ref"              .= pushEventRef
+        , "ref_name"         .= pushEventRefName
         ]
 
 
@@ -348,29 +311,32 @@ instance ToJSON PushEvent where
 -- IssuesEvent
 
 data IssuesEvent = IssuesEvent
-    { issuesEventRepository   :: Repository
+    { issuesEventOrganization :: Organization
+    , issuesEventRepository   :: Repository
     , issuesEventSender       :: User
+
     , issuesEventAction       :: Text
-    , issuesEventOrganization :: Organization
     , issuesEventIssue        :: Issue
     } deriving (Eq, Show, Read)
 
 instance FromJSON IssuesEvent where
     parseJSON (Object x) = IssuesEvent
-        <$> x .: "repository"
+        <$> x .: "organization"
+        <*> x .: "repository"
         <*> x .: "sender"
+
         <*> x .: "action"
-        <*> x .: "organization"
         <*> x .: "issue"
 
     parseJSON _ = fail "IssuesEvent"
 
 instance ToJSON IssuesEvent where
     toJSON IssuesEvent{..} = object
-        [ "repository"   .= issuesEventRepository
+        [ "organization" .= issuesEventOrganization
+        , "repository"   .= issuesEventRepository
         , "sender"       .= issuesEventSender
+
         , "action"       .= issuesEventAction
-        , "organization" .= issuesEventOrganization
         , "issue"        .= issuesEventIssue
         ]
 
@@ -379,32 +345,35 @@ instance ToJSON IssuesEvent where
 -- IssueCommentEvent
 
 data IssueCommentEvent = IssueCommentEvent
-    { issueCommentEventRepository   :: Repository
+    { issueCommentEventOrganization :: Organization
+    , issueCommentEventRepository   :: Repository
     , issueCommentEventSender       :: User
+
     , issueCommentEventAction       :: Text
     , issueCommentEventComment      :: IssueComment
-    , issueCommentEventOrganization :: Organization
     , issueCommentEventIssue        :: Issue
     } deriving (Eq, Show, Read)
 
 instance FromJSON IssueCommentEvent where
     parseJSON (Object x) = IssueCommentEvent
-        <$> x .: "repository"
+        <$> x .: "organization"
+        <*> x .: "repository"
         <*> x .: "sender"
+
         <*> x .: "action"
         <*> x .: "comment"
-        <*> x .: "organization"
         <*> x .: "issue"
 
     parseJSON _ = fail "IssueCommentEvent"
 
 instance ToJSON IssueCommentEvent where
     toJSON IssueCommentEvent{..} = object
-        [ "repository"   .= issueCommentEventRepository
+        [ "organization" .= issueCommentEventOrganization
+        , "repository"   .= issueCommentEventRepository
         , "sender"       .= issueCommentEventSender
+
         , "action"       .= issueCommentEventAction
         , "comment"      .= issueCommentEventComment
-        , "organization" .= issueCommentEventOrganization
         , "issue"        .= issueCommentEventIssue
         ]
 
@@ -413,18 +382,42 @@ instance ToJSON IssueCommentEvent where
 -- CreateEvent
 
 data CreateEvent = CreateEvent
-    { createEventRef :: !(Maybe Text)
+    { createEventOrganization :: Organization
+    , createEventRepository   :: Repository
+    , createEventSender       :: User
+
+    , createEventDescription  :: Text
+    , createEventMasterBranch :: Text
+    , createEventPusherType   :: Text
+    , createEventRef          :: Text
+    , createEventRefType      :: Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON CreateEvent where
     parseJSON (Object x) = CreateEvent
-        <$> x .: "ref"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "description"
+        <*> x .: "master_branch"
+        <*> x .: "pusher_type"
+        <*> x .: "ref"
+        <*> x .: "ref_type"
 
     parseJSON _ = fail "CreateEvent"
 
 instance ToJSON CreateEvent where
     toJSON CreateEvent{..} = object
-        [ "ref"      .= createEventRef
+        [ "organization"  .= createEventOrganization
+        , "repository"    .= createEventRepository
+        , "sender"        .= createEventSender
+
+        , "description"   .= createEventDescription
+        , "master_branch" .= createEventMasterBranch
+        , "pusher_type"   .= createEventPusherType
+        , "ref"           .= createEventRef
+        , "ref_type"      .= createEventRefType
         ]
 
 
@@ -432,45 +425,48 @@ instance ToJSON CreateEvent where
 -- PullRequestEvent
 
 data PullRequestEvent = PullRequestEvent
-    { pullRequestEventAfter        :: Maybe Text
+    { pullRequestEventOrganization :: Organization
     , pullRequestEventRepository   :: Repository
-    , pullRequestEventChanges      :: Maybe Changes
     , pullRequestEventSender       :: User
-    , pullRequestEventPullRequest  :: PullRequest
+
     , pullRequestEventAction       :: Text
+    , pullRequestEventAfter        :: Maybe Text
     , pullRequestEventAssignee     :: Maybe User
-    , pullRequestEventNumber       :: Int
-    , pullRequestEventOrganization :: Organization
     , pullRequestEventBefore       :: Maybe Text
+    , pullRequestEventChanges      :: Maybe Changes
+    , pullRequestEventNumber       :: Int
+    , pullRequestEventPullRequest  :: PullRequest
     } deriving (Eq, Show, Read)
 
 instance FromJSON PullRequestEvent where
     parseJSON (Object x) = PullRequestEvent
-        <$> x .:? "after"
+        <$> x .: "organization"
         <*> x .: "repository"
-        <*> x .:? "changes"
         <*> x .: "sender"
-        <*> x .: "pull_request"
+
         <*> x .: "action"
+        <*> x .:? "after"
         <*> x .:? "assignee"
-        <*> x .: "number"
-        <*> x .: "organization"
         <*> x .:? "before"
+        <*> x .:? "changes"
+        <*> x .: "number"
+        <*> x .: "pull_request"
 
     parseJSON _ = fail "PullRequestEvent"
 
 instance ToJSON PullRequestEvent where
     toJSON PullRequestEvent{..} = object $
-        [ "repository"   .= pullRequestEventRepository
-        , "changes"      .= pullRequestEventChanges
+        [ "organization" .= pullRequestEventOrganization
+        , "repository"   .= pullRequestEventRepository
         , "sender"       .= pullRequestEventSender
-        , "pull_request" .= pullRequestEventPullRequest
+
         , "action"       .= pullRequestEventAction
-        , "assignee"     .= pullRequestEventAssignee
-        , "number"       .= pullRequestEventNumber
-        , "organization" .= pullRequestEventOrganization
-        , "before"       .= pullRequestEventBefore
         , "after"        .= pullRequestEventAfter
+        , "assignee"     .= pullRequestEventAssignee
+        , "before"       .= pullRequestEventBefore
+        , "changes"      .= pullRequestEventChanges
+        , "number"       .= pullRequestEventNumber
+        , "pull_request" .= pullRequestEventPullRequest
         ]
 
 
@@ -478,33 +474,36 @@ instance ToJSON PullRequestEvent where
 -- PullRequestReviewEvent
 
 data PullRequestReviewEvent = PullRequestReviewEvent
-    { pullRequestReviewEventAction       :: Text
-    , pullRequestReviewEventReview       :: Review
-    , pullRequestReviewEventPullRequest  :: SimplePullRequest
+    { pullRequestReviewEventOrganization :: Organization
     , pullRequestReviewEventRepository   :: Repository
-    , pullRequestReviewEventOrganization :: Organization
     , pullRequestReviewEventSender       :: User
+
+    , pullRequestReviewEventAction       :: Text
+    , pullRequestReviewEventPullRequest  :: SimplePullRequest
+    , pullRequestReviewEventReview       :: Review
     } deriving (Eq, Show, Read)
 
 instance FromJSON PullRequestReviewEvent where
     parseJSON (Object x) = PullRequestReviewEvent
-        <$> x .: "action"
-        <*> x .: "review"
-        <*> x .: "pull_request"
+        <$> x .: "organization"
         <*> x .: "repository"
-        <*> x .: "organization"
         <*> x .: "sender"
+
+        <*> x .: "action"
+        <*> x .: "pull_request"
+        <*> x .: "review"
 
     parseJSON _ = fail "PullRequestReviewEvent"
 
 instance ToJSON PullRequestReviewEvent where
     toJSON PullRequestReviewEvent{..} = object $
-        [ "action"       .= pullRequestReviewEventAction
-        , "review"       .= pullRequestReviewEventReview
-        , "pull_request" .= pullRequestReviewEventPullRequest
+        [ "organization" .= pullRequestReviewEventOrganization
         , "repository"   .= pullRequestReviewEventRepository
-        , "organization" .= pullRequestReviewEventOrganization
         , "sender"       .= pullRequestReviewEventSender
+
+        , "action"       .= pullRequestReviewEventAction
+        , "pull_request" .= pullRequestReviewEventPullRequest
+        , "review"       .= pullRequestReviewEventReview
         ]
 
 
@@ -512,18 +511,36 @@ instance ToJSON PullRequestReviewEvent where
 -- PullRequestReviewCommentEventPayload
 
 data PullRequestReviewCommentEvent = PullRequestReviewCommentEvent
-    { pullRequestReviewCommentEventPullRequest :: !Value
+    { pullRequestReviewCommentEventOrganization :: Organization
+    , pullRequestReviewCommentEventRepository   :: Repository
+    , pullRequestReviewCommentEventSender       :: User
+
+    , pullRequestReviewCommentEventAction       :: Text
+    , pullRequestReviewCommentEventComment      :: ReviewComment
+    , pullRequestReviewCommentEventPullRequest  :: SimplePullRequest
     } deriving (Eq, Show, Read)
 
 instance FromJSON PullRequestReviewCommentEvent where
     parseJSON (Object x) = PullRequestReviewCommentEvent
-        <$> x .: "pull_request"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "action"
+        <*> x .: "comment"
+        <*> x .: "pull_request"
 
     parseJSON _ = fail "PullRequestReviewCommentEvent"
 
 instance ToJSON PullRequestReviewCommentEvent where
     toJSON PullRequestReviewCommentEvent{..} = object
-        [ "pull_request"      .= pullRequestReviewCommentEventPullRequest
+        [ "organization" .= pullRequestReviewCommentEventOrganization
+        , "repository"   .= pullRequestReviewCommentEventRepository
+        , "sender"       .= pullRequestReviewCommentEventSender
+
+        , "action"       .= pullRequestReviewCommentEventAction
+        , "comment"      .= pullRequestReviewCommentEventComment
+        , "pull_request" .= pullRequestReviewCommentEventPullRequest
         ]
 
 
@@ -532,27 +549,30 @@ instance ToJSON PullRequestReviewCommentEvent where
 -- WatchEvent
 
 data WatchEvent = WatchEvent
-    { watchEventRepository   :: Repository
+    { watchEventOrganization :: Organization
+    , watchEventRepository   :: Repository
     , watchEventSender       :: User
+
     , watchEventAction       :: Text
-    , watchEventOrganization :: Organization
     } deriving (Eq, Show, Read)
 
 instance FromJSON WatchEvent where
     parseJSON (Object x) = WatchEvent
-        <$> x .: "repository"
+        <$> x .: "organization"
+        <*> x .: "repository"
         <*> x .: "sender"
+
         <*> x .: "action"
-        <*> x .: "organization"
 
     parseJSON _ = fail "WatchEvent"
 
 instance ToJSON WatchEvent where
     toJSON WatchEvent{..} = object
-        [ "repository"   .= watchEventRepository
+        [ "organization" .= watchEventOrganization
+        , "repository"   .= watchEventRepository
         , "sender"       .= watchEventSender
+
         , "action"       .= watchEventAction
-        , "organization" .= watchEventOrganization
         ]
 
 
@@ -560,18 +580,36 @@ instance ToJSON WatchEvent where
 -- DeleteEvent
 
 data DeleteEvent = DeleteEvent
-    { deleteEventRef :: !Text
+    { deleteEventOrganization :: Organization
+    , deleteEventRepository   :: Repository
+    , deleteEventSender       :: User
+
+    , deleteEventPusherType   :: Text
+    , deleteEventRef          :: Text
+    , deleteEventRefType      :: Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON DeleteEvent where
     parseJSON (Object x) = DeleteEvent
-        <$> x .: "ref"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "pusher_type"
+        <*> x .: "ref"
+        <*> x .: "ref_type"
 
     parseJSON _ = fail "DeleteEvent"
 
 instance ToJSON DeleteEvent where
     toJSON DeleteEvent{..} = object
-        [ "ref"      .= deleteEventRef
+        [ "organization" .= deleteEventOrganization
+        , "repository"   .= deleteEventRepository
+        , "sender"       .= deleteEventSender
+
+        , "pusher_type"  .= deleteEventPusherType
+        , "ref"          .= deleteEventRef
+        , "ref_type"     .= deleteEventRefType
         ]
 
 
@@ -579,27 +617,30 @@ instance ToJSON DeleteEvent where
 -- ForkEvent
 
 data ForkEvent = ForkEvent
-    { forkEventForkee       :: Repository
+    { forkEventOrganization :: Organization
     , forkEventRepository   :: Repository
-    , forkEventOrganization :: Organization
     , forkEventSender       :: User
+
+    , forkEventForkee       :: Repository
     } deriving (Eq, Show, Read)
 
 instance FromJSON ForkEvent where
     parseJSON (Object x) = ForkEvent
-        <$> x .: "forkee"
+        <$> x .: "organization"
         <*> x .: "repository"
-        <*> x .: "organization"
         <*> x .: "sender"
+
+        <*> x .: "forkee"
 
     parseJSON _ = fail "ForkEvent"
 
 instance ToJSON ForkEvent where
     toJSON ForkEvent{..} = object
-        [ "forkee"       .= forkEventForkee
+        [ "organization" .= forkEventOrganization
         , "repository"   .= forkEventRepository
-        , "organization" .= forkEventOrganization
         , "sender"       .= forkEventSender
+
+        , "forkee"       .= forkEventForkee
         ]
 
 
@@ -607,18 +648,33 @@ instance ToJSON ForkEvent where
 -- ReleaseEvent
 
 data ReleaseEvent = ReleaseEvent
-    { releaseEventAction :: !Text
+    { releaseEventOrganization :: Organization
+    , releaseEventRepository   :: Repository
+    , releaseEventSender       :: User
+
+    , releaseEventAction       :: Text
+    , releaseEventRelease      :: Release
     } deriving (Eq, Show, Read)
 
 instance FromJSON ReleaseEvent where
     parseJSON (Object x) = ReleaseEvent
-        <$> x .: "action"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "action"
+        <*> x .: "release"
 
     parseJSON _ = fail "ForkEvent"
 
 instance ToJSON ReleaseEvent where
     toJSON ReleaseEvent{..} = object
-        [ "action"      .= releaseEventAction
+        [ "organization" .= releaseEventOrganization
+        , "repository"   .= releaseEventRepository
+        , "sender"       .= releaseEventSender
+
+        , "action"       .= releaseEventAction
+        , "release"      .= releaseEventRelease
         ]
 
 
@@ -626,18 +682,30 @@ instance ToJSON ReleaseEvent where
 -- GollumEvent
 
 data GollumEvent = GollumEvent
-    { gollumEventPages :: !Value
+    { gollumEventOrganization :: Organization
+    , gollumEventRepository   :: Repository
+    , gollumEventSender       :: User
+
+    , gollumEventPages        :: Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON GollumEvent where
     parseJSON (Object x) = GollumEvent
-        <$> x .: "pages"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "pages"
 
     parseJSON _ = fail "GollumEvent"
 
 instance ToJSON GollumEvent where
     toJSON GollumEvent{..} = object
-        [ "pages"      .= gollumEventPages
+        [ "organization" .= gollumEventOrganization
+        , "repository"   .= gollumEventRepository
+        , "sender"       .= gollumEventSender
+
+        , "pages"      .= gollumEventPages
         ]
 
 
@@ -645,18 +713,30 @@ instance ToJSON GollumEvent where
 -- MemberEvent
 
 data MemberEvent = MemberEvent
-    { memberEventAction :: !Text
+    { memberEventOrganization :: Organization
+    , memberEventRepository   :: Repository
+    , memberEventSender       :: User
+
+    , memberEventAction       :: Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON MemberEvent where
     parseJSON (Object x) = MemberEvent
-        <$> x .: "action"
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "action"
 
     parseJSON _ = fail "MemberEvent"
 
 instance ToJSON MemberEvent where
     toJSON MemberEvent{..} = object
-        [ "action"      .= memberEventAction
+        [ "organization" .= memberEventOrganization
+        , "repository"   .= memberEventRepository
+        , "sender"       .= memberEventSender
+
+        , "action"      .= memberEventAction
         ]
 
 
@@ -664,55 +744,92 @@ instance ToJSON MemberEvent where
 -- StatusEvent
 
 data StatusEvent = StatusEvent
-    { statusEventId           :: Int
-    , statusEventSha          :: Text
-    , statusEventName         :: Text
-    , statusEventTargetUrl    :: Text
-    , statusEventContext      :: Text
-    , statusEventDescription  :: Text
-    , statusEventState        :: Text
-    , statusEventCommit       :: StatusCommit
-    , statusEventBranches     :: [Branch]
-    , statusEventCreatedAt    :: DateTime
-    , statusEventUpdatedAt    :: DateTime
+    { statusEventOrganization :: Organization
     , statusEventRepository   :: Repository
-    , statusEventOrganization :: Organization
     , statusEventSender       :: User
+
+    , statusEventBranches     :: [Branch]
+    , statusEventCommit       :: StatusCommit
+    , statusEventContext      :: Text
+    , statusEventCreatedAt    :: DateTime
+    , statusEventDescription  :: Text
+    , statusEventId           :: Int
+    , statusEventName         :: Text
+    , statusEventSha          :: Text
+    , statusEventState        :: Text
+    , statusEventTargetUrl    :: Text
+    , statusEventUpdatedAt    :: DateTime
     } deriving (Eq, Show, Read)
 
 instance FromJSON StatusEvent where
     parseJSON (Object x) = StatusEvent
-        <$> x .: "id"
-        <*> x .: "sha"
-        <*> x .: "name"
-        <*> x .: "target_url"
-        <*> x .: "context"
-        <*> x .: "description"
-        <*> x .: "state"
-        <*> x .: "commit"
-        <*> x .: "branches"
-        <*> x .: "created_at"
-        <*> x .: "updated_at"
+        <$> x .: "organization"
         <*> x .: "repository"
-        <*> x .: "organization"
         <*> x .: "sender"
+
+        <*> x .: "branches"
+        <*> x .: "commit"
+        <*> x .: "context"
+        <*> x .: "created_at"
+        <*> x .: "description"
+        <*> x .: "id"
+        <*> x .: "name"
+        <*> x .: "sha"
+        <*> x .: "state"
+        <*> x .: "target_url"
+        <*> x .: "updated_at"
 
     parseJSON _ = fail "StatusEvent"
 
 instance ToJSON StatusEvent where
     toJSON StatusEvent{..} = object
-        [ "id"           .= statusEventId
-        , "sha"          .= statusEventSha
-        , "name"         .= statusEventName
-        , "target_url"   .= statusEventTargetUrl
-        , "context"      .= statusEventContext
-        , "description"  .= statusEventDescription
-        , "state"        .= statusEventState
-        , "commit"       .= statusEventCommit
-        , "branches"     .= statusEventBranches
-        , "created_at"   .= statusEventCreatedAt
-        , "updated_at"   .= statusEventUpdatedAt
+        [ "organization" .= statusEventOrganization
         , "repository"   .= statusEventRepository
-        , "organization" .= statusEventOrganization
         , "sender"       .= statusEventSender
+
+        , "branches"     .= statusEventBranches
+        , "commit"       .= statusEventCommit
+        , "context"      .= statusEventContext
+        , "created_at"   .= statusEventCreatedAt
+        , "description"  .= statusEventDescription
+        , "id"           .= statusEventId
+        , "name"         .= statusEventName
+        , "sha"          .= statusEventSha
+        , "state"        .= statusEventState
+        , "target_url"   .= statusEventTargetUrl
+        , "updated_at"   .= statusEventUpdatedAt
+        ]
+
+
+------------------------------------------------------------------------------
+-- MilestoneEvent
+
+data MilestoneEvent = MilestoneEvent
+    { milestoneEventOrganization :: Organization
+    , milestoneEventRepository   :: Repository
+    , milestoneEventSender       :: User
+
+    , milestoneEventAction       :: Text
+    , milestoneEventMilestone    :: Milestone
+    } deriving (Eq, Show, Read)
+
+instance FromJSON MilestoneEvent where
+    parseJSON (Object x) = MilestoneEvent
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "action"
+        <*> x .: "milestone"
+
+    parseJSON _ = fail "MilestoneEvent"
+
+instance ToJSON MilestoneEvent where
+    toJSON MilestoneEvent{..} = object
+        [ "organization" .= milestoneEventOrganization
+        , "repository"   .= milestoneEventRepository
+        , "sender"       .= milestoneEventSender
+
+        , "action"       .= milestoneEventAction
+        , "milestone"    .= milestoneEventMilestone
         ]

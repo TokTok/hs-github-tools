@@ -86,7 +86,6 @@ executable webservice
     , servant
     , servant-server
     , text
-    , time
     , unordered-containers
     , uuid
     , vector

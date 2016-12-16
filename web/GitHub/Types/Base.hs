@@ -13,6 +13,143 @@ import           Data.Text           (Text)
 
 
 ------------------------------------------------------------------------------
+-- Release
+
+data Release = Release
+    { releaseTagName         :: Text
+    , releaseTarballUrl      :: Text
+    , releaseBody            :: Text
+    , releaseUrl             :: Text
+    , releasePrerelease      :: Bool
+    , releaseZipballUrl      :: Text
+    , releaseName            :: Text
+    , releaseAssetsUrl       :: Text
+    , releaseUploadUrl       :: Text
+    , releasePublishedAt     :: DateTime
+    , releaseCreatedAt       :: DateTime
+    , releaseTargetCommitish :: Text
+    , releaseAuthor          :: User
+    , releaseDraft           :: Bool
+    , releaseId              :: Int
+    , releaseAssets          :: [Text]
+    , releaseHtmlUrl         :: Text
+    } deriving (Eq, Show, Read)
+
+
+instance FromJSON Release where
+    parseJSON (Object x) = Release
+        <$> x .: "tag_name"
+        <*> x .: "tarball_url"
+        <*> x .: "body"
+        <*> x .: "url"
+        <*> x .: "prerelease"
+        <*> x .: "zipball_url"
+        <*> x .: "name"
+        <*> x .: "assets_url"
+        <*> x .: "upload_url"
+        <*> x .: "published_at"
+        <*> x .: "created_at"
+        <*> x .: "target_commitish"
+        <*> x .: "author"
+        <*> x .: "draft"
+        <*> x .: "id"
+        <*> x .: "assets"
+        <*> x .: "html_url"
+
+    parseJSON _ = fail "Release"
+
+
+instance ToJSON Release where
+    toJSON Release{..} = object
+        [ "tag_name"         .= releaseTagName
+        , "tarball_url"      .= releaseTarballUrl
+        , "body"             .= releaseBody
+        , "url"              .= releaseUrl
+        , "prerelease"       .= releasePrerelease
+        , "zipball_url"      .= releaseZipballUrl
+        , "name"             .= releaseName
+        , "assets_url"       .= releaseAssetsUrl
+        , "upload_url"       .= releaseUploadUrl
+        , "published_at"     .= releasePublishedAt
+        , "created_at"       .= releaseCreatedAt
+        , "target_commitish" .= releaseTargetCommitish
+        , "author"           .= releaseAuthor
+        , "draft"            .= releaseDraft
+        , "id"               .= releaseId
+        , "assets"           .= releaseAssets
+        , "html_url"         .= releaseHtmlUrl
+        ]
+
+
+
+------------------------------------------------------------------------------
+-- ReviewComment
+
+data ReviewComment = ReviewComment
+    { reviewCommentUrl                 :: Text
+    , reviewCommentHtmlUrl             :: Text
+    , reviewCommentId                  :: Int
+    , reviewCommentUser                :: User
+    , reviewCommentPullRequestUrl      :: Text
+    , reviewCommentOriginalPosition    :: Maybe Int
+    , reviewCommentPosition            :: Maybe Int
+    , reviewCommentPath                :: Maybe Text
+    , reviewCommentCommitId            :: Text
+    , reviewCommentCreatedAt           :: DateTime
+    , reviewCommentUpdatedAt           :: DateTime
+    , reviewCommentBody                :: Text
+    , reviewCommentPullRequestReviewId :: Int
+    , reviewCommentLinks               :: ReviewCommentLinks
+    , reviewCommentDiffHunk            :: Text
+    , reviewCommentOriginalCommitId    :: Text
+    } deriving (Eq, Show, Read)
+
+
+instance FromJSON ReviewComment where
+    parseJSON (Object x) = ReviewComment
+        <$> x .: "url"
+        <*> x .: "html_url"
+        <*> x .: "id"
+        <*> x .: "user"
+        <*> x .: "pull_request_url"
+        <*> x .: "original_position"
+        <*> x .: "position"
+        <*> x .: "path"
+        <*> x .: "commit_id"
+        <*> x .: "created_at"
+        <*> x .: "updated_at"
+        <*> x .: "body"
+        <*> x .: "pull_request_review_id"
+        <*> x .: "_links"
+        <*> x .: "diff_hunk"
+        <*> x .: "original_commit_id"
+
+    parseJSON _ = fail "ReviewComment"
+
+
+instance ToJSON ReviewComment where
+    toJSON ReviewComment{..} = object
+        [ "url"                    .= reviewCommentUrl
+        , "html_url"               .= reviewCommentHtmlUrl
+        , "id"                     .= reviewCommentId
+        , "user"                   .= reviewCommentUser
+        , "pull_request_url"       .= reviewCommentPullRequestUrl
+        , "original_position"      .= reviewCommentOriginalPosition
+        , "position"               .= reviewCommentPosition
+        , "path"                   .= reviewCommentPath
+        , "commit_id"              .= reviewCommentCommitId
+        , "created_at"             .= reviewCommentCreatedAt
+        , "updated_at"             .= reviewCommentUpdatedAt
+        , "body"                   .= reviewCommentBody
+        , "pull_request_review_id" .= reviewCommentPullRequestReviewId
+        , "_links"                 .= reviewCommentLinks
+        , "diff_hunk"              .= reviewCommentDiffHunk
+        , "original_commit_id"     .= reviewCommentOriginalCommitId
+        ]
+
+
+
+------------------------------------------------------------------------------
 -- CommitComment
 
 data CommitComment = CommitComment
@@ -331,7 +468,7 @@ instance ToJSON RepoOwner where
 data Review = Review
     { reviewId             :: Int
     , reviewUser           :: User
-    , reviewBody           :: Text
+    , reviewBody           :: Maybe Text
     , reviewSubmittedAt    :: DateTime
     , reviewState          :: Text
     , reviewHtmlUrl        :: Text
@@ -386,6 +523,34 @@ instance FromJSON Link where
 instance ToJSON Link where
     toJSON Link{..} = object
         [ "href" .= linkHref
+        ]
+
+
+
+------------------------------------------------------------------------------
+-- ReviewCommentLinks
+
+data ReviewCommentLinks = ReviewCommentLinks
+    { reviewCommentLinksHtml        :: Link
+    , reviewCommentLinksSelf        :: Link
+    , reviewCommentLinksPullRequest :: Link
+    } deriving (Eq, Show, Read)
+
+
+instance FromJSON ReviewCommentLinks where
+    parseJSON (Object x) = ReviewCommentLinks
+        <$> x .: "html"
+        <*> x .: "self"
+        <*> x .: "pull_request"
+
+    parseJSON _ = fail "ReviewCommentLinks"
+
+
+instance ToJSON ReviewCommentLinks where
+    toJSON ReviewCommentLinks{..} = object
+        [ "html"         .= reviewCommentLinksHtml
+        , "self"         .= reviewCommentLinksSelf
+        , "pull_request" .= reviewCommentLinksPullRequest
         ]
 
 
