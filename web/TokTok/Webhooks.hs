@@ -11,7 +11,7 @@ import           Data.Monoid            (mempty, (<>))
 import qualified Data.Text              as Text
 import           Data.Text.Encoding     (decodeUtf8, encodeUtf8)
 import           Data.UUID              (UUID)
-import           GitHub.Types.Events    (Payload (..))
+import           GitHub.Types           (Payload (..))
 import           GitHub.WebHook.Handler (Error (..), Handler (..), removeNulls,
                                          runHandler)
 import           Network.HTTP.Types     (HeaderName, status200, status501)

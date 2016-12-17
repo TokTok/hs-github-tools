@@ -1,8 +1,5 @@
-module GitHub.Types
-    ( module GitHub.Types.Base
-    , module GitHub.Types.Events
-    ) where
+module GitHub.Types (module X) where
 
-
-import           GitHub.Types.Base
-import           GitHub.Types.Events
+import           GitHub.Types.Base          as X
+import           GitHub.Types.Events        as X
+import           GitHub.Types.PayloadParser as X
