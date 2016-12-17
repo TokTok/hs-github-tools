@@ -1,0 +1,41 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
+module GitHub.Types.Events.ReleaseEvent where
+
+import           Control.Applicative ((<$>), (<*>))
+import           Data.Aeson          (FromJSON (..), ToJSON (..), object)
+import           Data.Aeson.Types    (Value (..), (.:), (.=))
+import           Data.Text           (Text)
+
+import           GitHub.Types.Base
+
+
+data ReleaseEvent = ReleaseEvent
+    { releaseEventOrganization :: Organization
+    , releaseEventRepository   :: Repository
+    , releaseEventSender       :: User
+
+    , releaseEventAction       :: Text
+    , releaseEventRelease      :: Release
+    } deriving (Eq, Show, Read)
+
+instance FromJSON ReleaseEvent where
+    parseJSON (Object x) = ReleaseEvent
+        <$> x .: "organization"
+        <*> x .: "repository"
+        <*> x .: "sender"
+
+        <*> x .: "action"
+        <*> x .: "release"
+
+    parseJSON _ = fail "ForkEvent"
+
+instance ToJSON ReleaseEvent where
+    toJSON ReleaseEvent{..} = object
+        [ "organization" .= releaseEventOrganization
+        , "repository"   .= releaseEventRepository
+        , "sender"       .= releaseEventSender
+
+        , "action"       .= releaseEventAction
+        , "release"      .= releaseEventRelease
+        ]
