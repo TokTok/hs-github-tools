@@ -9,6 +9,7 @@ import           Data.Monoid         ((<>))
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
 
+import           GitHub.Types.Event
 import           GitHub.Types.Events
 
 
@@ -62,42 +63,49 @@ instance ToJSON Payload where
 
 
 data PayloadParser = PayloadParser
-    { payloadParserEventName   :: Text
+    { payloadParserTypeName    :: Text
     , payloadParserWebhookName :: Text
     , payloadParser            :: Value -> Parser Payload
     }
 
 
 payloadParsers :: [PayloadParser]
-payloadParsers = map (\(e, w, p) -> PayloadParser e w p)
-    [ ( "CommitCommentEvent"           , "commit_comment"             , fmap CommitCommentEventPayload            . parseJSON)
-    , ( "CreateEvent"                  , "create"                     , fmap CreateEventPayload                   . parseJSON)
-    , ( "DeleteEvent"                  , "delete"                     , fmap DeleteEventPayload                   . parseJSON)
-    , ( "DeploymentEvent"              , "deployment"                 , fmap DeploymentEventPayload               . parseJSON)
-    , ( "DeploymentStatusEvent"        , "deployment_status"          , fmap DeploymentStatusEventPayload         . parseJSON)
-    , ( "ForkEvent"                    , "fork"                       , fmap ForkEventPayload                     . parseJSON)
-    , ( "GollumEvent"                  , "gollum"                     , fmap GollumEventPayload                   . parseJSON)
-    , ( "IssueCommentEvent"            , "issue_comment"              , fmap IssueCommentEventPayload             . parseJSON)
-    , ( "IssuesEvent"                  , "issues"                     , fmap IssuesEventPayload                   . parseJSON)
-    , ( "MemberEvent"                  , "member"                     , fmap MemberEventPayload                   . parseJSON)
-    , ( "MembershipEvent"              , "membership"                 , fmap MembershipEventPayload               . parseJSON)
-    , ( "MilestoneEvent"               , "milestone"                  , fmap MilestoneEventPayload                . parseJSON)
-    , ( "OrganizationEvent"            , "organization"               , fmap OrganizationEventPayload             . parseJSON)
-    , ( "PingEvent"                    , "ping"                       , fmap PingEventPayload                     . parseJSON)
-    , ( "PullRequestEvent"             , "pull_request"               , fmap PullRequestEventPayload              . parseJSON)
-    , ( "PullRequestReviewCommentEvent", "pull_request_review_comment", fmap PullRequestReviewCommentEventPayload . parseJSON)
-    , ( "PullRequestReviewEvent"       , "pull_request_review"        , fmap PullRequestReviewEventPayload        . parseJSON)
-    , ( "PushEvent"                    , "push"                       , fmap PushEventPayload                     . parseJSON)
-    , ( "ReleaseEvent"                 , "release"                    , fmap ReleaseEventPayload                  . parseJSON)
-    , ( "StatusEvent"                  , "status"                     , fmap StatusEventPayload                   . parseJSON)
-    , ( "WatchEvent"                   , "watch"                      , fmap WatchEventPayload                    . parseJSON)
+payloadParsers =
+    [ eventParser CommitCommentEventPayload
+    , eventParser CreateEventPayload
+    , eventParser DeleteEventPayload
+    , eventParser DeploymentEventPayload
+    , eventParser DeploymentStatusEventPayload
+    , eventParser ForkEventPayload
+    , eventParser GollumEventPayload
+    , eventParser IssueCommentEventPayload
+    , eventParser IssuesEventPayload
+    , eventParser MemberEventPayload
+    , eventParser MembershipEventPayload
+    , eventParser MilestoneEventPayload
+    , eventParser OrganizationEventPayload
+    , eventParser PingEventPayload
+    , eventParser PullRequestEventPayload
+    , eventParser PullRequestReviewCommentEventPayload
+    , eventParser PullRequestReviewEventPayload
+    , eventParser PushEventPayload
+    , eventParser ReleaseEventPayload
+    , eventParser StatusEventPayload
+    , eventParser WatchEventPayload
     ]
+  where
+    eventParser' :: (FromJSON a, Event a) => TypeName a -> EventName a -> (a -> Payload) -> PayloadParser
+    eventParser' (TypeName ty) (EventName ev) tycon =
+      PayloadParser ty ev (fmap tycon . parseJSON)
+
+    eventParser :: (FromJSON a, Event a) => (a -> Payload) -> PayloadParser
+    eventParser = eventParser' typeName eventName
 
 
 
 eventPayloadParser :: Text -> Value -> Parser Payload
 eventPayloadParser eventType x =
-  case List.find ((== eventType) . payloadParserEventName) payloadParsers of
+  case List.find ((== eventType) . payloadParserTypeName) payloadParsers of
     Nothing -> fail $ "eventPayloadParser: unknown event type: " <> Text.unpack eventType
     Just p  -> payloadParser p x
 

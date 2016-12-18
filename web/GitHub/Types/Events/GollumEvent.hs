@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data GollumEvent = GollumEvent
@@ -17,6 +18,10 @@ data GollumEvent = GollumEvent
 
     , gollumEventPages        :: Text
     } deriving (Eq, Show, Read)
+
+instance Event GollumEvent where
+    typeName = TypeName "GollumEvent"
+    eventName = EventName "gollum"
 
 instance FromJSON GollumEvent where
     parseJSON (Object x) = GollumEvent

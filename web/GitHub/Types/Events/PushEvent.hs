@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.:?), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data PushEvent = PushEvent
@@ -29,6 +30,10 @@ data PushEvent = PushEvent
     , pushEventRef             :: Text
     , pushEventRefName         :: Maybe Text
     } deriving (Eq, Show, Read)
+
+instance Event PushEvent where
+    typeName = TypeName "PushEvent"
+    eventName = EventName "push"
 
 instance FromJSON PushEvent where
     parseJSON (Object x) = PushEvent

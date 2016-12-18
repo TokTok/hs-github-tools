@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data OrganizationEvent = OrganizationEvent
@@ -17,6 +18,10 @@ data OrganizationEvent = OrganizationEvent
     , organizationEventAction       :: Text
     , organizationEventMembership   :: Membership
     } deriving (Eq, Show, Read)
+
+instance Event OrganizationEvent where
+    typeName = TypeName "OrganizationEvent"
+    eventName = EventName "organization"
 
 instance FromJSON OrganizationEvent where
     parseJSON (Object x) = OrganizationEvent

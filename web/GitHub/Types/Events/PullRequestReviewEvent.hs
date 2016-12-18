@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data PullRequestReviewEvent = PullRequestReviewEvent
@@ -19,6 +20,10 @@ data PullRequestReviewEvent = PullRequestReviewEvent
     , pullRequestReviewEventPullRequest  :: SimplePullRequest
     , pullRequestReviewEventReview       :: Review
     } deriving (Eq, Show, Read)
+
+instance Event PullRequestReviewEvent where
+    typeName = TypeName "PullRequestReviewEvent"
+    eventName = EventName "pull_request_review"
 
 instance FromJSON PullRequestReviewEvent where
     parseJSON (Object x) = PullRequestReviewEvent

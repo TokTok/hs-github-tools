@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data CommitCommentEvent = CommitCommentEvent
@@ -18,6 +19,10 @@ data CommitCommentEvent = CommitCommentEvent
     , commitCommentEventAction       :: Text
     , commitCommentEventComment      :: CommitComment
     } deriving (Eq, Show, Read)
+
+instance Event CommitCommentEvent where
+    typeName = TypeName "CommitCommentEvent"
+    eventName = EventName "commit_comment"
 
 instance FromJSON CommitCommentEvent where
     parseJSON (Object x) = CommitCommentEvent

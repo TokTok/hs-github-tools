@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data ReleaseEvent = ReleaseEvent
@@ -18,6 +19,10 @@ data ReleaseEvent = ReleaseEvent
     , releaseEventAction       :: Text
     , releaseEventRelease      :: Release
     } deriving (Eq, Show, Read)
+
+instance Event ReleaseEvent where
+    typeName = TypeName "ReleaseEvent"
+    eventName = EventName "release"
 
 instance FromJSON ReleaseEvent where
     parseJSON (Object x) = ReleaseEvent

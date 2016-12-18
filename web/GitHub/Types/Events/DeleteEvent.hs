@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data DeleteEvent = DeleteEvent
@@ -19,6 +20,10 @@ data DeleteEvent = DeleteEvent
     , deleteEventRef          :: Text
     , deleteEventRefType      :: Text
     } deriving (Eq, Show, Read)
+
+instance Event DeleteEvent where
+    typeName = TypeName "DeleteEvent"
+    eventName = EventName "delete"
 
 instance FromJSON DeleteEvent where
     parseJSON (Object x) = DeleteEvent

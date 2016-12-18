@@ -7,6 +7,7 @@ import           Data.Aeson          (FromJSON (..), ToJSON (..), object)
 import           Data.Aeson.Types    (Value (..), (.:), (.=))
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data ForkEvent = ForkEvent
@@ -16,6 +17,10 @@ data ForkEvent = ForkEvent
 
     , forkEventForkee       :: Repository
     } deriving (Eq, Show, Read)
+
+instance Event ForkEvent where
+    typeName = TypeName "ForkEvent"
+    eventName = EventName "fork"
 
 instance FromJSON ForkEvent where
     parseJSON (Object x) = ForkEvent

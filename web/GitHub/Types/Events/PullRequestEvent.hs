@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.:?), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data PullRequestEvent = PullRequestEvent
@@ -23,6 +24,10 @@ data PullRequestEvent = PullRequestEvent
     , pullRequestEventNumber       :: Int
     , pullRequestEventPullRequest  :: PullRequest
     } deriving (Eq, Show, Read)
+
+instance Event PullRequestEvent where
+    typeName = TypeName "PullRequestEvent"
+    eventName = EventName "pull_request"
 
 instance FromJSON PullRequestEvent where
     parseJSON (Object x) = PullRequestEvent

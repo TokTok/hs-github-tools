@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data MilestoneEvent = MilestoneEvent
@@ -18,6 +19,10 @@ data MilestoneEvent = MilestoneEvent
     , milestoneEventAction       :: Text
     , milestoneEventMilestone    :: Milestone
     } deriving (Eq, Show, Read)
+
+instance Event MilestoneEvent where
+    typeName = TypeName "MilestoneEvent"
+    eventName = EventName "milestone"
 
 instance FromJSON MilestoneEvent where
     parseJSON (Object x) = MilestoneEvent

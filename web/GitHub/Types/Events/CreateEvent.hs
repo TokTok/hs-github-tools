@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data CreateEvent = CreateEvent
@@ -21,6 +22,10 @@ data CreateEvent = CreateEvent
     , createEventRef          :: Text
     , createEventRefType      :: Text
     } deriving (Eq, Show, Read)
+
+instance Event CreateEvent where
+    typeName = TypeName "CreateEvent"
+    eventName = EventName "create"
 
 instance FromJSON CreateEvent where
     parseJSON (Object x) = CreateEvent

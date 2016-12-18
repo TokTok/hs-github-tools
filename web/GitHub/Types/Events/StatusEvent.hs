@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data StatusEvent = StatusEvent
@@ -27,6 +28,10 @@ data StatusEvent = StatusEvent
     , statusEventTargetUrl    :: Text
     , statusEventUpdatedAt    :: DateTime
     } deriving (Eq, Show, Read)
+
+instance Event StatusEvent where
+    typeName = TypeName "StatusEvent"
+    eventName = EventName "status"
 
 instance FromJSON StatusEvent where
     parseJSON (Object x) = StatusEvent

@@ -1,8 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
-
 module GitHub.Types.Base (module X) where
-
 
 import           GitHub.Types.Base.Author             as X
 import           GitHub.Types.Base.Branch             as X

@@ -8,6 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data PingEvent = PingEvent
@@ -18,6 +19,10 @@ data PingEvent = PingEvent
     , pingEventHookId       :: Int
     , pingEventZen          :: Text
     } deriving (Eq, Show, Read)
+
+instance Event PingEvent where
+    typeName = TypeName "PingEvent"
+    eventName = EventName "ping"
 
 instance FromJSON PingEvent where
     parseJSON (Object x) = PingEvent

@@ -8,7 +8,7 @@ import           Data.Aeson.Types    (Value (..), (.:), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
-
+import           GitHub.Types.Event
 
 
 data WatchEvent = WatchEvent
@@ -18,6 +18,10 @@ data WatchEvent = WatchEvent
 
     , watchEventAction       :: Text
     } deriving (Eq, Show, Read)
+
+instance Event WatchEvent where
+    typeName = TypeName "WatchEvent"
+    eventName = EventName "watch"
 
 instance FromJSON WatchEvent where
     parseJSON (Object x) = WatchEvent

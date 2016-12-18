@@ -7,6 +7,7 @@ import           Data.Aeson          (FromJSON (..), ToJSON (..), object)
 import           Data.Aeson.Types    (Value (..), (.:), (.=))
 
 import           GitHub.Types.Base
+import           GitHub.Types.Event
 
 
 data DeploymentEvent = DeploymentEvent
@@ -16,6 +17,10 @@ data DeploymentEvent = DeploymentEvent
 
     , deploymentEventDeployment   :: Deployment
     } deriving (Eq, Show, Read)
+
+instance Event DeploymentEvent where
+    typeName = TypeName "DeploymentEvent"
+    eventName = EventName "deployment"
 
 instance FromJSON DeploymentEvent where
     parseJSON (Object x) = DeploymentEvent
