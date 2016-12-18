@@ -97,8 +97,8 @@ executable webservice
     , github            >= 0.15.0
     , http-types
     , mtl
-    , servant
-    , servant-server
+    , servant           >= 0.5
+    , servant-server    >= 0.5
     , text
     , unordered-containers
     , uuid
@@ -108,3 +108,72 @@ executable webservice
     , warp
   hs-source-dirs:      web
   default-language:    Haskell2010
+  other-modules:
+      GitHub.Types
+    , GitHub.Types.Base
+    , GitHub.Types.Base.Author
+    , GitHub.Types.Base.Branch
+    , GitHub.Types.Base.Change
+    , GitHub.Types.Base.Changes
+    , GitHub.Types.Base.Commit
+    , GitHub.Types.Base.CommitComment
+    , GitHub.Types.Base.CommitDetails
+    , GitHub.Types.Base.CommitRef
+    , GitHub.Types.Base.CommitRefHtml
+    , GitHub.Types.Base.DateTime
+    , GitHub.Types.Base.Deployment
+    , GitHub.Types.Base.DeploymentStatus
+    , GitHub.Types.Base.Hook
+    , GitHub.Types.Base.HookConfig
+    , GitHub.Types.Base.Issue
+    , GitHub.Types.Base.IssueComment
+    , GitHub.Types.Base.Label
+    , GitHub.Types.Base.Link
+    , GitHub.Types.Base.Membership
+    , GitHub.Types.Base.Milestone
+    , GitHub.Types.Base.Organization
+    , GitHub.Types.Base.PullRequest
+    , GitHub.Types.Base.PullRequestLinks
+    , GitHub.Types.Base.PullRequestRef
+    , GitHub.Types.Base.PushCommit
+    , GitHub.Types.Base.Pusher
+    , GitHub.Types.Base.Release
+    , GitHub.Types.Base.RepoOwner
+    , GitHub.Types.Base.Repository
+    , GitHub.Types.Base.Review
+    , GitHub.Types.Base.ReviewComment
+    , GitHub.Types.Base.ReviewCommentLinks
+    , GitHub.Types.Base.ReviewLinks
+    , GitHub.Types.Base.SimplePullRequest
+    , GitHub.Types.Base.StatusCommit
+    , GitHub.Types.Base.Team
+    , GitHub.Types.Base.User
+    , GitHub.Types.Base.UserRef
+    , GitHub.Types.Base.UserStamp
+    , GitHub.Types.Event
+    , GitHub.Types.Events
+    , GitHub.Types.Events.CommitCommentEvent
+    , GitHub.Types.Events.CreateEvent
+    , GitHub.Types.Events.DeleteEvent
+    , GitHub.Types.Events.DeploymentEvent
+    , GitHub.Types.Events.DeploymentStatusEvent
+    , GitHub.Types.Events.ForkEvent
+    , GitHub.Types.Events.GollumEvent
+    , GitHub.Types.Events.IssueCommentEvent
+    , GitHub.Types.Events.IssuesEvent
+    , GitHub.Types.Events.MemberEvent
+    , GitHub.Types.Events.MembershipEvent
+    , GitHub.Types.Events.MilestoneEvent
+    , GitHub.Types.Events.OrganizationEvent
+    , GitHub.Types.Events.PingEvent
+    , GitHub.Types.Events.PullRequestEvent
+    , GitHub.Types.Events.PullRequestReviewCommentEvent
+    , GitHub.Types.Events.PullRequestReviewEvent
+    , GitHub.Types.Events.PushEvent
+    , GitHub.Types.Events.ReleaseEvent
+    , GitHub.Types.Events.StatusEvent
+    , GitHub.Types.Events.WatchEvent
+    , GitHub.Types.PayloadParser
+    , GitHub.WebHook.Handler
+    , TokTok.Hello
+    , TokTok.Webhooks

@@ -20,6 +20,7 @@ data IssuesEvent = IssuesEvent
     , issuesEventAssignee     :: Maybe User
     , issuesEventChanges      :: Maybe Changes
     , issuesEventIssue        :: Issue
+    , issuesEventLabel        :: Maybe Label
     } deriving (Eq, Show, Read)
 
 instance Event IssuesEvent where
@@ -36,6 +37,7 @@ instance FromJSON IssuesEvent where
         <*> x .:? "assignee"
         <*> x .:? "changes"
         <*> x .: "issue"
+        <*> x .:? "label"
 
     parseJSON _ = fail "IssuesEvent"
 
@@ -49,4 +51,5 @@ instance ToJSON IssuesEvent where
         , "assignee"     .= issuesEventAssignee
         , "changes"      .= issuesEventChanges
         , "issue"        .= issuesEventIssue
+        , "label"        .= issuesEventLabel
         ]

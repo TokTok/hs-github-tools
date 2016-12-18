@@ -14,6 +14,7 @@ import qualified Data.IORef          as IORef
 import           Data.Monoid         ((<>))
 import           Data.Text           (Text, toUpper)
 import           GHC.Generics        (Generic)
+import           Network.Wai         (Application)
 import           Servant
 
 import qualified Changelogs
