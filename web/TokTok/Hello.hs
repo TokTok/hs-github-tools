@@ -6,7 +6,7 @@
 {-# LANGUAGE TypeOperators     #-}
 module TokTok.Hello (newApp) where
 
-import           Control.Applicative ((<$>))
+import           Control.Applicative ((<$>), (<*>))
 import           Control.Monad.Trans (lift)
 import           Data.Aeson          (FromJSON, ToJSON)
 import           Data.IORef          (IORef)
@@ -21,12 +21,14 @@ import qualified Changelogs
 
 data ApiContext = ApiContext
   { getChangelog :: IORef Changelogs.ChangeLog
+  , getRoadmap   :: IORef Changelogs.ChangeLog
   }
 
 
 newContext :: IO ApiContext
 newContext = ApiContext
-  <$> (IORef.newIORef =<< Changelogs.fetchChangeLog "TokTok" "c-toxcore" Nothing)
+  <$> (IORef.newIORef =<< Changelogs.fetchChangeLog False "TokTok" "c-toxcore" Nothing)
+  <*> (IORef.newIORef =<< Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" Nothing)
 
 
 -- * Example
@@ -43,8 +45,8 @@ type TestApi =
        -- GET /hello/:name?capital={true, false}  returns a Greet as JSON
        "hello" :> Capture "name" Text :> QueryParam "capital" Bool :> Get '[JSON] Greet
 
-       -- GET /hello/:name?capital={true, false}  returns a Greet as JSON
   :<|> "changelog" :> Get '[PlainText] Text
+  :<|> "roadmap" :> Get '[PlainText] Text
 
        -- POST /greet with a Greet as JSON in the request body,
        --             returns a Greet as JSON
@@ -65,7 +67,8 @@ testApi = Proxy
 server :: ApiContext -> Server TestApi
 server ctx =
        helloH
-  :<|> changelogH
+  :<|> changelogH False
+  :<|> changelogH True
   :<|> postGreetH
   :<|> deleteGreetH
   where
@@ -73,7 +76,8 @@ server ctx =
     helloH name (Just False) = return . Greet $ "Hello, " <> name
     helloH name (Just True)  = return . Greet . toUpper $ "Hello, " <> name
 
-    changelogH = lift $ Changelogs.formatChangeLog <$> IORef.readIORef (getChangelog ctx)
+    changelogH False = lift $ Changelogs.formatChangeLog False <$> IORef.readIORef (getChangelog ctx)
+    changelogH True  = lift $ Changelogs.formatChangeLog True  <$> IORef.readIORef (getRoadmap ctx)
 
     postGreetH greet = return greet
 

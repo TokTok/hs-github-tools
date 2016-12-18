@@ -45,8 +45,8 @@ library
   hs-source-dirs:      src
   default-language:    Haskell2010
 
-executable pull-status
-  main-is:             pull-status.hs
+executable hub-pulls
+  main-is:             hub-pulls.hs
   ghc-options:
       -Wall
   build-depends:
@@ -57,8 +57,21 @@ executable pull-status
   hs-source-dirs:      tools
   default-language:    Haskell2010
 
-executable changelog
-  main-is:             changelog.hs
+executable hub-changelog
+  main-is:             hub-changelog.hs
+  ghc-options:
+      -Wall
+  build-depends:
+      base >= 4 && < 5
+    , github-tools
+    , bytestring
+    , github            >= 0.15.0
+    , text
+  hs-source-dirs:      tools
+  default-language:    Haskell2010
+
+executable hub-roadmap
+  main-is:             hub-roadmap.hs
   ghc-options:
       -Wall
   build-depends:

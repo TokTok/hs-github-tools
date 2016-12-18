@@ -9,6 +9,7 @@ module Changelogs
 import           Control.Applicative     ((<$>), (<*>))
 import           Control.Arrow           (first, second, (&&&))
 import           Data.List               (foldl')
+import qualified Data.List               as List
 import qualified Data.Map                as Map
 import qualified Data.Maybe              as Maybe
 import           Data.Monoid             ((<>))
@@ -26,9 +27,13 @@ import           Requests
 newtype ChangeLog = ChangeLog { unChangeLog :: [(Text, [Text], [Text])] }
 
 
-formatChangeLog :: ChangeLog -> Text
-formatChangeLog = (<> "\n") . foldl' (<>) "" . map formatMilestone . unChangeLog
+formatChangeLog :: Bool -> ChangeLog -> Text
+formatChangeLog wantRoadmap =
+  (<> "\n") . foldl' (<>) "" . map formatMilestone . unChangeLog
   where
+    issuesWord = if wantRoadmap then "Planned tasks" else "Closed issues"
+    prsWord    = if wantRoadmap then "PRs to review" else "Merged PRs"
+
     formatMilestone (milestone, issues, pulls) =
       "\n\n## " <> milestone
       <> closedIssues issues
@@ -36,11 +41,11 @@ formatChangeLog = (<> "\n") . foldl' (<>) "" . map formatMilestone . unChangeLog
 
     closedIssues [] = ""
     closedIssues issues =
-      foldl' (<>) "\n\n### Closed issues:\n" . itemise $ issues
+      foldl' (<>) ("\n\n### " <> issuesWord <> ":\n") . itemise $ issues
 
     mergedPrs [] = ""
     mergedPrs pulls =
-      foldl' (<>) "\n\n### Merged PRs:\n" . itemise $ pulls
+      foldl' (<>) ("\n\n### " <> prsWord <> ":\n") . itemise $ pulls
 
     itemise = map ("\n- " <>)
 
@@ -65,38 +70,54 @@ formatChangeLogItem ownerName repoName item =
     number = Text.pack . show . clNumber $ item
 
 
-makeChangeLog :: GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> [GitHub.SimplePullRequest] -> [GitHub.Issue] -> ChangeLog
-makeChangeLog ownerName repoName pulls issues =
+makeChangeLog :: Bool -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> [GitHub.SimplePullRequest] -> [GitHub.Issue] -> ChangeLog
+makeChangeLog wantRoadmap ownerName repoName pulls issues =
   ChangeLog
+  . sortChangelog
   . Map.foldlWithKey (\changes milestone (msIssues, msPulls) ->
-      ( milestone
-      , map (formatChangeLogItem ownerName repoName) msIssues
-      , map (formatChangeLogItem ownerName repoName) msPulls
-      ) : changes
+      if milestone == "meta"
+        then changes
+        else
+          ( milestone
+          , map (formatChangeLogItem ownerName repoName) msIssues
+          , map (formatChangeLogItem ownerName repoName) msPulls
+          ) : changes
     ) []
   . groupByMilestone (first  . (:)) changeLogIssues
   . groupByMilestone (second . (:)) changeLogPrs
   $ Map.empty
   where
-    mergedPrs = filter (\case
+    sortChangelog =
+      if wantRoadmap
+        then reverse
+        else id
+
+    (mergedPrs, openPrs) = List.partition (\case
         GitHub.SimplePullRequest
-          { GitHub.simplePullRequestMergedAt = Just _
-          } -> True
+          { GitHub.simplePullRequestMergedAt = Just _ } -> True
         _ -> False
       ) pulls
 
-    closedItems = filter (\case
+    selectedPrs =
+      if wantRoadmap
+        then openPrs
+        else mergedPrs
+
+    selectedItems = filter (\case
         GitHub.Issue
           { GitHub.issueMilestone = Just GitHub.Milestone
-            { GitHub.milestoneState = "closed" }
-          } -> True
+            { GitHub.milestoneState = state }
+          } ->
+            if wantRoadmap
+              then state == "open"
+              else state == "closed"
         _ -> False
       ) issues
 
     milestoneByIssueId =
       Map.fromList
       . map (GitHub.issueNumber &&& GitHub.milestoneTitle . Maybe.fromJust . GitHub.issueMilestone)
-      $ closedItems
+      $ selectedItems
 
     changeLogIssues :: [ChangeLogItem]
     changeLogIssues = Maybe.mapMaybe (\case
@@ -107,7 +128,7 @@ makeChangeLog ownerName repoName pulls issues =
           , clTitle     = GitHub.issueTitle issue
           , clNumber    = GitHub.issueNumber issue
           }
-      ) closedItems
+      ) selectedItems
 
     changeLogPrs :: [ChangeLogItem]
     changeLogPrs = Maybe.mapMaybe (\issue -> do
@@ -117,7 +138,7 @@ makeChangeLog ownerName repoName pulls issues =
           , clTitle     = GitHub.simplePullRequestTitle issue
           , clNumber    = GitHub.simplePullRequestNumber issue
           }
-      ) mergedPrs
+      ) selectedPrs
 
     groupByMilestone add = flip $ foldr (\item group ->
         Map.insert (clMilestone item) (
@@ -128,14 +149,16 @@ makeChangeLog ownerName repoName pulls issues =
       )
 
 
-fetchChangeLog :: GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> Maybe GitHub.Auth -> IO ChangeLog
-fetchChangeLog ownerName repoName auth = do
+fetchChangeLog :: Bool -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> Maybe GitHub.Auth -> IO ChangeLog
+fetchChangeLog wantRoadmap ownerName repoName auth = do
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
-  let pulls  = V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateClosed GitHub.FetchAll)
-  let issues = V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName (GitHub.stateClosed <> GitHub.optionsAnyMilestone) GitHub.FetchAll)
+  let pulls  state = V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName state GitHub.FetchAll)
+  let issues state = V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName (state <> GitHub.optionsAnyMilestone) GitHub.FetchAll)
 
   -- issues >>= putStrLn . groom
 
-  makeChangeLog ownerName repoName <$> pulls <*> issues
+  if wantRoadmap
+    then makeChangeLog wantRoadmap ownerName repoName <$> pulls GitHub.stateOpen   <*> issues GitHub.stateOpen
+    else makeChangeLog wantRoadmap ownerName repoName <$> pulls GitHub.stateClosed <*> issues GitHub.stateClosed
