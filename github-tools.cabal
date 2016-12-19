@@ -95,6 +95,7 @@ executable webservice
     , case-insensitive
     , cryptohash
     , github            >= 0.15.0
+    , http-media
     , http-types
     , mtl
     , servant           >= 0.5
