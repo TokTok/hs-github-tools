@@ -25,7 +25,7 @@ data StatusEvent = StatusEvent
     , statusEventName         :: Text
     , statusEventSha          :: Text
     , statusEventState        :: Text
-    , statusEventTargetUrl    :: Text
+    , statusEventTargetUrl    :: Maybe Text
     , statusEventUpdatedAt    :: DateTime
     } deriving (Eq, Show, Read)
 

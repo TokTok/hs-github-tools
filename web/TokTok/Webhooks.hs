@@ -51,7 +51,7 @@ handleError event headers body err = do
 
 
 handlePayload :: Bool -> BS.ByteString -> UUID -> Payload -> IO Response
-handlePayload isSigned event uuid payload = do
+handlePayload isSigned event uuid _payload = do
   putStrLn $ unsignedMsg ++ "Success in event " ++ show event ++ ": UUID=" ++ show uuid
   return responseOK
   where

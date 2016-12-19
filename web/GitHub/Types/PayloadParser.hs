@@ -27,6 +27,7 @@ data Payload
     | MembershipEventPayload               MembershipEvent
     | MilestoneEventPayload                MilestoneEvent
     | OrganizationEventPayload             OrganizationEvent
+    | PageBuildEventPayload                PageBuildEvent
     | PingEventPayload                     PingEvent
     | PullRequestEventPayload              PullRequestEvent
     | PullRequestReviewCommentEventPayload PullRequestReviewCommentEvent
@@ -52,6 +53,7 @@ instance ToJSON Payload where
     toJSON (MembershipEventPayload               x) = toJSON x
     toJSON (MilestoneEventPayload                x) = toJSON x
     toJSON (OrganizationEventPayload             x) = toJSON x
+    toJSON (PageBuildEventPayload                x) = toJSON x
     toJSON (PingEventPayload                     x) = toJSON x
     toJSON (PullRequestEventPayload              x) = toJSON x
     toJSON (PullRequestReviewCommentEventPayload x) = toJSON x
@@ -84,6 +86,7 @@ payloadParsers =
     , eventParser MembershipEventPayload
     , eventParser MilestoneEventPayload
     , eventParser OrganizationEventPayload
+    , eventParser PageBuildEventPayload
     , eventParser PingEventPayload
     , eventParser PullRequestEventPayload
     , eventParser PullRequestReviewCommentEventPayload

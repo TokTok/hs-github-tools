@@ -125,6 +125,7 @@ executable webservice
     , GitHub.Types.Base.DeploymentStatus
     , GitHub.Types.Base.Hook
     , GitHub.Types.Base.HookConfig
+    , GitHub.Types.Base.Invitation
     , GitHub.Types.Base.Issue
     , GitHub.Types.Base.IssueComment
     , GitHub.Types.Base.Label
@@ -132,11 +133,12 @@ executable webservice
     , GitHub.Types.Base.Membership
     , GitHub.Types.Base.Milestone
     , GitHub.Types.Base.Organization
+    , GitHub.Types.Base.PageBuild
+    , GitHub.Types.Base.PageBuildError
     , GitHub.Types.Base.PullRequest
     , GitHub.Types.Base.PullRequestLinks
     , GitHub.Types.Base.PullRequestRef
     , GitHub.Types.Base.PushCommit
-    , GitHub.Types.Base.Pusher
     , GitHub.Types.Base.Release
     , GitHub.Types.Base.RepoOwner
     , GitHub.Types.Base.Repository
@@ -165,6 +167,7 @@ executable webservice
     , GitHub.Types.Events.MembershipEvent
     , GitHub.Types.Events.MilestoneEvent
     , GitHub.Types.Events.OrganizationEvent
+    , GitHub.Types.Events.PageBuildEvent
     , GitHub.Types.Events.PingEvent
     , GitHub.Types.Events.PullRequestEvent
     , GitHub.Types.Events.PullRequestReviewCommentEvent

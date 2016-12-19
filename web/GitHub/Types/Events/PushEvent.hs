@@ -26,7 +26,7 @@ data PushEvent = PushEvent
     , pushEventDistinctCommits :: Maybe [PushCommit]
     , pushEventForced          :: Bool
     , pushEventHeadCommit      :: Maybe PushCommit
-    , pushEventPusher          :: Pusher
+    , pushEventPusher          :: UserRef
     , pushEventRef             :: Text
     , pushEventRefName         :: Maybe Text
     } deriving (Eq, Show, Read)

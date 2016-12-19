@@ -4,7 +4,7 @@ module GitHub.Types.Base.Author where
 
 import           Control.Applicative ((<$>), (<*>))
 import           Data.Aeson          (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types    (Value (..), (.:), (.=))
+import           Data.Aeson.Types    (Value (..), (.:), (.:?), (.=))
 import           Data.Text           (Text)
 
 ------------------------------------------------------------------------------
@@ -13,7 +13,7 @@ import           Data.Text           (Text)
 data Author = Author
     { authorName     :: Text
     , authorEmail    :: Text
-    , authorUsername :: Text
+    , authorUsername :: Maybe Text
     } deriving (Eq, Show, Read)
 
 
@@ -21,7 +21,7 @@ instance FromJSON Author where
     parseJSON (Object x) = Author
         <$> x .: "name"
         <*> x .: "email"
-        <*> x .: "username"
+        <*> x .:? "username"
 
     parseJSON _ = fail "Author"
 

@@ -13,6 +13,7 @@ import           GitHub.Types.Events.MemberEvent                   as X
 import           GitHub.Types.Events.MembershipEvent               as X
 import           GitHub.Types.Events.MilestoneEvent                as X
 import           GitHub.Types.Events.OrganizationEvent             as X
+import           GitHub.Types.Events.PageBuildEvent                as X
 import           GitHub.Types.Events.PingEvent                     as X
 import           GitHub.Types.Events.PullRequestEvent              as X
 import           GitHub.Types.Events.PullRequestReviewCommentEvent as X

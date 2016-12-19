@@ -14,6 +14,7 @@ import           GitHub.Types.Base.Deployment         as X
 import           GitHub.Types.Base.DeploymentStatus   as X
 import           GitHub.Types.Base.Hook               as X
 import           GitHub.Types.Base.HookConfig         as X
+import           GitHub.Types.Base.Invitation         as X
 import           GitHub.Types.Base.Issue              as X
 import           GitHub.Types.Base.IssueComment       as X
 import           GitHub.Types.Base.Label              as X
@@ -21,11 +22,12 @@ import           GitHub.Types.Base.Link               as X
 import           GitHub.Types.Base.Membership         as X
 import           GitHub.Types.Base.Milestone          as X
 import           GitHub.Types.Base.Organization       as X
+import           GitHub.Types.Base.PageBuild          as X
+import           GitHub.Types.Base.PageBuildError     as X
 import           GitHub.Types.Base.PullRequest        as X
 import           GitHub.Types.Base.PullRequestLinks   as X
 import           GitHub.Types.Base.PullRequestRef     as X
 import           GitHub.Types.Base.PushCommit         as X
-import           GitHub.Types.Base.Pusher             as X
 import           GitHub.Types.Base.Release            as X
 import           GitHub.Types.Base.RepoOwner          as X
 import           GitHub.Types.Base.Repository         as X

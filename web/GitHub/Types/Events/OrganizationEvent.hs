@@ -4,7 +4,7 @@ module GitHub.Types.Events.OrganizationEvent where
 
 import           Control.Applicative ((<$>), (<*>))
 import           Data.Aeson          (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types    (Value (..), (.:), (.=))
+import           Data.Aeson.Types    (Value (..), (.:), (.:?), (.=))
 import           Data.Text           (Text)
 
 import           GitHub.Types.Base
@@ -16,7 +16,9 @@ data OrganizationEvent = OrganizationEvent
     , organizationEventSender       :: User
 
     , organizationEventAction       :: Text
-    , organizationEventMembership   :: Membership
+    , organizationEventInvitation   :: Maybe Invitation
+    , organizationEventMembership   :: Maybe Membership
+    , organizationEventUser         :: Maybe User
     } deriving (Eq, Show, Read)
 
 instance Event OrganizationEvent where
@@ -29,7 +31,9 @@ instance FromJSON OrganizationEvent where
         <*> x .: "sender"
 
         <*> x .: "action"
-        <*> x .: "membership"
+        <*> x .:? "invitation"
+        <*> x .:? "membership"
+        <*> x .:? "user"
 
     parseJSON _ = fail "OrganizationEvent"
 
@@ -39,5 +43,7 @@ instance ToJSON OrganizationEvent where
         , "sender"       .= organizationEventSender
 
         , "action"       .= organizationEventAction
+        , "invitation"   .= organizationEventInvitation
         , "membership"   .= organizationEventMembership
+        , "user"         .= organizationEventUser
         ]

@@ -16,39 +16,39 @@ import           GitHub.Types.Base.User
 -- StatusCommit
 
 data StatusCommit = StatusCommit
-    { statusCommitSha         :: Text
-    , statusCommitCommit      :: CommitDetails
-    , statusCommitUrl         :: Text
+    { statusCommitAuthor      :: User
     , statusCommitCommentsUrl :: Text
+    , statusCommitCommit      :: CommitDetails
+    , statusCommitCommitter   :: Maybe User
     , statusCommitHtmlUrl     :: Text
-    , statusCommitAuthor      :: User
-    , statusCommitCommitter   :: User
     , statusCommitParents     :: [CommitRefHtml]
+    , statusCommitSha         :: Text
+    , statusCommitUrl         :: Text
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON StatusCommit where
     parseJSON (Object x) = StatusCommit
-        <$> x .: "sha"
-        <*> x .: "commit"
-        <*> x .: "url"
+        <$> x .: "author"
         <*> x .: "comments_url"
-        <*> x .: "html_url"
-        <*> x .: "author"
+        <*> x .: "commit"
         <*> x .: "committer"
+        <*> x .: "html_url"
         <*> x .: "parents"
+        <*> x .: "sha"
+        <*> x .: "url"
 
     parseJSON _ = fail "StatusCommit"
 
 
 instance ToJSON StatusCommit where
     toJSON StatusCommit{..} = object
-        [ "sha"          .= statusCommitSha
-        , "commit"       .= statusCommitCommit
-        , "url"          .= statusCommitUrl
+        [ "author"       .= statusCommitAuthor
         , "comments_url" .= statusCommitCommentsUrl
-        , "html_url"     .= statusCommitHtmlUrl
-        , "author"       .= statusCommitAuthor
+        , "commit"       .= statusCommitCommit
         , "committer"    .= statusCommitCommitter
+        , "html_url"     .= statusCommitHtmlUrl
         , "parents"      .= statusCommitParents
+        , "sha"          .= statusCommitSha
+        , "url"          .= statusCommitUrl
         ]
