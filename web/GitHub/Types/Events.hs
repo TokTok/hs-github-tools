@@ -9,6 +9,7 @@ import           GitHub.Types.Events.ForkEvent                     as X
 import           GitHub.Types.Events.GollumEvent                   as X
 import           GitHub.Types.Events.IssueCommentEvent             as X
 import           GitHub.Types.Events.IssuesEvent                   as X
+import           GitHub.Types.Events.LabelEvent                    as X
 import           GitHub.Types.Events.MemberEvent                   as X
 import           GitHub.Types.Events.MembershipEvent               as X
 import           GitHub.Types.Events.MilestoneEvent                as X
@@ -20,5 +21,6 @@ import           GitHub.Types.Events.PullRequestReviewCommentEvent as X
 import           GitHub.Types.Events.PullRequestReviewEvent        as X
 import           GitHub.Types.Events.PushEvent                     as X
 import           GitHub.Types.Events.ReleaseEvent                  as X
+import           GitHub.Types.Events.RepositoryEvent               as X
 import           GitHub.Types.Events.StatusEvent                   as X
 import           GitHub.Types.Events.WatchEvent                    as X

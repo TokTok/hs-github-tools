@@ -23,6 +23,7 @@ data Payload
     | GollumEventPayload                   GollumEvent
     | IssueCommentEventPayload             IssueCommentEvent
     | IssuesEventPayload                   IssuesEvent
+    | LabelEventPayload                    LabelEvent
     | MemberEventPayload                   MemberEvent
     | MembershipEventPayload               MembershipEvent
     | MilestoneEventPayload                MilestoneEvent
@@ -34,6 +35,7 @@ data Payload
     | PullRequestReviewEventPayload        PullRequestReviewEvent
     | PushEventPayload                     PushEvent
     | ReleaseEventPayload                  ReleaseEvent
+    | RepositoryEventPayload               RepositoryEvent
     | StatusEventPayload                   StatusEvent
     | WatchEventPayload                    WatchEvent
     deriving (Eq, Show, Read)
@@ -49,6 +51,7 @@ instance ToJSON Payload where
     toJSON (GollumEventPayload                   x) = toJSON x
     toJSON (IssueCommentEventPayload             x) = toJSON x
     toJSON (IssuesEventPayload                   x) = toJSON x
+    toJSON (LabelEventPayload                    x) = toJSON x
     toJSON (MemberEventPayload                   x) = toJSON x
     toJSON (MembershipEventPayload               x) = toJSON x
     toJSON (MilestoneEventPayload                x) = toJSON x
@@ -60,6 +63,7 @@ instance ToJSON Payload where
     toJSON (PullRequestReviewEventPayload        x) = toJSON x
     toJSON (PushEventPayload                     x) = toJSON x
     toJSON (ReleaseEventPayload                  x) = toJSON x
+    toJSON (RepositoryEventPayload               x) = toJSON x
     toJSON (StatusEventPayload                   x) = toJSON x
     toJSON (WatchEventPayload                    x) = toJSON x
 
@@ -82,6 +86,7 @@ payloadParsers =
     , eventParser GollumEventPayload
     , eventParser IssueCommentEventPayload
     , eventParser IssuesEventPayload
+    , eventParser LabelEventPayload
     , eventParser MemberEventPayload
     , eventParser MembershipEventPayload
     , eventParser MilestoneEventPayload
@@ -93,6 +98,7 @@ payloadParsers =
     , eventParser PullRequestReviewEventPayload
     , eventParser PushEventPayload
     , eventParser ReleaseEventPayload
+    , eventParser RepositoryEventPayload
     , eventParser StatusEventPayload
     , eventParser WatchEventPayload
     ]

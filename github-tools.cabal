@@ -164,6 +164,7 @@ executable webservice
     , GitHub.Types.Events.GollumEvent
     , GitHub.Types.Events.IssueCommentEvent
     , GitHub.Types.Events.IssuesEvent
+    , GitHub.Types.Events.LabelEvent
     , GitHub.Types.Events.MemberEvent
     , GitHub.Types.Events.MembershipEvent
     , GitHub.Types.Events.MilestoneEvent
@@ -175,6 +176,7 @@ executable webservice
     , GitHub.Types.Events.PullRequestReviewEvent
     , GitHub.Types.Events.PushEvent
     , GitHub.Types.Events.ReleaseEvent
+    , GitHub.Types.Events.RepositoryEvent
     , GitHub.Types.Events.StatusEvent
     , GitHub.Types.Events.WatchEvent
     , GitHub.Types.PayloadParser

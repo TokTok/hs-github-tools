@@ -15,231 +15,231 @@ import           GitHub.Types.Base.RepoOwner
 -- Repository
 
 data Repository = Repository
-    { repositoryHomepage         :: Maybe Text
-    , repositoryHooksUrl         :: Text
+    { repositoryArchiveUrl       :: Text
+    , repositoryAssigneesUrl     :: Text
     , repositoryBlobsUrl         :: Text
-    , repositorySshUrl           :: Text
-    , repositorySvnUrl           :: Text
+    , repositoryBranchesUrl      :: Text
     , repositoryCloneUrl         :: Text
-    , repositoryMergesUrl        :: Text
-    , repositoryNotificationsUrl :: Text
     , repositoryCollaboratorsUrl :: Text
-    , repositoryLanguagesUrl     :: Text
-    , repositorySize             :: Int
-    , repositoryIssueEventsUrl   :: Text
-    , repositoryPrivate          :: Bool
-    , repositoryFork             :: Bool
-    , repositoryGitCommitsUrl    :: Text
-    , repositoryDownloadsUrl     :: Text
-    , repositoryFullName         :: Text
-    , repositoryUrl              :: Text
-    , repositoryArchiveUrl       :: Text
-    , repositoryGitUrl           :: Text
-    , repositoryStatusesUrl      :: Text
-    , repositoryIssuesUrl        :: Text
-    , repositoryDeploymentsUrl   :: Text
-    , repositoryCommitsUrl       :: Text
-    , repositoryTreesUrl         :: Text
-    , repositoryOwner            :: RepoOwner
-    , repositoryMilestonesUrl    :: Text
-    , repositoryHasWiki          :: Bool
-    , repositoryIssueCommentUrl  :: Text
     , repositoryCommentsUrl      :: Text
+    , repositoryCommitsUrl       :: Text
+    , repositoryCompareUrl       :: Text
+    , repositoryContentsUrl      :: Text
     , repositoryContributorsUrl  :: Text
-    , repositoryName             :: Text
-    , repositoryHasIssues        :: Bool
-    , repositoryUpdatedAt        :: DateTime
-    , repositoryMasterBranch     :: Maybe Text
+    , repositoryCreatedAt        :: DateTime
+    , repositoryDefaultBranch    :: Text
+    , repositoryDeploymentsUrl   :: Text
+    , repositoryDescription      :: Text
+    , repositoryDownloadsUrl     :: Text
+    , repositoryEventsUrl        :: Text
+    , repositoryFork             :: Bool
+    , repositoryForks            :: Int
     , repositoryForksCount       :: Int
     , repositoryForksUrl         :: Text
-    , repositorySubscriptionUrl  :: Text
+    , repositoryFullName         :: Text
+    , repositoryGitCommitsUrl    :: Text
+    , repositoryGitRefsUrl       :: Text
+    , repositoryGitTagsUrl       :: Text
+    , repositoryGitUrl           :: Text
     , repositoryHasDownloads     :: Bool
-    , repositoryTeamsUrl         :: Text
-    , repositoryPullsUrl         :: Text
-    , repositoryLanguage         :: Maybe Text
-    , repositoryCreatedAt        :: DateTime
+    , repositoryHasIssues        :: Bool
     , repositoryHasPages         :: Bool
-    , repositoryPushedAt         :: DateTime
+    , repositoryHasWiki          :: Bool
+    , repositoryHomepage         :: Maybe Text
+    , repositoryHooksUrl         :: Text
+    , repositoryHtmlUrl          :: Text
     , repositoryId               :: Int
-    , repositorySubscribersUrl   :: Text
-    , repositoryTagsUrl          :: Text
-    , repositoryOpenIssuesCount  :: Int
+    , repositoryIssueCommentUrl  :: Text
+    , repositoryIssueEventsUrl   :: Text
+    , repositoryIssuesUrl        :: Text
+    , repositoryKeysUrl          :: Text
+    , repositoryLabelsUrl        :: Text
+    , repositoryLanguage         :: Maybe Text
+    , repositoryLanguagesUrl     :: Text
+    , repositoryMasterBranch     :: Maybe Text
+    , repositoryMergesUrl        :: Text
+    , repositoryMilestonesUrl    :: Text
     , repositoryMirrorUrl        :: Maybe Text
-    , repositoryWatchers         :: Int
+    , repositoryName             :: Text
+    , repositoryNotificationsUrl :: Text
+    , repositoryOpenIssues       :: Int
+    , repositoryOpenIssuesCount  :: Int
+    , repositoryOrganization     :: Maybe Text
+    , repositoryOwner            :: RepoOwner
+    , repositoryPrivate          :: Bool
+    , repositoryPublic           :: Maybe Bool
+    , repositoryPullsUrl         :: Text
+    , repositoryPushedAt         :: Maybe DateTime
+    , repositoryReleasesUrl      :: Text
+    , repositorySize             :: Int
+    , repositorySshUrl           :: Text
     , repositoryStargazers       :: Maybe Int
     , repositoryStargazersCount  :: Int
     , repositoryStargazersUrl    :: Text
-    , repositoryKeysUrl          :: Text
-    , repositoryGitTagsUrl       :: Text
-    , repositoryDefaultBranch    :: Text
-    , repositoryEventsUrl        :: Text
-    , repositoryCompareUrl       :: Text
-    , repositoryGitRefsUrl       :: Text
-    , repositoryOrganization     :: Maybe Text
-    , repositoryForks            :: Int
-    , repositoryContentsUrl      :: Text
-    , repositoryBranchesUrl      :: Text
-    , repositoryReleasesUrl      :: Text
-    , repositoryAssigneesUrl     :: Text
-    , repositoryDescription      :: Text
+    , repositoryStatusesUrl      :: Text
+    , repositorySubscribersUrl   :: Text
+    , repositorySubscriptionUrl  :: Text
+    , repositorySvnUrl           :: Text
+    , repositoryTagsUrl          :: Text
+    , repositoryTeamsUrl         :: Text
+    , repositoryTreesUrl         :: Text
+    , repositoryUpdatedAt        :: DateTime
+    , repositoryUrl              :: Text
+    , repositoryWatchers         :: Int
     , repositoryWatchersCount    :: Int
-    , repositoryLabelsUrl        :: Text
-    , repositoryHtmlUrl          :: Text
-    , repositoryOpenIssues       :: Int
-    , repositoryPublic           :: Maybe Bool
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON Repository where
     parseJSON (Object x) = Repository
-        <$> x .: "homepage"
-        <*> x .: "hooks_url"
+        <$> x .: "archive_url"
+        <*> x .: "assignees_url"
         <*> x .: "blobs_url"
-        <*> x .: "ssh_url"
-        <*> x .: "svn_url"
+        <*> x .: "branches_url"
         <*> x .: "clone_url"
-        <*> x .: "merges_url"
-        <*> x .: "notifications_url"
         <*> x .: "collaborators_url"
-        <*> x .: "languages_url"
-        <*> x .: "size"
-        <*> x .: "issue_events_url"
-        <*> x .: "private"
-        <*> x .: "fork"
-        <*> x .: "git_commits_url"
-        <*> x .: "downloads_url"
-        <*> x .: "full_name"
-        <*> x .: "url"
-        <*> x .: "archive_url"
-        <*> x .: "git_url"
-        <*> x .: "statuses_url"
-        <*> x .: "issues_url"
-        <*> x .: "deployments_url"
-        <*> x .: "commits_url"
-        <*> x .: "trees_url"
-        <*> x .: "owner"
-        <*> x .: "milestones_url"
-        <*> x .: "has_wiki"
-        <*> x .: "issue_comment_url"
         <*> x .: "comments_url"
+        <*> x .: "commits_url"
+        <*> x .: "compare_url"
+        <*> x .: "contents_url"
         <*> x .: "contributors_url"
-        <*> x .: "name"
-        <*> x .: "has_issues"
-        <*> x .: "updated_at"
-        <*> x .:? "master_branch"
+        <*> x .: "created_at"
+        <*> x .: "default_branch"
+        <*> x .: "deployments_url"
+        <*> x .: "description"
+        <*> x .: "downloads_url"
+        <*> x .: "events_url"
+        <*> x .: "fork"
+        <*> x .: "forks"
         <*> x .: "forks_count"
         <*> x .: "forks_url"
-        <*> x .: "subscription_url"
+        <*> x .: "full_name"
+        <*> x .: "git_commits_url"
+        <*> x .: "git_refs_url"
+        <*> x .: "git_tags_url"
+        <*> x .: "git_url"
         <*> x .: "has_downloads"
-        <*> x .: "teams_url"
-        <*> x .: "pulls_url"
-        <*> x .:? "language"
-        <*> x .: "created_at"
+        <*> x .: "has_issues"
         <*> x .: "has_pages"
-        <*> x .: "pushed_at"
+        <*> x .: "has_wiki"
+        <*> x .: "homepage"
+        <*> x .: "hooks_url"
+        <*> x .: "html_url"
         <*> x .: "id"
-        <*> x .: "subscribers_url"
-        <*> x .: "tags_url"
-        <*> x .: "open_issues_count"
+        <*> x .: "issue_comment_url"
+        <*> x .: "issue_events_url"
+        <*> x .: "issues_url"
+        <*> x .: "keys_url"
+        <*> x .: "labels_url"
+        <*> x .:? "language"
+        <*> x .: "languages_url"
+        <*> x .:? "master_branch"
+        <*> x .: "merges_url"
+        <*> x .: "milestones_url"
         <*> x .: "mirror_url"
-        <*> x .: "watchers"
+        <*> x .: "name"
+        <*> x .: "notifications_url"
+        <*> x .: "open_issues"
+        <*> x .: "open_issues_count"
+        <*> x .:? "organization"
+        <*> x .: "owner"
+        <*> x .: "private"
+        <*> x .:? "public"
+        <*> x .: "pulls_url"
+        <*> x .: "pushed_at"
+        <*> x .: "releases_url"
+        <*> x .: "size"
+        <*> x .: "ssh_url"
         <*> x .:? "stargazers"
         <*> x .: "stargazers_count"
         <*> x .: "stargazers_url"
-        <*> x .: "keys_url"
-        <*> x .: "git_tags_url"
-        <*> x .: "default_branch"
-        <*> x .: "events_url"
-        <*> x .: "compare_url"
-        <*> x .: "git_refs_url"
-        <*> x .:? "organization"
-        <*> x .: "forks"
-        <*> x .: "contents_url"
-        <*> x .: "branches_url"
-        <*> x .: "releases_url"
-        <*> x .: "assignees_url"
-        <*> x .: "description"
+        <*> x .: "statuses_url"
+        <*> x .: "subscribers_url"
+        <*> x .: "subscription_url"
+        <*> x .: "svn_url"
+        <*> x .: "tags_url"
+        <*> x .: "teams_url"
+        <*> x .: "trees_url"
+        <*> x .: "updated_at"
+        <*> x .: "url"
+        <*> x .: "watchers"
         <*> x .: "watchers_count"
-        <*> x .: "labels_url"
-        <*> x .: "html_url"
-        <*> x .: "open_issues"
-        <*> x .:? "public"
 
     parseJSON _ = fail "Repository"
 
 
 instance ToJSON Repository where
     toJSON Repository{..} = object
-        [ "homepage"          .= repositoryHomepage
-        , "hooks_url"         .= repositoryHooksUrl
+        [ "archive_url"       .= repositoryArchiveUrl
+        , "assignees_url"     .= repositoryAssigneesUrl
         , "blobs_url"         .= repositoryBlobsUrl
-        , "ssh_url"           .= repositorySshUrl
-        , "svn_url"           .= repositorySvnUrl
+        , "branches_url"      .= repositoryBranchesUrl
         , "clone_url"         .= repositoryCloneUrl
-        , "merges_url"        .= repositoryMergesUrl
-        , "notifications_url" .= repositoryNotificationsUrl
         , "collaborators_url" .= repositoryCollaboratorsUrl
-        , "languages_url"     .= repositoryLanguagesUrl
-        , "size"              .= repositorySize
-        , "issue_events_url"  .= repositoryIssueEventsUrl
-        , "private"           .= repositoryPrivate
-        , "fork"              .= repositoryFork
-        , "git_commits_url"   .= repositoryGitCommitsUrl
-        , "downloads_url"     .= repositoryDownloadsUrl
-        , "full_name"         .= repositoryFullName
-        , "url"               .= repositoryUrl
-        , "archive_url"       .= repositoryArchiveUrl
-        , "git_url"           .= repositoryGitUrl
-        , "statuses_url"      .= repositoryStatusesUrl
-        , "issues_url"        .= repositoryIssuesUrl
-        , "deployments_url"   .= repositoryDeploymentsUrl
-        , "commits_url"       .= repositoryCommitsUrl
-        , "trees_url"         .= repositoryTreesUrl
-        , "owner"             .= repositoryOwner
-        , "milestones_url"    .= repositoryMilestonesUrl
-        , "has_wiki"          .= repositoryHasWiki
-        , "issue_comment_url" .= repositoryIssueCommentUrl
         , "comments_url"      .= repositoryCommentsUrl
+        , "commits_url"       .= repositoryCommitsUrl
+        , "compare_url"       .= repositoryCompareUrl
+        , "contents_url"      .= repositoryContentsUrl
         , "contributors_url"  .= repositoryContributorsUrl
-        , "name"              .= repositoryName
-        , "has_issues"        .= repositoryHasIssues
-        , "updated_at"        .= repositoryUpdatedAt
-        , "master_branch"     .= repositoryMasterBranch
+        , "created_at"        .= repositoryCreatedAt
+        , "default_branch"    .= repositoryDefaultBranch
+        , "deployments_url"   .= repositoryDeploymentsUrl
+        , "description"       .= repositoryDescription
+        , "downloads_url"     .= repositoryDownloadsUrl
+        , "events_url"        .= repositoryEventsUrl
+        , "fork"              .= repositoryFork
+        , "forks"             .= repositoryForks
         , "forks_count"       .= repositoryForksCount
         , "forks_url"         .= repositoryForksUrl
-        , "subscription_url"  .= repositorySubscriptionUrl
+        , "full_name"         .= repositoryFullName
+        , "git_commits_url"   .= repositoryGitCommitsUrl
+        , "git_refs_url"      .= repositoryGitRefsUrl
+        , "git_tags_url"      .= repositoryGitTagsUrl
+        , "git_url"           .= repositoryGitUrl
         , "has_downloads"     .= repositoryHasDownloads
-        , "teams_url"         .= repositoryTeamsUrl
-        , "pulls_url"         .= repositoryPullsUrl
-        , "language"          .= repositoryLanguage
-        , "created_at"        .= repositoryCreatedAt
+        , "has_issues"        .= repositoryHasIssues
         , "has_pages"         .= repositoryHasPages
-        , "pushed_at"         .= repositoryPushedAt
+        , "has_wiki"          .= repositoryHasWiki
+        , "homepage"          .= repositoryHomepage
+        , "hooks_url"         .= repositoryHooksUrl
+        , "html_url"          .= repositoryHtmlUrl
         , "id"                .= repositoryId
-        , "subscribers_url"   .= repositorySubscribersUrl
-        , "tags_url"          .= repositoryTagsUrl
-        , "open_issues_count" .= repositoryOpenIssuesCount
+        , "issue_comment_url" .= repositoryIssueCommentUrl
+        , "issue_events_url"  .= repositoryIssueEventsUrl
+        , "issues_url"        .= repositoryIssuesUrl
+        , "keys_url"          .= repositoryKeysUrl
+        , "labels_url"        .= repositoryLabelsUrl
+        , "language"          .= repositoryLanguage
+        , "languages_url"     .= repositoryLanguagesUrl
+        , "master_branch"     .= repositoryMasterBranch
+        , "merges_url"        .= repositoryMergesUrl
+        , "milestones_url"    .= repositoryMilestonesUrl
         , "mirror_url"        .= repositoryMirrorUrl
-        , "watchers"          .= repositoryWatchers
+        , "name"              .= repositoryName
+        , "notifications_url" .= repositoryNotificationsUrl
+        , "open_issues"       .= repositoryOpenIssues
+        , "open_issues_count" .= repositoryOpenIssuesCount
+        , "organization"      .= repositoryOrganization
+        , "owner"             .= repositoryOwner
+        , "private"           .= repositoryPrivate
+        , "public"            .= repositoryPublic
+        , "pulls_url"         .= repositoryPullsUrl
+        , "pushed_at"         .= repositoryPushedAt
+        , "releases_url"      .= repositoryReleasesUrl
+        , "size"              .= repositorySize
+        , "ssh_url"           .= repositorySshUrl
         , "stargazers"        .= repositoryStargazers
         , "stargazers_count"  .= repositoryStargazersCount
         , "stargazers_url"    .= repositoryStargazersUrl
-        , "keys_url"          .= repositoryKeysUrl
-        , "git_tags_url"      .= repositoryGitTagsUrl
-        , "default_branch"    .= repositoryDefaultBranch
-        , "events_url"        .= repositoryEventsUrl
-        , "compare_url"       .= repositoryCompareUrl
-        , "git_refs_url"      .= repositoryGitRefsUrl
-        , "forks"             .= repositoryForks
-        , "organization"      .= repositoryOrganization
-        , "contents_url"      .= repositoryContentsUrl
-        , "branches_url"      .= repositoryBranchesUrl
-        , "releases_url"      .= repositoryReleasesUrl
-        , "assignees_url"     .= repositoryAssigneesUrl
-        , "description"       .= repositoryDescription
+        , "statuses_url"      .= repositoryStatusesUrl
+        , "subscribers_url"   .= repositorySubscribersUrl
+        , "subscription_url"  .= repositorySubscriptionUrl
+        , "svn_url"           .= repositorySvnUrl
+        , "tags_url"          .= repositoryTagsUrl
+        , "teams_url"         .= repositoryTeamsUrl
+        , "trees_url"         .= repositoryTreesUrl
+        , "updated_at"        .= repositoryUpdatedAt
+        , "url"               .= repositoryUrl
+        , "watchers"          .= repositoryWatchers
         , "watchers_count"    .= repositoryWatchersCount
-        , "labels_url"        .= repositoryLabelsUrl
-        , "html_url"          .= repositoryHtmlUrl
-        , "open_issues"       .= repositoryOpenIssues
-        , "public"            .= repositoryPublic
         ]
