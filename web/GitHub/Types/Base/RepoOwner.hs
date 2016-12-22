@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
 module GitHub.Types.Base.RepoOwner where
 
 import           Control.Applicative       ((<$>), (<|>))

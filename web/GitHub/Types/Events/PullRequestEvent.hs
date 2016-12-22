@@ -46,7 +46,7 @@ instance FromJSON PullRequestEvent where
     parseJSON _ = fail "PullRequestEvent"
 
 instance ToJSON PullRequestEvent where
-    toJSON PullRequestEvent{..} = object $
+    toJSON PullRequestEvent{..} = object
         [ "organization" .= pullRequestEventOrganization
         , "repository"   .= pullRequestEventRepository
         , "sender"       .= pullRequestEventSender

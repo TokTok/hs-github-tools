@@ -3,6 +3,7 @@ module Review where
 
 import           Control.Applicative    ((<$>))
 import qualified Data.ByteString.Lazy   as LBS
+import           Data.Function          (on)
 import qualified Data.List              as List
 import           Data.Text              (Text)
 import qualified Data.Text              as Text
@@ -68,4 +69,4 @@ approvalsFromHtml statuses =
   . tagTree
   . parseTags
   where
-    nubWith f = List.nubBy (\x y -> f x == f y)
+    nubWith f = List.nubBy ((==) `on` f)

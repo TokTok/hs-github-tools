@@ -22,7 +22,7 @@ getFullPr
   -> GitHub.Name GitHub.Repo
   -> GitHub.SimplePullRequest
   -> IO GitHub.PullRequest
-getFullPr auth mgr owner repo simplePr = do
+getFullPr auth mgr owner repo simplePr =
   request auth mgr
     . GitHub.pullRequestR owner repo
     . GitHub.Id

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
 module GitHub.Types.Base.DateTime where
 
 import           Control.Applicative ((<$>), (<|>))

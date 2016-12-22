@@ -123,7 +123,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
     changeLogIssues = Maybe.mapMaybe (\case
         -- filter out PRs
         GitHub.Issue { GitHub.issuePullRequest = Just _ } -> Nothing
-        issue -> Just $ ChangeLogItem
+        issue -> Just ChangeLogItem
           { clMilestone = GitHub.milestoneTitle . Maybe.fromJust . GitHub.issueMilestone $ issue
           , clTitle     = GitHub.issueTitle issue
           , clNumber    = GitHub.issueNumber issue
@@ -133,7 +133,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
     changeLogPrs :: [ChangeLogItem]
     changeLogPrs = Maybe.mapMaybe (\issue -> do
         milestone <- flip Map.lookup milestoneByIssueId . GitHub.simplePullRequestNumber $ issue
-        return $ ChangeLogItem
+        return ChangeLogItem
           { clMilestone = milestone
           , clTitle     = GitHub.simplePullRequestTitle issue
           , clNumber    = GitHub.simplePullRequestNumber issue

@@ -101,7 +101,7 @@ server ctx =
 
     pullsH = return $ getPulls ctx
 
-    postGreetH greet = return greet
+    postGreetH = return
 
     deleteGreetH _ = return NoContent
 

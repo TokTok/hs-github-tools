@@ -117,7 +117,7 @@ runHandler h = do
             -- Both the signature and secret keys are available. Verify the
             -- signature with the first key which works, otherwise reject the
             -- request.
-            (secretKeys, Just sig) -> do
+            (secretKeys, Just sig) ->
                 if any (verifySecretKey rawBody sig) secretKeys
                     then Right rawBody
                     else Left InvalidSignature

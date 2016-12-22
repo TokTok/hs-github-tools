@@ -38,7 +38,7 @@ instance FromJSON PullRequestReviewEvent where
     parseJSON _ = fail "PullRequestReviewEvent"
 
 instance ToJSON PullRequestReviewEvent where
-    toJSON PullRequestReviewEvent{..} = object $
+    toJSON PullRequestReviewEvent{..} = object
         [ "organization" .= pullRequestReviewEventOrganization
         , "repository"   .= pullRequestReviewEventRepository
         , "sender"       .= pullRequestReviewEventSender

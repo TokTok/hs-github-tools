@@ -1,9 +1,5 @@
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PolyKinds         #-}
-{-# LANGUAGE TypeFamilies      #-}
-{-# LANGUAGE TypeOperators     #-}
+module Main (main) where
 
 import           Control.Applicative      ((<|>))
 import           Network.Wai              (Application)

@@ -83,7 +83,7 @@ app req respond =
   case lookup "X-GitHub-Event" . requestHeaders $ req of
     Nothing -> do
       -- Respond OK if we don't get an event.
-      putStrLn $ "Ignoring request without event type"
+      putStrLn "Ignoring request without event type"
       respond responseOK
     Just event -> do
       putStrLn $ "Handling GitHub event: " ++ show event

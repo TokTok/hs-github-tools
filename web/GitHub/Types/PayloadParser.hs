@@ -1,11 +1,8 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
 module GitHub.Types.PayloadParser where
 
 import           Data.Aeson          (FromJSON (..), ToJSON (..))
 import           Data.Aeson.Types    (Parser, Value (..))
 import qualified Data.List           as List
-import           Data.Monoid         ((<>))
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
 
@@ -115,7 +112,7 @@ payloadParsers =
 eventPayloadParser :: Text -> Value -> Parser Payload
 eventPayloadParser eventType x =
   case List.find ((== eventType) . payloadParserTypeName) payloadParsers of
-    Nothing -> fail $ "eventPayloadParser: unknown event type: " <> Text.unpack eventType
+    Nothing -> fail $ "eventPayloadParser: unknown event type: " ++ Text.unpack eventType
     Just p  -> payloadParser p x
 
 -- | Since the event type is included through different means (X-GitHub-Event
@@ -125,5 +122,5 @@ eventPayloadParser eventType x =
 webhookPayloadParser :: Text -> Value -> Parser Payload
 webhookPayloadParser eventType x =
   case List.find ((== eventType) . payloadParserWebhookName) payloadParsers of
-    Nothing -> fail $ "webhookPayloadParser: unknown event type: " <> Text.unpack eventType
+    Nothing -> fail $ "webhookPayloadParser: unknown event type: " ++ Text.unpack eventType
     Just p  -> payloadParser p x
