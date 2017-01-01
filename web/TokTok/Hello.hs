@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                   #-}
 {-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -18,6 +19,9 @@ import           Data.Text.Encoding    (encodeUtf8)
 import           GHC.Generics          (Generic)
 import qualified GitHub
 import           Network.HTTP.Media    ((//), (/:))
+#if !MIN_VERSION_servant_server(0, 6, 0)
+import           Network.Wai           (Application)
+#endif
 import           Servant
 import           System.Environment    (getEnv)
 
