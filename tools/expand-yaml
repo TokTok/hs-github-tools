@@ -169,4 +169,7 @@ process_inherits $data;
 process_expansions $data, $data;
 process_before_after $data;
 
-DumpFile $output, $data;
+open my $outfh, '>', $output or die "Cannot open $output for writing: $!";
+print $outfh "# DO NOT EDIT: This file was generated using the following command:\n";
+print $outfh "# $0 @ARGV\n";
+DumpFile $outfh, $data;
