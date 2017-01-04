@@ -18,129 +18,132 @@ import           GitHub.Types.Base.User
 -- PullRequest
 
 data PullRequest = PullRequest
-    { pullRequestMerged            :: Bool
-    , pullRequestAdditions         :: Int
-    , pullRequestState             :: Text
-    , pullRequestMergeableState    :: Text
-    , pullRequestReviewCommentUrl  :: Text
-    , pullRequestMergeable         :: Maybe Bool
-    , pullRequestAssignees         :: [User]
-    , pullRequestLocked            :: Bool
-    , pullRequestBase              :: Commit
-    , pullRequestBody              :: Text
-    , pullRequestHead              :: Commit
-    , pullRequestUrl               :: Text
-    , pullRequestMilestone         :: Maybe Milestone
-    , pullRequestStatusesUrl       :: Text
-    , pullRequestMergedAt          :: Maybe DateTime
-    , pullRequestCommitsUrl        :: Text
-    , pullRequestAssignee          :: Maybe User
-    , pullRequestDiffUrl           :: Text
-    , pullRequestUser              :: User
-    , pullRequestCommentsUrl       :: Text
-    , pullRequestLinks             :: PullRequestLinks
-    , pullRequestUpdatedAt         :: DateTime
-    , pullRequestDeletions         :: Int
-    , pullRequestCommits           :: Int
-    , pullRequestPatchUrl          :: Text
-    , pullRequestCreatedAt         :: DateTime
-    , pullRequestReviewComments    :: Int
-    , pullRequestId                :: Int
-    , pullRequestIssueUrl          :: Text
-    , pullRequestComments          :: Int
-    , pullRequestMergedBy          :: Maybe User
-    , pullRequestTitle             :: Text
-    , pullRequestClosedAt          :: Maybe DateTime
-    , pullRequestChangedFiles      :: Int
-    , pullRequestNumber            :: Int
-    , pullRequestMergeCommitSha    :: Maybe Text
-    , pullRequestReviewCommentsUrl :: Text
-    , pullRequestHtmlUrl           :: Text
+    { pullRequestAdditions           :: Int
+    , pullRequestAssignee            :: Maybe User
+    , pullRequestAssignees           :: [User]
+    , pullRequestBase                :: Commit
+    , pullRequestBody                :: Text
+    , pullRequestChangedFiles        :: Int
+    , pullRequestClosedAt            :: Maybe DateTime
+    , pullRequestComments            :: Int
+    , pullRequestCommentsUrl         :: Text
+    , pullRequestCommits             :: Int
+    , pullRequestCommitsUrl          :: Text
+    , pullRequestCreatedAt           :: DateTime
+    , pullRequestDeletions           :: Int
+    , pullRequestDiffUrl             :: Text
+    , pullRequestHead                :: Commit
+    , pullRequestHtmlUrl             :: Text
+    , pullRequestId                  :: Int
+    , pullRequestIssueUrl            :: Text
+    , pullRequestLinks               :: PullRequestLinks
+    , pullRequestLocked              :: Bool
+    , pullRequestMaintainerCanModify :: Bool
+    , pullRequestMergeable           :: Maybe Bool
+    , pullRequestMergeableState      :: Text
+    , pullRequestMergeCommitSha      :: Maybe Text
+    , pullRequestMerged              :: Bool
+    , pullRequestMergedAt            :: Maybe DateTime
+    , pullRequestMergedBy            :: Maybe User
+    , pullRequestMilestone           :: Maybe Milestone
+    , pullRequestNumber              :: Int
+    , pullRequestPatchUrl            :: Text
+    , pullRequestReviewComments      :: Int
+    , pullRequestReviewCommentsUrl   :: Text
+    , pullRequestReviewCommentUrl    :: Text
+    , pullRequestState               :: Text
+    , pullRequestStatusesUrl         :: Text
+    , pullRequestTitle               :: Text
+    , pullRequestUpdatedAt           :: DateTime
+    , pullRequestUrl                 :: Text
+    , pullRequestUser                :: User
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON PullRequest where
     parseJSON (Object x) = PullRequest
-        <$> x .: "merged"
-        <*> x .: "additions"
-        <*> x .: "state"
-        <*> x .: "mergeable_state"
-        <*> x .: "review_comment_url"
-        <*> x .: "mergeable"
+        <$> x .: "additions"
+        <*> x .: "assignee"
         <*> x .: "assignees"
-        <*> x .: "locked"
         <*> x .: "base"
         <*> x .: "body"
-        <*> x .: "head"
-        <*> x .: "url"
-        <*> x .: "milestone"
-        <*> x .: "statuses_url"
-        <*> x .: "merged_at"
-        <*> x .: "commits_url"
-        <*> x .: "assignee"
-        <*> x .: "diff_url"
-        <*> x .: "user"
+        <*> x .: "changed_files"
+        <*> x .: "closed_at"
+        <*> x .: "comments"
         <*> x .: "comments_url"
-        <*> x .: "_links"
-        <*> x .: "updated_at"
-        <*> x .: "deletions"
         <*> x .: "commits"
-        <*> x .: "patch_url"
+        <*> x .: "commits_url"
         <*> x .: "created_at"
-        <*> x .: "review_comments"
+        <*> x .: "deletions"
+        <*> x .: "diff_url"
+        <*> x .: "head"
+        <*> x .: "html_url"
         <*> x .: "id"
         <*> x .: "issue_url"
-        <*> x .: "comments"
-        <*> x .: "merged_by"
-        <*> x .: "title"
-        <*> x .: "closed_at"
-        <*> x .: "changed_files"
-        <*> x .: "number"
+        <*> x .: "_links"
+        <*> x .: "locked"
+        <*> x .: "maintainer_can_modify"
+        <*> x .: "mergeable"
+        <*> x .: "mergeable_state"
         <*> x .: "merge_commit_sha"
+        <*> x .: "merged"
+        <*> x .: "merged_at"
+        <*> x .: "merged_by"
+        <*> x .: "milestone"
+        <*> x .: "number"
+        <*> x .: "patch_url"
+        <*> x .: "review_comments"
         <*> x .: "review_comments_url"
-        <*> x .: "html_url"
+        <*> x .: "review_comment_url"
+        <*> x .: "state"
+        <*> x .: "statuses_url"
+        <*> x .: "title"
+        <*> x .: "updated_at"
+        <*> x .: "url"
+        <*> x .: "user"
 
     parseJSON _ = fail "PullRequest"
 
 
 instance ToJSON PullRequest where
     toJSON PullRequest{..} = object
-        [ "merged"              .= pullRequestMerged
-        , "additions"           .= pullRequestAdditions
-        , "state"               .= pullRequestState
-        , "mergeable_state"     .= pullRequestMergeableState
-        , "review_comment_url"  .= pullRequestReviewCommentUrl
-        , "mergeable"           .= pullRequestMergeable
-        , "assignees"           .= pullRequestAssignees
-        , "locked"              .= pullRequestLocked
-        , "base"                .= pullRequestBase
-        , "body"                .= pullRequestBody
-        , "head"                .= pullRequestHead
-        , "url"                 .= pullRequestUrl
-        , "milestone"           .= pullRequestMilestone
-        , "statuses_url"        .= pullRequestStatusesUrl
-        , "merged_at"           .= pullRequestMergedAt
-        , "commits_url"         .= pullRequestCommitsUrl
-        , "assignee"            .= pullRequestAssignee
-        , "diff_url"            .= pullRequestDiffUrl
-        , "user"                .= pullRequestUser
-        , "comments_url"        .= pullRequestCommentsUrl
-        , "_links"              .= pullRequestLinks
-        , "updated_at"          .= pullRequestUpdatedAt
-        , "deletions"           .= pullRequestDeletions
-        , "commits"             .= pullRequestCommits
-        , "patch_url"           .= pullRequestPatchUrl
-        , "created_at"          .= pullRequestCreatedAt
-        , "review_comments"     .= pullRequestReviewComments
-        , "id"                  .= pullRequestId
-        , "issue_url"           .= pullRequestIssueUrl
-        , "comments"            .= pullRequestComments
-        , "merged_by"           .= pullRequestMergedBy
-        , "title"               .= pullRequestTitle
-        , "closed_at"           .= pullRequestClosedAt
-        , "changed_files"       .= pullRequestChangedFiles
-        , "number"              .= pullRequestNumber
-        , "merge_commit_sha"    .= pullRequestMergeCommitSha
-        , "review_comments_url" .= pullRequestReviewCommentsUrl
-        , "html_url"            .= pullRequestHtmlUrl
+        [ "additions"             .= pullRequestAdditions
+        , "assignee"              .= pullRequestAssignee
+        , "assignees"             .= pullRequestAssignees
+        , "base"                  .= pullRequestBase
+        , "body"                  .= pullRequestBody
+        , "changed_files"         .= pullRequestChangedFiles
+        , "closed_at"             .= pullRequestClosedAt
+        , "comments"              .= pullRequestComments
+        , "comments_url"          .= pullRequestCommentsUrl
+        , "commits"               .= pullRequestCommits
+        , "commits_url"           .= pullRequestCommitsUrl
+        , "created_at"            .= pullRequestCreatedAt
+        , "deletions"             .= pullRequestDeletions
+        , "diff_url"              .= pullRequestDiffUrl
+        , "head"                  .= pullRequestHead
+        , "html_url"              .= pullRequestHtmlUrl
+        , "id"                    .= pullRequestId
+        , "issue_url"             .= pullRequestIssueUrl
+        , "_links"                .= pullRequestLinks
+        , "locked"                .= pullRequestLocked
+        , "maintainer_can_modify" .= pullRequestMaintainerCanModify
+        , "mergeable"             .= pullRequestMergeable
+        , "mergeable_state"       .= pullRequestMergeableState
+        , "merge_commit_sha"      .= pullRequestMergeCommitSha
+        , "merged"                .= pullRequestMerged
+        , "merged_at"             .= pullRequestMergedAt
+        , "merged_by"             .= pullRequestMergedBy
+        , "milestone"             .= pullRequestMilestone
+        , "number"                .= pullRequestNumber
+        , "patch_url"             .= pullRequestPatchUrl
+        , "review_comments"       .= pullRequestReviewComments
+        , "review_comments_url"   .= pullRequestReviewCommentsUrl
+        , "review_comment_url"    .= pullRequestReviewCommentUrl
+        , "state"                 .= pullRequestState
+        , "statuses_url"          .= pullRequestStatusesUrl
+        , "title"                 .= pullRequestTitle
+        , "updated_at"            .= pullRequestUpdatedAt
+        , "url"                   .= pullRequestUrl
+        , "user"                  .= pullRequestUser
         ]
