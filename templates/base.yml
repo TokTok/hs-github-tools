@@ -14,3 +14,8 @@ branches:
 # not build the previously queued build.
 git:
   depth: 1
+
+# Add elements to the special __erase__ field to remove sections that are only
+# used during generation and have no meaning to Travis.
+__erase__:
+  - __erase__

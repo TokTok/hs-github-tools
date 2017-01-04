@@ -161,6 +161,14 @@ sub process_before_after {
    }
 }
 
+sub process_erase {
+   my ($data) = @_;
+
+   for my $k (@{ $data->{__erase__} }) {
+     delete $data->{$k};
+   }
+}
+
 my ($input, $output) = @ARGV;
 $input and $output or die "Usage: expand-yaml <input.yml> <output.yml>";
 
@@ -168,6 +176,7 @@ my $data = load_file (abs_path $input);
 process_inherits $data;
 process_expansions $data, $data;
 process_before_after $data;
+process_erase $data;
 
 open my $outfh, '>', $output or die "Cannot open $output for writing: $!";
 print $outfh "# DO NOT EDIT: This file was generated using the following command:\n";

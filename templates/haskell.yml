@@ -40,6 +40,9 @@ haskell:
   # arrays of strings are joined with a space. E.g. [semdoc, pandoc] will end up
   # as "semdoc pandoc" in a %haskell.packages% expansion.
   packages: []
+  # Some tools may need to be installed in the tools cabal. They can be
+  # specified here.
+  tools: []
 
 env: CABALVER=%haskell.cabal% GHCVER=%haskell.ghc%
 addons:
@@ -57,11 +60,14 @@ addons:
 # append that snippet to the inherited snippet.
 install:
   after:
-    # Only one .cabal should be on $PATH at any time. This is to avoid issues
-    # with hlint not being able to find its data, because it expects it to be in
-    # $HOME/.ghc, not in wherever it actually currently lives. The errors are
-    # confusing, so we make this a little stricter than necessary to avoid them.
-    - export PATH=$HOME/.cabal/bin:/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:/opt/alex/3.1.7/bin:/opt/happy/1.19.5/bin:$PATH
+    # We want both .cabal directories on the path, but the currently active one
+    # should have precedence. After that, the build cabal has precedence and
+    # then the tools one.
+    - export PATH=$HOME/.cabal/bin:$PATH
+    - export PATH=$HOME/.cabal-build/bin:$PATH
+    - export PATH=$HOME/.cabal-tools/bin:$PATH
+    # Put ghc, cabal, alex, and happy on the path.
+    - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:/opt/alex/3.1.7/bin:/opt/happy/1.19.5/bin:$PATH
     # Get old cabal out of the way.
     - rm -rf $HOME/.cabal $HOME/.ghc
     # Update tools cabal.
@@ -81,7 +87,7 @@ script:
     # incompatible dependencies.
     - rm -f $HOME/.cabal && ln -s $HOME/.cabal-tools $HOME/.cabal
     - rm -f $HOME/.ghc && ln -s $HOME/.ghc-tools $HOME/.ghc
-    - cabal install hpc-coveralls stylish-haskell hlint aeson-0.9.0.1
+    - cabal install hpc-coveralls stylish-haskell hlint aeson-0.9.0.1 %haskell.tools%
     - curl https://raw.githubusercontent.com/TokTok/toktok-stack/master/tools/stylish-haskell-lhs -o $HOME/.cabal/bin/stylish-haskell-lhs
     - chmod +x $HOME/.cabal/bin/stylish-haskell-lhs
     # Do the style checks.
@@ -105,3 +111,8 @@ after_script:
     - rm -f $HOME/.cabal && ln -s $HOME/.cabal-tools $HOME/.cabal
     - rm -f $HOME/.ghc && ln -s $HOME/.ghc-tools $HOME/.ghc
     - hpc-coveralls %package.name%-%package.version%
+
+# Erase fields only used by the Haskell template.
+__erase__:
+  - haskell
+  - package
