@@ -11,14 +11,11 @@ module TokTok.Hello (newApp) where
 import           Control.Applicative   ((<$>), (<*>))
 import           Data.Aeson            (FromJSON, ToJSON)
 import qualified Data.ByteString.Char8 as BS8
-import qualified Data.ByteString.Lazy  as LBS
 import           Data.Monoid           ((<>))
 import           Data.Text             (Text)
 import qualified Data.Text             as Text
-import           Data.Text.Encoding    (encodeUtf8)
 import           GHC.Generics          (Generic)
 import qualified GitHub
-import           Network.HTTP.Media    ((//), (/:))
 #if !MIN_VERSION_servant_server(0, 6, 0)
 import           Network.Wai           (Application)
 #endif
@@ -43,7 +40,7 @@ newContext = do
   ApiContext
     <$> Changelogs.fetchChangeLog False "TokTok" "c-toxcore" Nothing
     <*> Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" Nothing
-    <*> (Text.pack <$> PullStatus.getPullStatus "TokTok" "TokTok" True auth)
+    <*> (Text.pack <$> PullStatus.getPullStatus "TokTok" "TokTok" False auth)
 
 
 -- * Example
@@ -55,12 +52,6 @@ newtype Greet = Greet { _msg :: Text }
 instance FromJSON Greet
 instance ToJSON Greet
 
-data HTML
-instance Accept HTML where
-  contentType _ = "text" // "html" /: ("charset", "utf-8")
-instance MimeRender HTML Text where
-  mimeRender _ = LBS.fromStrict . encodeUtf8
-
 -- API specification
 type TestApi =
        -- GET /hello/:name?capital={true, false}  returns a Greet as JSON
@@ -68,7 +59,7 @@ type TestApi =
 
   :<|> "changelog" :> Get '[PlainText] Text
   :<|> "roadmap" :> Get '[PlainText] Text
-  :<|> "pulls" :> Get '[HTML] Text
+  :<|> "pulls" :> Get '[PlainText] Text
 
        -- POST /greet with a Greet as JSON in the request body,
        --             returns a Greet as JSON
