@@ -94,7 +94,6 @@ library
       PullRequestInfo
       PullStatus
       Requests
-      Review
   ghc-options:
       -Wall
   build-depends:
@@ -113,7 +112,6 @@ library
     , QuickCheck
     , quickcheck-text
     , tabular
-    , tagsoup
     , text
     , time
     , unordered-containers
@@ -131,6 +129,7 @@ executable hub-pulls
     , bytestring
     , github            >= 0.15.0
     , github-tools
+    , text
   hs-source-dirs:      tools
   default-language:    Haskell2010
 
