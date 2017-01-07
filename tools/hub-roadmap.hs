@@ -18,7 +18,7 @@ main = do
   -- Get auth token from the $GITHUB_TOKEN environment variable.
   auth <- fmap (GitHub.OAuth . BS8.pack) <$> lookupEnv "GITHUB_TOKEN"
 
-  fetchChangeLog False ownerName repoName auth >>= putStr . Text.unpack . formatChangeLog False
+  fetchChangeLog True ownerName repoName auth >>= putStr . Text.unpack . formatChangeLog True
 
   where
     repoLocation [] =
