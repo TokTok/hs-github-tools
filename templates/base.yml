@@ -9,12 +9,6 @@ branches:
   only:
     - master
 
-# Only clone a single revision by default. This has the desirable result that
-# adding commits while a previous commit is in the Travis queue will make Travis
-# not build the previously queued build.
-git:
-  depth: 1
-
 # Add elements to the special __erase__ field to remove sections that are only
 # used during generation and have no meaning to Travis.
 __erase__:
