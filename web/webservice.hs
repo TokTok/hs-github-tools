@@ -1,23 +1,24 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import           Control.Applicative      ((<|>))
-import           Network.Wai              (Application)
-import           Network.Wai.Handler.Warp (Port, run)
-import           Network.Wai.UrlMap       (mapUrls, mount)
-import           System.Environment       (getArgs)
-import           System.IO                (BufferMode (..), hSetBuffering,
-                                           stdout)
+import           Control.Applicative         ((<|>))
+import           Network.Wai                 (Application)
+import           Network.Wai.Handler.Warp    (Port, run)
+import           Network.Wai.Middleware.Cors (simpleCors)
+import           Network.Wai.UrlMap          (mapUrls, mount)
+import           System.Environment          (getArgs)
+import           System.IO                   (BufferMode (..), hSetBuffering,
+                                              stdout)
 
-import qualified TokTok.Hello             as Hello
-import qualified TokTok.Webhooks          as Webhooks
+import qualified TokTok.Hello                as Hello
+import qualified TokTok.Webhooks             as Webhooks
 
 
 newApp :: IO Application
 newApp = do
   helloApp <- Hello.newApp
   return $ mapUrls $
-        mount "hello" helloApp
+        mount "hello" (simpleCors helloApp)
     <|> mount "webhooks" Webhooks.app
 
 

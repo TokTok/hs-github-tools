@@ -179,6 +179,7 @@ executable webservice
     , uuid
     , vector
     , wai
+    , wai-cors
     , wai-extra
     , warp
   hs-source-dirs:      web
