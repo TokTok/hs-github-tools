@@ -30,7 +30,7 @@ data Repository = Repository
     , repositoryCreatedAt        :: DateTime
     , repositoryDefaultBranch    :: Text
     , repositoryDeploymentsUrl   :: Text
-    , repositoryDescription      :: Text
+    , repositoryDescription      :: Maybe Text
     , repositoryDownloadsUrl     :: Text
     , repositoryEventsUrl        :: Text
     , repositoryFork             :: Bool
