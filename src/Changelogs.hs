@@ -51,8 +51,8 @@ formatChangeLog wantRoadmap =
 
 
 data ChangeLogItemKind
-  = PullRequest
-  | Issue
+  = Issue
+  | PullRequest
   deriving Show
 
 
@@ -63,11 +63,15 @@ data ChangeLogItem = ChangeLogItem
   }
 
 
-formatChangeLogItem :: GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> ChangeLogItem -> Text
-formatChangeLogItem ownerName repoName item =
-  "[#" <> number <> "](https://github.com/" <> GitHub.untagName ownerName <> "/" <> GitHub.untagName repoName <> "/issues/" <> number <> ") " <> clTitle item
+formatChangeLogItem :: ChangeLogItemKind -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> ChangeLogItem -> Text
+formatChangeLogItem kind ownerName repoName item =
+  "[#" <> number <> "](https://github.com/" <> GitHub.untagName ownerName <> "/" <> GitHub.untagName repoName <> kindPart <> number <> ") " <> clTitle item
   where
     number = Text.pack . show . clNumber $ item
+    kindPart =
+      case kind of
+        Issue       -> "/issues/"
+        PullRequest -> "/pull/"
 
 
 makeChangeLog :: Bool -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> [GitHub.SimplePullRequest] -> [GitHub.Issue] -> ChangeLog
@@ -79,8 +83,8 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
         then changes
         else
           ( milestone
-          , map (formatChangeLogItem ownerName repoName) msIssues
-          , map (formatChangeLogItem ownerName repoName) msPulls
+          , map (formatChangeLogItem Issue       ownerName repoName) msIssues
+          , map (formatChangeLogItem PullRequest ownerName repoName) msPulls
           ) : changes
     ) []
   . groupByMilestone (first  . (:)) changeLogIssues
