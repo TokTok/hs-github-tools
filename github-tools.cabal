@@ -169,6 +169,7 @@ executable webservice
     , aeson
     , bytestring
     , case-insensitive
+    , expiring-cache-map
     , github            >= 0.15.0
     , http-media
     , http-types
@@ -176,6 +177,8 @@ executable webservice
     , servant           >= 0.5
     , servant-server    >= 0.5
     , text
+    , time
+    , unordered-containers
     , uuid
     , vector
     , wai

@@ -8,34 +8,55 @@
 {-# LANGUAGE TypeOperators         #-}
 module TokTok.Hello (newApp) where
 
-import           Control.Applicative   ((<$>), (<*>))
-import           Control.Monad.Trans   (lift)
-import           Data.Aeson            (FromJSON, ToJSON)
-import qualified Data.ByteString.Char8 as BS8
-import qualified Data.ByteString.Lazy  as LBS
-import           Data.Monoid           ((<>))
-import           Data.Text             (Text)
-import qualified Data.Text             as Text
-import           Data.Text.Encoding    (encodeUtf8)
-import           GHC.Generics          (Generic)
+import           Caching.ExpiringCacheMap.HashECM (CacheSettings (..), ECM,
+                                                   consistentDuration,
+                                                   lookupECM, newECMIO)
+import           Control.Applicative              ((<$>), (<*>))
+import           Control.Concurrent.MVar          (MVar)
+import           Control.Monad.Trans              (lift)
+import           Data.Aeson                       (FromJSON, ToJSON)
+import qualified Data.ByteString.Char8            as BS8
+import qualified Data.ByteString.Lazy             as LBS
+import           Data.HashMap.Strict              (HashMap)
+import           Data.Monoid                      ((<>))
+import           Data.Text                        (Text)
+import qualified Data.Text                        as Text
+import           Data.Text.Encoding               (encodeUtf8)
+import qualified Data.Time.Clock.POSIX            as POSIX
+import           GHC.Generics                     (Generic)
 import qualified GitHub
-import           Network.HTTP.Media    ((//), (/:))
+import           Network.HTTP.Media               ((//), (/:))
 #if !MIN_VERSION_servant_server(0, 6, 0)
-import           Network.Wai           (Application)
+import           Network.Wai                      (Application)
 #endif
 import           Servant
-import           System.Environment    (getEnv)
+import           System.Environment               (getEnv)
 
 import qualified Changelogs
-import           PullRequestInfo       (PullRequestInfo)
+import           PullRequestInfo                  (PullRequestInfo)
 import qualified PullStatus
+
+
+type PullRequestCache = ECM IO MVar () HashMap () [[PullRequestInfo]]
 
 
 data ApiContext = ApiContext
   { getChangelog :: Changelogs.ChangeLog
   , getRoadmap   :: Changelogs.ChangeLog
-  , pullInfos    :: [[PullRequestInfo]]
+  , pullInfos    :: PullRequestCache
   }
+
+
+newPullInfoCache :: Maybe GitHub.Auth -> IO PullRequestCache
+newPullInfoCache auth =
+  newECMIO
+    (consistentDuration 30 $ \state () -> do
+      infos <- PullStatus.getPullInfos "TokTok" "TokTok" auth
+      return (state, infos))
+    (do time <- POSIX.getPOSIXTime
+        return $ round time)
+    1
+    (CacheWithLRUList 1 1 1)
 
 
 newContext :: IO ApiContext
@@ -43,9 +64,9 @@ newContext = do
   auth <- Just . GitHub.OAuth . BS8.pack <$> getEnv "GITHUB_TOKEN"
 
   ApiContext
-    <$> Changelogs.fetchChangeLog False "TokTok" "c-toxcore" Nothing
-    <*> Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" Nothing
-    <*> PullStatus.getPullInfos "TokTok" "TokTok" auth
+    <$> Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth
+    <*> Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth
+    <*> newPullInfoCache auth
 
 
 -- * Example
@@ -106,8 +127,10 @@ server ctx =
     changelogH False = return $ Changelogs.formatChangeLog False (getChangelog ctx)
     changelogH True  = return $ Changelogs.formatChangeLog True  (getRoadmap ctx)
 
-    pullsHtmlH = lift $ PullStatus.showPullInfos True $ pullInfos ctx
-    pullsH = return $ pullInfos ctx
+    pullsHtmlH = lift $ do
+      infos <- lookupECM (pullInfos ctx) ()
+      PullStatus.showPullInfos True infos
+    pullsH = lift $ lookupECM (pullInfos ctx) ()
 
     postGreetH = return
 
