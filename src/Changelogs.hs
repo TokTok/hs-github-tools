@@ -63,9 +63,30 @@ data ChangeLogItem = ChangeLogItem
   }
 
 
-formatChangeLogItem :: ChangeLogItemKind -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> ChangeLogItem -> Text
+groupByMilestone
+  :: (ChangeLogItem -> ([a], [a]) -> ([a], [a]))
+  -> [ChangeLogItem]
+  -> Map.Map Text ([a], [a])
+  -> Map.Map Text ([a], [a])
+groupByMilestone add = flip $ foldr (\item group ->
+    Map.insert (clMilestone item) (
+        case Map.lookup (clMilestone item) group of
+          Just old -> add item old
+          Nothing  -> add item ([], [])
+      ) group
+  )
+
+
+formatChangeLogItem
+  :: ChangeLogItemKind
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> ChangeLogItem
+  -> Text
 formatChangeLogItem kind ownerName repoName item =
-  "[#" <> number <> "](https://github.com/" <> GitHub.untagName ownerName <> "/" <> GitHub.untagName repoName <> kindPart <> number <> ") " <> clTitle item
+  "[#" <> number <> "](https://github.com/" <> GitHub.untagName ownerName <>
+  "/" <> GitHub.untagName repoName <> kindPart <> number <> ") " <>
+  clTitle item
   where
     number = Text.pack . show . clNumber $ item
     kindPart =
@@ -74,7 +95,13 @@ formatChangeLogItem kind ownerName repoName item =
         PullRequest -> "/pull/"
 
 
-makeChangeLog :: Bool -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> [GitHub.SimplePullRequest] -> [GitHub.Issue] -> ChangeLog
+makeChangeLog
+  :: Bool
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> [GitHub.SimplePullRequest]
+  -> [GitHub.Issue]
+  -> ChangeLog
 makeChangeLog wantRoadmap ownerName repoName pulls issues =
   ChangeLog
   . sortChangelog
@@ -91,15 +118,16 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
   . groupByMilestone (second . (:)) changeLogPrs
   $ Map.empty
   where
-    sortChangelog =
+    sortChangelog [] = []
+    sortChangelog l@(backlog:rest) =
       if wantRoadmap
-        then reverse
-        else id
+        then backlog : reverse rest
+        else l
 
     (mergedPrs, openPrs) = List.partition (\case
         GitHub.SimplePullRequest
           { GitHub.simplePullRequestMergedAt = Just _ } -> True
-        _ -> False
+        _                                               -> False
       ) pulls
 
     selectedPrs =
@@ -118,13 +146,40 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
         _ -> False
       ) issues
 
+    (backlogPrs, backlogIssues) =
+      if wantRoadmap
+        then
+            -- Split into PRs and non-PR issues.
+            List.partition (\case
+              GitHub.Issue { GitHub.issuePullRequest = Just _ } -> True
+              _                                                 -> False
+            )
+            -- Filter by issues that don't have a milestone.
+          . filter (\case
+              GitHub.Issue { GitHub.issueMilestone = Nothing } -> True
+              _                                                -> False
+            )
+          $ issues
+        else
+          ([], [])
+
+    addToBacklog =
+      map $ \issue -> ChangeLogItem
+        { clMilestone = "Backlog"
+        , clTitle     = GitHub.issueTitle issue
+        , clNumber    = GitHub.issueNumber issue
+        }
+
+    backlogPrItems    = addToBacklog backlogPrs
+    backlogIssueItems = addToBacklog backlogIssues
+
     milestoneByIssueId =
       Map.fromList
       . map (GitHub.issueNumber &&& GitHub.milestoneTitle . Maybe.fromJust . GitHub.issueMilestone)
       $ selectedItems
 
     changeLogIssues :: [ChangeLogItem]
-    changeLogIssues = Maybe.mapMaybe (\case
+    changeLogIssues = backlogIssueItems ++ Maybe.mapMaybe (\case
         -- filter out PRs
         GitHub.Issue { GitHub.issuePullRequest = Just _ } -> Nothing
         issue -> Just ChangeLogItem
@@ -135,7 +190,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
       ) selectedItems
 
     changeLogPrs :: [ChangeLogItem]
-    changeLogPrs = Maybe.mapMaybe (\issue -> do
+    changeLogPrs = backlogPrItems ++ Maybe.mapMaybe (\issue -> do
         milestone <- flip Map.lookup milestoneByIssueId . GitHub.simplePullRequestNumber $ issue
         return ChangeLogItem
           { clMilestone = milestone
@@ -144,22 +199,19 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
           }
       ) selectedPrs
 
-    groupByMilestone add = flip $ foldr (\item group ->
-        Map.insert (clMilestone item) (
-            case Map.lookup (clMilestone item) group of
-              Just old -> add item old
-              Nothing  -> add item ([], [])
-          ) group
-      )
 
-
-fetchChangeLog :: Bool -> GitHub.Name GitHub.Owner -> GitHub.Name GitHub.Repo -> Maybe GitHub.Auth -> IO ChangeLog
+fetchChangeLog
+  :: Bool
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> Maybe GitHub.Auth
+  -> IO ChangeLog
 fetchChangeLog wantRoadmap ownerName repoName auth = do
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
   let pulls  state = V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName state GitHub.FetchAll)
-  let issues state = V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName (state <> GitHub.optionsAnyMilestone) GitHub.FetchAll)
+  let issues state = V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName state GitHub.FetchAll)
 
   -- issues >>= putStrLn . groom
 
