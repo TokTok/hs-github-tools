@@ -11,11 +11,15 @@
 
 
 
-const numReviewersRequired = 2; // TODO(grayhatter) do we want to calculate this number by size of diff, or number of files?
+const numReviewersRequired = 3; // TODO(grayhatter) do we want to calculate this number by size of diff, or number of files?
 // Part 1 Check that each file has been reviewed by at least numReviewersRequired at the latest revision.
 const unreviewedFiles = _(review.files)
   .filter(file => _.size(_.last(file.revisions).reviewers) < numReviewersRequired)
-    .value();
+  .value();
+
+const neededReviewers = _(review.files)
+  .map(file => numReviewersRequired - _.size(_.last(file.revisions).reviewers))
+  .max();
 
 // Part 2 Verify there are no open comments of assigned reviewers
 const fileBlockers = _(unreviewedFiles)
@@ -84,7 +88,10 @@ const pendingReviewers = _(fileBlockers)
 
 const descriptionPieces = [];
 if (unreviewedFiles.length) {
-  descriptionPieces.push(`${unreviewedFiles.length} files need more reviewers`);
+  const us = unreviewedFiles.length == 1 ? '' : 's';
+  const ns = unreviewedFiles.length == 0 ? '' : 's';
+  const rs = neededReviewers == 1 ? '' : 's';
+  descriptionPieces.push(`${unreviewedFiles.length} file${us} need${ns} ${neededReviewers} more reviewer${rs}`);
 }
 if (unresolvedDiscussions.length) {
   const s = unresolvedDiscussions.length == 1 ? '' : 's';
