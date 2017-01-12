@@ -89,7 +89,7 @@ const pendingReviewers = _(fileBlockers)
 const descriptionPieces = [];
 if (unreviewedFiles.length) {
   const us = unreviewedFiles.length == 1 ? '' : 's';
-  const ns = unreviewedFiles.length == 0 ? '' : 's';
+  const ns = unreviewedFiles.length != 1 ? '' : 's';
   const rs = neededReviewers == 1 ? '' : 's';
   descriptionPieces.push(`${unreviewedFiles.length} file${us} need${ns} ${neededReviewers} more reviewer${rs}`);
 }
