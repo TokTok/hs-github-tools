@@ -37,21 +37,21 @@ import           PullRequestInfo                  (PullRequestInfo)
 import qualified PullStatus
 
 
-type PullRequestCache = ECM IO MVar () HashMap () [[PullRequestInfo]]
+type GitHubCache a = ECM IO MVar () HashMap () a
 
 
 data ApiContext = ApiContext
-  { getChangelog :: Changelogs.ChangeLog
-  , getRoadmap   :: Changelogs.ChangeLog
-  , pullInfos    :: PullRequestCache
+  { changelogInfo :: GitHubCache Changelogs.ChangeLog
+  , roadmapInfo   :: GitHubCache Changelogs.ChangeLog
+  , pullInfos     :: GitHubCache [[PullRequestInfo]]
   }
 
 
-newPullInfoCache :: Maybe GitHub.Auth -> IO PullRequestCache
-newPullInfoCache auth =
+newGitHubCache :: Int -> IO a -> IO (GitHubCache a)
+newGitHubCache timeout fetchUpdates =
   newECMIO
-    (consistentDuration 30 $ \state () -> do
-      infos <- PullStatus.getPullInfos "TokTok" "TokTok" auth
+    (consistentDuration timeout $ \state () -> do
+      infos <- fetchUpdates
       return (state, infos))
     (do time <- POSIX.getPOSIXTime
         return $ round time)
@@ -64,9 +64,9 @@ newContext = do
   auth <- Just . GitHub.OAuth . BS8.pack <$> getEnv "GITHUB_TOKEN"
 
   ApiContext
-    <$> Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth
-    <*> Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth
-    <*> newPullInfoCache auth
+    <$> newGitHubCache 300 (Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth)
+    <*> newGitHubCache 300 (Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth)
+    <*> newGitHubCache  30 (PullStatus.getPullInfos "TokTok" "TokTok" auth)
 
 
 -- * Example
@@ -113,8 +113,8 @@ testApi = Proxy
 server :: ApiContext -> Server TestApi
 server ctx =
        helloH
-  :<|> changelogH False
-  :<|> changelogH True
+  :<|> changelogH
+  :<|> roadmapH
   :<|> pullsHtmlH
   :<|> pullsH
   :<|> postGreetH
@@ -124,12 +124,12 @@ server ctx =
     helloH name (Just False) = return . Greet $ "Hello, " <> name
     helloH name (Just True)  = return . Greet . Text.toUpper $ "Hello, " <> name
 
-    changelogH False = return $ Changelogs.formatChangeLog False (getChangelog ctx)
-    changelogH True  = return $ Changelogs.formatChangeLog True  (getRoadmap ctx)
+    changelogH = lift $
+      Changelogs.formatChangeLog False <$> lookupECM (changelogInfo ctx) ()
+    roadmapH = lift $
+      Changelogs.formatChangeLog True  <$> lookupECM (roadmapInfo   ctx) ()
 
-    pullsHtmlH = lift $ do
-      infos <- lookupECM (pullInfos ctx) ()
-      PullStatus.showPullInfos True infos
+    pullsHtmlH = lift $ lookupECM (pullInfos ctx) () >>= PullStatus.showPullInfos True
     pullsH = lift $ lookupECM (pullInfos ctx) ()
 
     postGreetH = return
