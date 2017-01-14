@@ -31,21 +31,21 @@ formatChangeLog :: Bool -> ChangeLog -> Text
 formatChangeLog wantRoadmap =
   (<> "\n") . foldl' (<>) "" . map formatMilestone . unChangeLog
   where
-    issuesWord = if wantRoadmap then "Planned tasks" else "Closed issues"
     prsWord    = if wantRoadmap then "PRs to review" else "Merged PRs"
+    issuesWord = if wantRoadmap then "Planned tasks" else "Closed issues"
 
     formatMilestone (milestone, issues, pulls) =
       "\n\n## " <> milestone
-      <> closedIssues issues
       <> mergedPrs pulls
-
-    closedIssues [] = ""
-    closedIssues issues =
-      foldl' (<>) ("\n\n### " <> issuesWord <> ":\n") . itemise $ issues
+      <> closedIssues issues
 
     mergedPrs [] = ""
     mergedPrs pulls =
       foldl' (<>) ("\n\n### " <> prsWord <> ":\n") . itemise $ pulls
+
+    closedIssues [] = ""
+    closedIssues issues =
+      foldl' (<>) ("\n\n### " <> issuesWord <> ":\n") . itemise $ issues
 
     itemise = map ("\n- " <>)
 
