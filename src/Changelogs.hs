@@ -118,10 +118,11 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
   . groupByMilestone (second . (:)) changeLogPrs
   $ Map.empty
   where
-    sortChangelog [] = []
-    sortChangelog l@(backlog:rest) =
+    sortChangelog l =
       if wantRoadmap
-        then backlog : reverse rest
+        then case reverse l of
+          []   -> []
+          x:xs -> xs ++ [x] -- Put "Backlog" last.
         else l
 
     (mergedPrs, openPrs) = List.partition (\case
