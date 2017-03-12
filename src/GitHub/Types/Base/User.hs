@@ -13,68 +13,68 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 -- User
 
 data User = User
-    { userLogin             :: Text
-    , userId                :: Int
-    , userAvatarUrl         :: Text
-    , userGravatarId        :: Text
-    , userUrl               :: Text
-    , userHtmlUrl           :: Text
+    { userAvatarUrl         :: Text
+    , userEventsUrl         :: Text
     , userFollowersUrl      :: Text
     , userFollowingUrl      :: Text
     , userGistsUrl          :: Text
+    , userGravatarId        :: Text
+    , userHtmlUrl           :: Text
+    , userId                :: Int
+    , userLogin             :: Text
+    , userOrganizationsUrl  :: Text
+    , userReceivedEventsUrl :: Text
+    , userReposUrl          :: Text
+    , userSiteAdmin         :: Bool
     , userStarredUrl        :: Text
     , userSubscriptionsUrl  :: Text
-    , userOrganizationsUrl  :: Text
-    , userReposUrl          :: Text
-    , userEventsUrl         :: Text
-    , userReceivedEventsUrl :: Text
     , userType              :: Text
-    , userSiteAdmin         :: Bool
+    , userUrl               :: Text
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON User where
     parseJSON (Object x) = User
-        <$> x .: "login"
-        <*> x .: "id"
-        <*> x .: "avatar_url"
-        <*> x .: "gravatar_id"
-        <*> x .: "url"
-        <*> x .: "html_url"
+        <$> x .: "avatar_url"
+        <*> x .: "events_url"
         <*> x .: "followers_url"
         <*> x .: "following_url"
         <*> x .: "gists_url"
+        <*> x .: "gravatar_id"
+        <*> x .: "html_url"
+        <*> x .: "id"
+        <*> x .: "login"
+        <*> x .: "organizations_url"
+        <*> x .: "received_events_url"
+        <*> x .: "repos_url"
+        <*> x .: "site_admin"
         <*> x .: "starred_url"
         <*> x .: "subscriptions_url"
-        <*> x .: "organizations_url"
-        <*> x .: "repos_url"
-        <*> x .: "events_url"
-        <*> x .: "received_events_url"
         <*> x .: "type"
-        <*> x .: "site_admin"
+        <*> x .: "url"
 
     parseJSON _ = fail "User"
 
 
 instance ToJSON User where
     toJSON User{..} = object
-        [ "login"               .= userLogin
-        , "id"                  .= userId
-        , "avatar_url"          .= userAvatarUrl
-        , "gravatar_id"         .= userGravatarId
-        , "url"                 .= userUrl
-        , "html_url"            .= userHtmlUrl
+        [ "avatar_url"          .= userAvatarUrl
+        , "events_url"          .= userEventsUrl
         , "followers_url"       .= userFollowersUrl
         , "following_url"       .= userFollowingUrl
         , "gists_url"           .= userGistsUrl
+        , "gravatar_id"         .= userGravatarId
+        , "html_url"            .= userHtmlUrl
+        , "id"                  .= userId
+        , "login"               .= userLogin
+        , "organizations_url"   .= userOrganizationsUrl
+        , "received_events_url" .= userReceivedEventsUrl
+        , "repos_url"           .= userReposUrl
+        , "site_admin"          .= userSiteAdmin
         , "starred_url"         .= userStarredUrl
         , "subscriptions_url"   .= userSubscriptionsUrl
-        , "organizations_url"   .= userOrganizationsUrl
-        , "repos_url"           .= userReposUrl
-        , "events_url"          .= userEventsUrl
-        , "received_events_url" .= userReceivedEventsUrl
         , "type"                .= userType
-        , "site_admin"          .= userSiteAdmin
+        , "url"                 .= userUrl
         ]
 
 

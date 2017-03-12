@@ -49,6 +49,7 @@ data PullRequest = PullRequest
     , pullRequestMilestone           :: Maybe Milestone
     , pullRequestNumber              :: Int
     , pullRequestPatchUrl            :: Text
+    , pullRequestRequestedReviewers  :: [Text]
     , pullRequestReviewComments      :: Int
     , pullRequestReviewCommentsUrl   :: Text
     , pullRequestReviewCommentUrl    :: Text
@@ -93,6 +94,7 @@ instance FromJSON PullRequest where
         <*> x .: "milestone"
         <*> x .: "number"
         <*> x .: "patch_url"
+        <*> x .: "requested_reviewers"
         <*> x .: "review_comments"
         <*> x .: "review_comments_url"
         <*> x .: "review_comment_url"
@@ -138,6 +140,7 @@ instance ToJSON PullRequest where
         , "milestone"             .= pullRequestMilestone
         , "number"                .= pullRequestNumber
         , "patch_url"             .= pullRequestPatchUrl
+        , "requested_reviewers"   .= pullRequestRequestedReviewers
         , "review_comments"       .= pullRequestReviewComments
         , "review_comments_url"   .= pullRequestReviewCommentsUrl
         , "review_comment_url"    .= pullRequestReviewCommentUrl
@@ -153,6 +156,7 @@ instance ToJSON PullRequest where
 instance Arbitrary PullRequest where
     arbitrary = PullRequest
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

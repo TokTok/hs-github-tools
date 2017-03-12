@@ -4,7 +4,7 @@ module GitHub.Types.Base.Organization where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Data.Text.Arbitrary       ()
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
@@ -13,56 +13,60 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 -- Organization
 
 data Organization = Organization
-    { organizationLogin            :: Text
-    , organizationId               :: Int
-    , organizationUrl              :: Text
-    , organizationReposUrl         :: Text
+    { organizationAvatarUrl        :: Text
+    , organizationDescription      :: Text
+    , organizationEmail            :: Maybe Text
     , organizationEventsUrl        :: Text
     , organizationHooksUrl         :: Text
+    , organizationId               :: Int
     , organizationIssuesUrl        :: Text
+    , organizationLogin            :: Text
     , organizationMembersUrl       :: Text
     , organizationPublicMembersUrl :: Text
-    , organizationAvatarUrl        :: Text
-    , organizationDescription      :: Text
+    , organizationReposUrl         :: Text
+    , organizationUrl              :: Text
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON Organization where
     parseJSON (Object x) = Organization
-        <$> x .: "login"
-        <*> x .: "id"
-        <*> x .: "url"
-        <*> x .: "repos_url"
+        <$> x .: "avatar_url"
+        <*> x .: "description"
+        <*> x .:? "email"
         <*> x .: "events_url"
         <*> x .: "hooks_url"
+        <*> x .: "id"
         <*> x .: "issues_url"
+        <*> x .: "login"
         <*> x .: "members_url"
         <*> x .: "public_members_url"
-        <*> x .: "avatar_url"
-        <*> x .: "description"
+        <*> x .: "repos_url"
+        <*> x .: "url"
 
     parseJSON _ = fail "Organization"
 
 
 instance ToJSON Organization where
     toJSON Organization{..} = object
-        [ "login"              .= organizationLogin
-        , "id"                 .= organizationId
-        , "url"                .= organizationUrl
-        , "repos_url"          .= organizationReposUrl
+        [ "avatar_url"         .= organizationAvatarUrl
+        , "description"        .= organizationDescription
+        , "email"              .= organizationEmail
         , "events_url"         .= organizationEventsUrl
         , "hooks_url"          .= organizationHooksUrl
+        , "id"                 .= organizationId
         , "issues_url"         .= organizationIssuesUrl
+        , "login"              .= organizationLogin
         , "members_url"        .= organizationMembersUrl
         , "public_members_url" .= organizationPublicMembersUrl
-        , "avatar_url"         .= organizationAvatarUrl
-        , "description"        .= organizationDescription
+        , "repos_url"          .= organizationReposUrl
+        , "url"                .= organizationUrl
         ]
 
 
 instance Arbitrary Organization where
     arbitrary = Organization
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
