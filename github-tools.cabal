@@ -178,6 +178,7 @@ executable webservice
     , servant-server    >= 0.5
     , text
     , time
+    , transformers
     , unordered-containers
     , uuid
     , vector
