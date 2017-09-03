@@ -103,7 +103,7 @@ library
     , containers
     , cryptohash
     , exceptions
-    , github            >= 0.15.0
+    , github            >= 0.16.0
     , groom
     , html
     , http-client       >= 0.4.30
@@ -127,7 +127,7 @@ executable hub-pulls
   build-depends:
       base >= 4 && < 5
     , bytestring
-    , github            >= 0.15.0
+    , github            >= 0.16.0
     , github-tools
     , text
   hs-source-dirs:      tools
@@ -140,7 +140,7 @@ executable hub-changelog
   build-depends:
       base >= 4 && < 5
     , bytestring
-    , github            >= 0.15.0
+    , github            >= 0.16.0
     , github-tools
     , text
   hs-source-dirs:      tools
@@ -153,7 +153,7 @@ executable hub-roadmap
   build-depends:
       base >= 4 && < 5
     , bytestring
-    , github            >= 0.15.0
+    , github            >= 0.16.0
     , github-tools
     , text
   hs-source-dirs:      tools
@@ -170,7 +170,7 @@ executable webservice
     , bytestring
     , case-insensitive
     , expiring-cache-map
-    , github            >= 0.15.0
+    , github            >= 0.16.0
     , http-media
     , http-types
     , mtl
