@@ -87,7 +87,7 @@ script:
     # incompatible dependencies.
     - rm -f $HOME/.cabal && ln -s $HOME/.cabal-tools $HOME/.cabal
     - rm -f $HOME/.ghc && ln -s $HOME/.ghc-tools $HOME/.ghc
-    - cabal install hpc-coveralls stylish-haskell hlint aeson-0.9.0.1 %haskell.tools%
+    - cabal install hpc-coveralls stylish-haskell hlint yaml-0.8.27 aeson-0.9.0.1 %haskell.tools%
     - curl https://raw.githubusercontent.com/TokTok/toktok-stack/master/tools/stylish-haskell-lhs -o $HOME/.cabal/bin/stylish-haskell-lhs
     - chmod +x $HOME/.cabal/bin/stylish-haskell-lhs
     # Do the style checks.
