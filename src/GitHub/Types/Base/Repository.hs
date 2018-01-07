@@ -45,6 +45,7 @@ data Repository = Repository
     , repositoryHasDownloads     :: Bool
     , repositoryHasIssues        :: Bool
     , repositoryHasPages         :: Bool
+    , repositoryHasProjects      :: Bool
     , repositoryHasWiki          :: Bool
     , repositoryHomepage         :: Maybe Text
     , repositoryHooksUrl         :: Text
@@ -122,6 +123,7 @@ instance FromJSON Repository where
         <*> x .: "has_downloads"
         <*> x .: "has_issues"
         <*> x .: "has_pages"
+        <*> x .: "has_projects"
         <*> x .: "has_wiki"
         <*> x .: "homepage"
         <*> x .: "hooks_url"
@@ -200,6 +202,7 @@ instance ToJSON Repository where
         , "has_downloads"     .= repositoryHasDownloads
         , "has_issues"        .= repositoryHasIssues
         , "has_pages"         .= repositoryHasPages
+        , "has_projects"      .= repositoryHasProjects
         , "has_wiki"          .= repositoryHasWiki
         , "homepage"          .= repositoryHomepage
         , "hooks_url"         .= repositoryHooksUrl
@@ -249,6 +252,7 @@ instance ToJSON Repository where
 instance Arbitrary Repository where
     arbitrary = Repository
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
