@@ -2,13 +2,15 @@
 {-# LANGUAGE RecordWildCards   #-}
 module GitHub.Types.Base.Deployment where
 
-import           Control.Applicative        (pure, (<$>), (<*>))
-import           Data.Aeson                 (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types           (Value (..), (.:), (.=))
-import           Data.Text                  (Text)
-import           Test.QuickCheck.Arbitrary  (Arbitrary (..))
+import           Control.Applicative                 ((<$>), (<*>))
+import           Data.Aeson                          (FromJSON (..),
+                                                      ToJSON (..), object)
+import           Data.Aeson.Types                    (Value (..), (.:), (.=))
+import           Data.Text                           (Text)
+import           Test.QuickCheck.Arbitrary           (Arbitrary (..))
 
 import           GitHub.Types.Base.DateTime
+import           GitHub.Types.Base.DeploymentPayload
 import           GitHub.Types.Base.User
 
 ------------------------------------------------------------------------------
@@ -20,7 +22,7 @@ data Deployment = Deployment
     , deploymentSha           :: Text
     , deploymentRef           :: Text
     , deploymentTask          :: Text
-    , deploymentPayload       :: Value
+    , deploymentPayload       :: Maybe DeploymentPayload
     , deploymentEnvironment   :: Text
     , deploymentDescription   :: Maybe Text
     , deploymentCreator       :: User
@@ -73,7 +75,7 @@ instance Arbitrary Deployment where
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
-        <*> pure Null
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

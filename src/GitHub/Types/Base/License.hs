@@ -15,8 +15,8 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 data License = License
     { licenseKey    :: Text
     , licenseName   :: Text
-    , licenseSpdxId :: Text
-    , licenseUrl    :: Text
+    , licenseSpdxId :: Maybe Text
+    , licenseUrl    :: Maybe Text
     } deriving (Eq, Show, Read)
 
 

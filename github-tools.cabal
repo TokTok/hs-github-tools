@@ -33,6 +33,7 @@ library
       GitHub.Types.Base.CommitRefHtml
       GitHub.Types.Base.DateTime
       GitHub.Types.Base.Deployment
+      GitHub.Types.Base.DeploymentPayload
       GitHub.Types.Base.DeploymentStatus
       GitHub.Types.Base.Hook
       GitHub.Types.Base.HookConfig
