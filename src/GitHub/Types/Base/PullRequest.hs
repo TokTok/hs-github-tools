@@ -51,7 +51,7 @@ data PullRequest = PullRequest
     , pullRequestNumber              :: Int
     , pullRequestPatchUrl            :: Text
     , pullRequestRebaseable          :: Maybe Bool
-    , pullRequestRequestedReviewers  :: [Text]
+    , pullRequestRequestedReviewers  :: [User]
     , pullRequestReviewComments      :: Int
     , pullRequestReviewCommentsUrl   :: Text
     , pullRequestReviewCommentUrl    :: Text
