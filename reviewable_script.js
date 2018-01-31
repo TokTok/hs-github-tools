@@ -10,7 +10,7 @@
 // (_), which is supplied by the execution environment.
 
 
-/*µ
+/**
  * @todo Calculate required reviewers count automatically.
  * @body Do we want to calculate this number by size of diff, or number of files?
  */
