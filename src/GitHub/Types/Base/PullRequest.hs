@@ -13,6 +13,7 @@ import           GitHub.Types.Base.Commit
 import           GitHub.Types.Base.DateTime
 import           GitHub.Types.Base.Milestone
 import           GitHub.Types.Base.PullRequestLinks
+import           GitHub.Types.Base.Team
 import           GitHub.Types.Base.User
 
 ------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ data PullRequest = PullRequest
     , pullRequestPatchUrl            :: Text
     , pullRequestRebaseable          :: Maybe Bool
     , pullRequestRequestedReviewers  :: [User]
+    , pullRequestRequestedTeams      :: [Team]
     , pullRequestReviewComments      :: Int
     , pullRequestReviewCommentsUrl   :: Text
     , pullRequestReviewCommentUrl    :: Text
@@ -99,6 +101,7 @@ instance FromJSON PullRequest where
         <*> x .: "patch_url"
         <*> x .: "rebaseable"
         <*> x .: "requested_reviewers"
+        <*> x .: "requested_teams"
         <*> x .: "review_comments"
         <*> x .: "review_comments_url"
         <*> x .: "review_comment_url"
@@ -147,6 +150,7 @@ instance ToJSON PullRequest where
         , "patch_url"             .= pullRequestPatchUrl
         , "rebaseable"            .= pullRequestRebaseable
         , "requested_reviewers"   .= pullRequestRequestedReviewers
+        , "requested_teams"       .= pullRequestRequestedTeams
         , "review_comments"       .= pullRequestReviewComments
         , "review_comments_url"   .= pullRequestReviewCommentsUrl
         , "review_comment_url"    .= pullRequestReviewCommentUrl
@@ -162,6 +166,7 @@ instance ToJSON PullRequest where
 instance Arbitrary PullRequest where
     arbitrary = PullRequest
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
