@@ -10,8 +10,11 @@
 // (_), which is supplied by the execution environment.
 
 
-
-const numReviewersRequired = 3; // TODO(grayhatter) do we want to calculate this number by size of diff, or number of files?
+/**
+ * @todo Calculate required reviewers count automatically.
+ * @body Do we want to calculate this number by size of diff, or number of files?
+ */
+const numReviewersRequired = 3;
 // Part 1 Check that each file has been reviewed by at least numReviewersRequired at the latest revision.
 const unreviewedFiles = _(review.files)
   .filter(file => _.size(_.last(file.revisions).reviewers) < numReviewersRequired)
