@@ -102,7 +102,7 @@ script:
     - if [ -n "%haskell.packages%" ]; then cabal install %haskell.packages%; fi
     # Now to the actual build.
     - cabal configure --enable-tests --enable-benchmarks --enable-library-coverage
-    - cabal test
+    - travis_wait cabal test
     - cabal check
 
 after_script:

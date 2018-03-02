@@ -54,5 +54,5 @@ script:
 - cabal install --enable-tests --enable-benchmarks --only-dependencies ./
 - if [ -n "" ]; then cabal install ; fi
 - cabal configure --enable-tests --enable-benchmarks --enable-library-coverage
-- cabal test
+- travis_wait cabal test
 - cabal check
