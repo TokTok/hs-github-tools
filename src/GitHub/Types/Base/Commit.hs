@@ -18,7 +18,7 @@ import           GitHub.Types.Base.User
 data Commit = Commit
     { commitSha   :: Text
     , commitUser  :: User
-    , commitRepo  :: Repository
+    , commitRepo  :: Maybe Repository
     , commitLabel :: Text
     , commitRef   :: Text
     } deriving (Eq, Show, Read)

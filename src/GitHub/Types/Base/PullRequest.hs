@@ -11,6 +11,7 @@ import           Test.QuickCheck.Arbitrary          (Arbitrary (..))
 
 import           GitHub.Types.Base.Commit
 import           GitHub.Types.Base.DateTime
+import           GitHub.Types.Base.Label
 import           GitHub.Types.Base.Milestone
 import           GitHub.Types.Base.PullRequestLinks
 import           GitHub.Types.Base.Team
@@ -39,6 +40,7 @@ data PullRequest = PullRequest
     , pullRequestHtmlUrl             :: Text
     , pullRequestId                  :: Int
     , pullRequestIssueUrl            :: Text
+    , pullRequestLabels              :: [Label]
     , pullRequestLinks               :: PullRequestLinks
     , pullRequestLocked              :: Bool
     , pullRequestMaintainerCanModify :: Bool
@@ -87,6 +89,7 @@ instance FromJSON PullRequest where
         <*> x .: "html_url"
         <*> x .: "id"
         <*> x .: "issue_url"
+        <*> x .: "labels"
         <*> x .: "_links"
         <*> x .: "locked"
         <*> x .: "maintainer_can_modify"
@@ -136,6 +139,7 @@ instance ToJSON PullRequest where
         , "html_url"              .= pullRequestHtmlUrl
         , "id"                    .= pullRequestId
         , "issue_url"             .= pullRequestIssueUrl
+        , "labels"                .= pullRequestLabels
         , "_links"                .= pullRequestLinks
         , "locked"                .= pullRequestLocked
         , "maintainer_can_modify" .= pullRequestMaintainerCanModify
@@ -166,6 +170,7 @@ instance ToJSON PullRequest where
 instance Arbitrary PullRequest where
     arbitrary = PullRequest
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

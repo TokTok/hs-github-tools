@@ -11,7 +11,7 @@ import           GitHub.Types.Events
 
 spec :: Spec
 spec =
-  describe "identity JSON conversion" $ do
+  describe "identity JSON conversion" $ parallel $ do
     it "CommitCommentEvent"            $ property $ \(x :: CommitCommentEvent           ) -> decode (encode x) `shouldBe` Just x
     it "CreateEvent"                   $ property $ \(x :: CreateEvent                  ) -> decode (encode x) `shouldBe` Just x
     it "DeleteEvent"                   $ property $ \(x :: DeleteEvent                  ) -> decode (encode x) `shouldBe` Just x

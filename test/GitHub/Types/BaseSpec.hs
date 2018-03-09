@@ -2,9 +2,7 @@
 {-# LANGUAGE Trustworthy         #-}
 module GitHub.Types.BaseSpec where
 
-import           Control.Applicative ((<$>))
-import           Data.Aeson          (FromJSON, ToJSON, decode, encode)
-import           GHC.Generics        (Generic)
+import           Data.Aeson        (decode, encode)
 import           Test.Hspec
 import           Test.QuickCheck
 
@@ -13,7 +11,7 @@ import           GitHub.Types.Base
 
 spec :: Spec
 spec =
-  describe "identity JSON conversion" $ do
+  describe "identity JSON conversion" $ parallel $ do
     it "Author"             $ property $ \(x :: Author            ) -> decode (encode x) `shouldBe` Just x
     it "Branch"             $ property $ \(x :: Branch            ) -> decode (encode x) `shouldBe` Just x
     it "Change"             $ property $ \(x :: Change            ) -> decode (encode x) `shouldBe` Just x

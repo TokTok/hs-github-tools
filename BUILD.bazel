@@ -6,6 +6,12 @@ project("github-tools")
 haskell_library(
     name = "github-tools",
     srcs = glob(["src/**/*.*hs"]),
+    compiler_flags = [
+        "-j4",
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-imports",
+    ],
     prebuilt_dependencies = [
         "base",
         "bytestring",
@@ -35,7 +41,20 @@ haskell_library(
 
 haskell_test(
     name = "test",
+    timeout = "long",
     srcs = glob(["test/**/*.*hs"]),
+    args = [
+        "-j4",
+        "+RTS",
+        "-N4",
+    ],
+    compiler_flags = [
+        "-threaded",
+        "-rtsopts",
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-imports",
+    ],
     main_file = "test/testsuite.hs",
     prebuilt_dependencies = ["base"],
     src_strip_prefix = "test",

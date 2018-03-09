@@ -3,7 +3,7 @@ cache:
 - '%APPDATA%\ghc'
 
 install:
-- choco install ghc
+- choco install ghc --version 8.2.2
 - refreshenv
 
 build_script:
