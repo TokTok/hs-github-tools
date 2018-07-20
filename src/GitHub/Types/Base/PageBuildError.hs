@@ -12,7 +12,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 ------------------------------------------------------------------------------
 -- PageBuildError
 
-data PageBuildError = PageBuildError
+newtype PageBuildError = PageBuildError
     { pageBuildErrorMessage :: Maybe Text
     } deriving (Eq, Show, Read)
 

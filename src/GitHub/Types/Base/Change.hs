@@ -12,7 +12,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 ------------------------------------------------------------------------------
 -- Change
 
-data Change = Change
+newtype Change = Change
     { changesFrom :: Text
     } deriving (Eq, Show, Read)
 

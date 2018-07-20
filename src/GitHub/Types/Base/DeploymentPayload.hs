@@ -12,7 +12,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 ------------------------------------------------------------------------------
 -- DeploymentPayload
 
-data DeploymentPayload = DeploymentPayload
+newtype DeploymentPayload = DeploymentPayload
     { deploymentPayloadWebUrl :: Maybe Text
     } deriving (Eq, Show, Read)
 

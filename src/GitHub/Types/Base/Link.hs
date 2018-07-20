@@ -12,7 +12,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 ------------------------------------------------------------------------------
 -- Link
 
-data Link = Link
+newtype Link = Link
     { linkHref :: Text
     } deriving (Eq, Show, Read)
 

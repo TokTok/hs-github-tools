@@ -95,32 +95,33 @@ verifySecretKey rawBody sig key = sig == ("sha1=" <> digestToHexByteString
 
 runHandler :: (Applicative m, Monad m) => Handler m -> m (Either Error (UUID, Payload))
 runHandler h = do
-    mbDelivery <- pure . (fromASCIIBytes =<<) =<< hHeader h "X-GitHub-Delivery"
+    mbDelivery <- (fromASCIIBytes =<<) <$> hHeader h "X-GitHub-Delivery"
 
     res <- do
         rawBody     <- hBody h
         mbSignature <- hHeader h "X-Hub-Signature"
 
-        authenticatedBody <- pure $ case (hSecretKeys h, mbSignature) of
+        let authenticatedBody
+              = case (hSecretKeys h, mbSignature) of
+                  -- No secret key and no signature. Pass along the body
+                  -- unverified.
+                  ([], Nothing) -> Right rawBody
 
-            -- No secret key and no signature. Pass along the body unverified.
-            ([], Nothing) -> Right rawBody
+                  -- Signature is available but no secret keys to verify it.
+                  -- This is not a fatal error, we can still process the event.
+                  ([], Just _) -> Right rawBody
 
-            -- Signature is available but no secret keys to verify it. This is
-            -- not a fatal error, we can still process the event.
-            ([], Just _) -> Right rawBody
+                  -- Secret keys are available but the request is not signed.
+                  -- Reject the request.
+                  (_, Nothing) -> Left UnsignedRequest
 
-            -- Secret keys are available but the request is not signed. Reject
-            -- the request.
-            (_, Nothing) -> Left UnsignedRequest
-
-            -- Both the signature and secret keys are available. Verify the
-            -- signature with the first key which works, otherwise reject the
-            -- request.
-            (secretKeys, Just sig) ->
-                if any (verifySecretKey rawBody sig) secretKeys
-                    then Right rawBody
-                    else Left InvalidSignature
+                  -- Both the signature and secret keys are available. Verify
+                  -- the signature with the first key which works, otherwise
+                  -- reject the request.
+                  (secretKeys, Just sig) ->
+                      if any (verifySecretKey rawBody sig) secretKeys
+                          then Right rawBody
+                          else Left InvalidSignature
 
         mbEventName <- hHeader h "X-GitHub-Event"
         pure $ do

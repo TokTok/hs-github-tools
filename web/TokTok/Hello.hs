@@ -48,8 +48,7 @@ newGitHubCache timeout fetchUpdates =
     (consistentDuration timeout $ \state () -> do
       infos <- fetchUpdates
       return (state, infos))
-    (do time <- POSIX.getPOSIXTime
-        return $ round time)
+    (round <$> POSIX.getPOSIXTime)
     1
     (CacheWithLRUList 1 1 1)
 
