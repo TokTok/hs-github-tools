@@ -2,8 +2,8 @@ name:                github-tools
 version:             0.1.1
 synopsis:            Various Github helper utilities.
 homepage:            https://toktok.github.io/
-license:             AGPL-3
-license-file:        LICENSE.md
+license:             GPL-3
+license-file:        LICENSE
 author:              iphydf
 maintainer:          iphydf@users.noreply.github.com
 category:            Development
