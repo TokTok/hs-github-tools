@@ -1,3 +1,4 @@
+load("@ai_formation_hazel//:hazel.bzl", "hazel_library")
 load("@io_tweag_rules_haskell//haskell:haskell.bzl", "haskell_library", "haskell_test")
 load("//tools/project:build_defs.bzl", "project")
 
@@ -16,25 +17,25 @@ haskell_library(
     version = "0.1.1",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party/haskell:base",
-        "//third_party/haskell:bytestring",
-        "//third_party/haskell:containers",
-        "//third_party/haskell:text",
-        "//third_party/haskell:time",
-        "@haskell_QuickCheck//:QuickCheck",
-        "@haskell_aeson//:aeson",
-        "@haskell_cryptohash//:cryptohash",
-        "@haskell_exceptions//:exceptions",
-        "@haskell_github//:github",
-        "@haskell_html//:html",
-        "@haskell_http_client//:http-client",
-        "@haskell_http_client_tls//:http-client-tls",
-        "@haskell_monad_parallel//:monad-parallel",
-        "@haskell_quickcheck_text//:quickcheck-text",
-        "@haskell_tabular//:tabular",
-        "@haskell_unordered_containers//:unordered-containers",
-        "@haskell_uuid//:uuid",
-        "@haskell_vector//:vector",
+        hazel_library("QuickCheck"),
+        hazel_library("aeson"),
+        hazel_library("base"),
+        hazel_library("bytestring"),
+        hazel_library("containers"),
+        hazel_library("cryptohash"),
+        hazel_library("exceptions"),
+        hazel_library("github"),
+        hazel_library("html"),
+        hazel_library("http-client"),
+        hazel_library("http-client-tls"),
+        hazel_library("monad-parallel"),
+        hazel_library("quickcheck-text"),
+        hazel_library("tabular"),
+        hazel_library("text"),
+        hazel_library("time"),
+        hazel_library("unordered-containers"),
+        hazel_library("uuid"),
+        hazel_library("vector"),
     ],
 )
 
@@ -58,9 +59,9 @@ haskell_test(
     visibility = ["//visibility:public"],
     deps = [
         ":hs-github-tools",
-        "//third_party/haskell:base",
-        "@haskell_QuickCheck//:QuickCheck",
-        "@haskell_aeson//:aeson",
-        "@haskell_hspec//:hspec",
+        hazel_library("QuickCheck"),
+        hazel_library("aeson"),
+        hazel_library("base"),
+        hazel_library("hspec"),
     ],
 )
