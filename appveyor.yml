@@ -1,19 +1,16 @@
+---
 cache:
-- '%APPDATA%\cabal'
-- '%APPDATA%\ghc'
+  - '%APPDATA%\cabal'
+  - '%APPDATA%\ghc'
 
 install:
-- choco install ghc --version 8.2.2
-- refreshenv
+  - choco install ghc --version 8.2.2
+  - refreshenv
 
 build_script:
-- cabal update
-- cabal install alex happy
-- cabal install --enable-tests --enable-benchmarks --disable-documentation --only-dependencies
+  - cabal update
+  - cabal install alex happy
+  - cabal install --enable-tests --enable-benchmarks --disable-documentation --only-dependencies
 
 test_script:
-- cabal test
-
-branches:
-  only:
-  - master
+  - cabal test
