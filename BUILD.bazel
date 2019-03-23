@@ -1,5 +1,6 @@
 load("@ai_formation_hazel//:hazel.bzl", "hazel_library")
-load("@io_tweag_rules_haskell//haskell:haskell.bzl", "haskell_library", "haskell_test")
+load("@io_tweag_rules_haskell//haskell:haskell.bzl", "haskell_library")
+load("//third_party/haskell/hspec-discover:build_defs.bzl", "hspec_test")
 load("//tools/project:build_defs.bzl", "project")
 
 project()
@@ -39,10 +40,9 @@ haskell_library(
     ],
 )
 
-haskell_test(
+hspec_test(
     name = "test",
     timeout = "long",
-    srcs = glob(["test/**/*.*hs"]),
     args = [
         "-j4",
         "+RTS",
@@ -55,8 +55,6 @@ haskell_test(
         "-Werror",
         "-Wno-unused-imports",
     ],
-    src_strip_prefix = "test",
-    visibility = ["//visibility:public"],
     deps = [
         ":hs-github-tools",
         hazel_library("QuickCheck"),
