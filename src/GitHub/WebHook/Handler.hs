@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections     #-}
 module GitHub.WebHook.Handler
   ( Handler (..)
   , Error (..)
@@ -134,4 +135,4 @@ runHandler h = do
 
     pure $ case mbDelivery of
         Nothing   -> Left InvalidRequest
-        Just uuid -> fmap ((,) uuid) res
+        Just uuid -> fmap (uuid,) res

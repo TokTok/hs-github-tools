@@ -168,7 +168,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
       map $ \issue -> ChangeLogItem
         { clMilestone = "Backlog"
         , clTitle     = GitHub.issueTitle issue
-        , clNumber    = GitHub.issueNumber issue
+        , clNumber    = GitHub.unIssueNumber $ GitHub.issueNumber issue
         }
 
     backlogPrItems    = addToBacklog backlogPrs
@@ -186,7 +186,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
         issue -> Just ChangeLogItem
           { clMilestone = GitHub.milestoneTitle . Maybe.fromJust . GitHub.issueMilestone $ issue
           , clTitle     = GitHub.issueTitle issue
-          , clNumber    = GitHub.issueNumber issue
+          , clNumber    = GitHub.unIssueNumber $ GitHub.issueNumber issue
           }
       ) selectedItems
 
@@ -196,7 +196,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
         return ChangeLogItem
           { clMilestone = milestone
           , clTitle     = GitHub.simplePullRequestTitle issue
-          , clNumber    = GitHub.simplePullRequestNumber issue
+          , clNumber    = GitHub.unIssueNumber $ GitHub.simplePullRequestNumber issue
           }
       ) selectedPrs
 

@@ -13,7 +13,6 @@ import qualified Data.Text               as Text
 import           Data.Time.Clock         (getCurrentTime)
 import qualified Data.Vector             as V
 import qualified GitHub
-import qualified GitHub.Data.Id          as GitHub
 import           Network.HTTP.Client     (Manager, newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
 
@@ -32,7 +31,6 @@ getFullPr
 getFullPr auth mgr owner repo =
   request auth mgr
     . GitHub.pullRequestR owner repo
-    . GitHub.Id
     . GitHub.simplePullRequestNumber
 
 
@@ -57,7 +55,7 @@ makePullRequestInfo
   -> PullRequestInfo
 makePullRequestInfo repoName (reviewers, pr) = PullRequestInfo
   { prRepoName  = GitHub.untagName repoName
-  , prNumber    = GitHub.pullRequestNumber pr
+  , prNumber    = GitHub.unIssueNumber $ GitHub.pullRequestNumber pr
   , prUser      = user
   , prBranch    = Text.tail branch
   , prCreated   = GitHub.pullRequestCreatedAt pr
@@ -72,6 +70,7 @@ makePullRequestInfo repoName (reviewers, pr) = PullRequestInfo
     showMergeableState GitHub.StateBlocked  = "blocked"
     showMergeableState GitHub.StateClean    = "clean"
     showMergeableState GitHub.StateDirty    = "dirty"
+    showMergeableState GitHub.StateDraft    = "draft"
     showMergeableState GitHub.StateUnknown  = "unknown"
     showMergeableState GitHub.StateUnstable = "unstable"
 

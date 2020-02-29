@@ -1,4 +1,5 @@
 /cabal.config
 /cabal.sandbox.config
 /dist
+/stack.yaml.lock
 /.stack-work

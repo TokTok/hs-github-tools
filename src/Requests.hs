@@ -2,12 +2,14 @@
 module Requests where
 
 import           Control.Monad.Catch (throwM)
+import           Data.Aeson          (FromJSON)
 import qualified GitHub
 import           Network.HTTP.Client (Manager)
 
 
 request
-  :: Maybe GitHub.Auth
+  :: FromJSON a
+  => Maybe GitHub.Auth
   -> Manager
   -> GitHub.Request 'GitHub.RO a
   -> IO a
