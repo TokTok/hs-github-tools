@@ -1,1 +1,1 @@
-web: ./webservice $PORT
+web: webservice $PORT
