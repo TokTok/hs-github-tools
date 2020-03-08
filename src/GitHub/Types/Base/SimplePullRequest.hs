@@ -22,6 +22,8 @@ data SimplePullRequest = SimplePullRequest
     { simplePullRequestState             :: Text
     , simplePullRequestReviewCommentUrl  :: Text
     , simplePullRequestAssignees         :: [User]
+    , simplePullRequestAuthorAssociation :: Text
+    , simplePullRequestDraft             :: Bool
     , simplePullRequestLocked            :: Bool
     , simplePullRequestBase              :: Commit
     , simplePullRequestBody              :: Text
@@ -40,6 +42,7 @@ data SimplePullRequest = SimplePullRequest
     , simplePullRequestPatchUrl          :: Text
     , simplePullRequestCreatedAt         :: DateTime
     , simplePullRequestId                :: Int
+    , simplePullRequestNodeId            :: Text
     , simplePullRequestIssueUrl          :: Text
     , simplePullRequestTitle             :: Text
     , simplePullRequestClosedAt          :: Maybe DateTime
@@ -55,6 +58,8 @@ instance FromJSON SimplePullRequest where
         <$> x .: "state"
         <*> x .: "review_comment_url"
         <*> x .: "assignees"
+        <*> x .: "author_association"
+        <*> x .: "draft"
         <*> x .: "locked"
         <*> x .: "base"
         <*> x .: "body"
@@ -73,6 +78,7 @@ instance FromJSON SimplePullRequest where
         <*> x .: "patch_url"
         <*> x .: "created_at"
         <*> x .: "id"
+        <*> x .: "node_id"
         <*> x .: "issue_url"
         <*> x .: "title"
         <*> x .: "closed_at"
@@ -89,6 +95,8 @@ instance ToJSON SimplePullRequest where
         [ "state"               .= simplePullRequestState
         , "review_comment_url"  .= simplePullRequestReviewCommentUrl
         , "assignees"           .= simplePullRequestAssignees
+        , "author_association"  .= simplePullRequestAuthorAssociation
+        , "draft"               .= simplePullRequestDraft
         , "locked"              .= simplePullRequestLocked
         , "base"                .= simplePullRequestBase
         , "body"                .= simplePullRequestBody
@@ -107,6 +115,7 @@ instance ToJSON SimplePullRequest where
         , "patch_url"           .= simplePullRequestPatchUrl
         , "created_at"          .= simplePullRequestCreatedAt
         , "id"                  .= simplePullRequestId
+        , "node_id"             .= simplePullRequestNodeId
         , "issue_url"           .= simplePullRequestIssueUrl
         , "title"               .= simplePullRequestTitle
         , "closed_at"           .= simplePullRequestClosedAt
@@ -120,6 +129,9 @@ instance ToJSON SimplePullRequest where
 instance Arbitrary SimplePullRequest where
     arbitrary = SimplePullRequest
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

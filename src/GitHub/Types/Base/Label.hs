@@ -18,6 +18,7 @@ data Label = Label
     , labelUrl     :: Text
     , labelName    :: Text
     , labelId      :: Int
+    , labelNodeId  :: Text
     } deriving (Eq, Show, Read)
 
 
@@ -28,6 +29,7 @@ instance FromJSON Label where
         <*> x .: "url"
         <*> x .: "name"
         <*> x .: "id"
+        <*> x .: "node_id"
 
     parseJSON _ = fail "Label"
 
@@ -39,12 +41,14 @@ instance ToJSON Label where
         , "url"     .= labelUrl
         , "name"    .= labelName
         , "id"      .= labelId
+        , "node_id" .= labelNodeId
         ]
 
 
 instance Arbitrary Label where
     arbitrary = Label
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

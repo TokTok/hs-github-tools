@@ -20,6 +20,7 @@ data IssueComment = IssueComment
     , issueCommentCreatedAt         :: DateTime
     , issueCommentHtmlUrl           :: Text
     , issueCommentId                :: Int
+    , issueCommentNodeId            :: Text
     , issueCommentIssueUrl          :: Text
     , issueCommentUpdatedAt         :: DateTime
     , issueCommentUrl               :: Text
@@ -34,6 +35,7 @@ instance FromJSON IssueComment where
         <*> x .: "created_at"
         <*> x .: "html_url"
         <*> x .: "id"
+        <*> x .: "node_id"
         <*> x .: "issue_url"
         <*> x .: "updated_at"
         <*> x .: "url"
@@ -49,6 +51,7 @@ instance ToJSON IssueComment where
         , "created_at"         .= issueCommentCreatedAt
         , "html_url"           .= issueCommentHtmlUrl
         , "id"                 .= issueCommentId
+        , "node_id"            .= issueCommentNodeId
         , "issue_url"          .= issueCommentIssueUrl
         , "updated_at"         .= issueCommentUpdatedAt
         , "url"                .= issueCommentUrl
@@ -59,6 +62,7 @@ instance ToJSON IssueComment where
 instance Arbitrary IssueComment where
     arbitrary = IssueComment
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

@@ -18,8 +18,10 @@ data DeploymentStatus = DeploymentStatus
     { deploymentStatusUrl           :: Text
     , deploymentStatusId            :: Int
     , deploymentStatusState         :: Text
+    , deploymentStatusNodeId        :: Text
     , deploymentStatusCreator       :: User
     , deploymentStatusDescription   :: Text
+    , deploymentStatusEnvironment   :: Text
     , deploymentStatusTargetUrl     :: Text
     , deploymentStatusCreatedAt     :: DateTime
     , deploymentStatusUpdatedAt     :: DateTime
@@ -32,8 +34,10 @@ instance FromJSON DeploymentStatus where
         <$> x .: "url"
         <*> x .: "id"
         <*> x .: "state"
+        <*> x .: "node_id"
         <*> x .: "creator"
         <*> x .: "description"
+        <*> x .: "environment"
         <*> x .: "target_url"
         <*> x .: "created_at"
         <*> x .: "updated_at"
@@ -47,8 +51,10 @@ instance ToJSON DeploymentStatus where
         [ "url"            .= deploymentStatusUrl
         , "id"             .= deploymentStatusId
         , "state"          .= deploymentStatusState
+        , "node_id"        .= deploymentStatusNodeId
         , "creator"        .= deploymentStatusCreator
         , "description"    .= deploymentStatusDescription
+        , "environment"    .= deploymentStatusEnvironment
         , "target_url"     .= deploymentStatusTargetUrl
         , "created_at"     .= deploymentStatusCreatedAt
         , "updated_at"     .= deploymentStatusUpdatedAt
@@ -60,6 +66,8 @@ instance ToJSON DeploymentStatus where
 instance Arbitrary DeploymentStatus where
     arbitrary = DeploymentStatus
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

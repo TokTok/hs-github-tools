@@ -33,6 +33,7 @@ data Repository = Repository
     , repositoryDefaultBranch    :: Text
     , repositoryDeploymentsUrl   :: Text
     , repositoryDescription      :: Maybe Text
+    , repositoryDisabled         :: Bool
     , repositoryDownloadsUrl     :: Text
     , repositoryEventsUrl        :: Text
     , repositoryFork             :: Bool
@@ -66,6 +67,7 @@ data Repository = Repository
     , repositoryMilestonesUrl    :: Text
     , repositoryMirrorUrl        :: Maybe Text
     , repositoryName             :: Text
+    , repositoryNodeId           :: Text
     , repositoryNotificationsUrl :: Text
     , repositoryOpenIssues       :: Int
     , repositoryOpenIssuesCount  :: Int
@@ -113,6 +115,7 @@ instance FromJSON Repository where
         <*> x .: "default_branch"
         <*> x .: "deployments_url"
         <*> x .: "description"
+        <*> x .: "disabled"
         <*> x .: "downloads_url"
         <*> x .: "events_url"
         <*> x .: "fork"
@@ -146,6 +149,7 @@ instance FromJSON Repository where
         <*> x .: "milestones_url"
         <*> x .: "mirror_url"
         <*> x .: "name"
+        <*> x .: "node_id"
         <*> x .: "notifications_url"
         <*> x .: "open_issues"
         <*> x .: "open_issues_count"
@@ -193,6 +197,7 @@ instance ToJSON Repository where
         , "default_branch"    .= repositoryDefaultBranch
         , "deployments_url"   .= repositoryDeploymentsUrl
         , "description"       .= repositoryDescription
+        , "disabled"          .= repositoryDisabled
         , "downloads_url"     .= repositoryDownloadsUrl
         , "events_url"        .= repositoryEventsUrl
         , "fork"              .= repositoryFork
@@ -226,6 +231,7 @@ instance ToJSON Repository where
         , "milestones_url"    .= repositoryMilestonesUrl
         , "mirror_url"        .= repositoryMirrorUrl
         , "name"              .= repositoryName
+        , "node_id"           .= repositoryNodeId
         , "notifications_url" .= repositoryNotificationsUrl
         , "open_issues"       .= repositoryOpenIssues
         , "open_issues_count" .= repositoryOpenIssuesCount
@@ -258,6 +264,8 @@ instance ToJSON Repository where
 instance Arbitrary Repository where
     arbitrary = Repository
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

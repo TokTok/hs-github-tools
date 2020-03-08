@@ -23,6 +23,7 @@ data Milestone = Milestone
     , milestoneUpdatedAt    :: DateTime
     , milestoneCreatedAt    :: DateTime
     , milestoneId           :: Int
+    , milestoneNodeId       :: Text
     , milestoneTitle        :: Text
     , milestoneClosedAt     :: Maybe DateTime
     , milestoneNumber       :: Int
@@ -43,6 +44,7 @@ instance FromJSON Milestone where
         <*> x .: "updated_at"
         <*> x .: "created_at"
         <*> x .: "id"
+        <*> x .: "node_id"
         <*> x .: "title"
         <*> x .: "closed_at"
         <*> x .: "number"
@@ -64,6 +66,7 @@ instance ToJSON Milestone where
         , "updated_at"    .= milestoneUpdatedAt
         , "created_at"    .= milestoneCreatedAt
         , "id"            .= milestoneId
+        , "node_id"       .= milestoneNodeId
         , "title"         .= milestoneTitle
         , "closed_at"     .= milestoneClosedAt
         , "number"        .= milestoneNumber
@@ -77,6 +80,7 @@ instance ToJSON Milestone where
 instance Arbitrary Milestone where
     arbitrary = Milestone
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

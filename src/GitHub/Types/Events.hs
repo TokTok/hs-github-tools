@@ -1,5 +1,7 @@
 module GitHub.Types.Events (module X) where
 
+import           GitHub.Types.Events.CheckRunEvent                 as X
+import           GitHub.Types.Events.CheckSuiteEvent               as X
 import           GitHub.Types.Events.CommitCommentEvent            as X
 import           GitHub.Types.Events.CreateEvent                   as X
 import           GitHub.Types.Events.DeleteEvent                   as X
@@ -22,5 +24,6 @@ import           GitHub.Types.Events.PullRequestReviewEvent        as X
 import           GitHub.Types.Events.PushEvent                     as X
 import           GitHub.Types.Events.ReleaseEvent                  as X
 import           GitHub.Types.Events.RepositoryEvent               as X
+import           GitHub.Types.Events.StarEvent                     as X
 import           GitHub.Types.Events.StatusEvent                   as X
 import           GitHub.Types.Events.WatchEvent                    as X

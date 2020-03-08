@@ -35,6 +35,7 @@ data Issue = Issue
     , issueLabelsUrl         :: Text
     , issueLocked            :: Bool
     , issueMilestone         :: Maybe Milestone
+    , issueNodeId            :: Text
     , issueNumber            :: Int
     , issuePullRequest       :: Maybe PullRequestRef
     , issueRepositoryUrl     :: Text
@@ -63,6 +64,7 @@ instance FromJSON Issue where
         <*> x .: "labels_url"
         <*> x .: "locked"
         <*> x .: "milestone"
+        <*> x .: "node_id"
         <*> x .: "number"
         <*> x .:? "pull_request"
         <*> x .: "repository_url"
@@ -92,6 +94,7 @@ instance ToJSON Issue where
         , "labels_url"         .= issueLabelsUrl
         , "locked"             .= issueLocked
         , "milestone"          .= issueMilestone
+        , "node_id"            .= issueNodeId
         , "number"             .= issueNumber
         , "pull_request"       .= issuePullRequest
         , "repository_url"     .= issueRepositoryUrl
@@ -106,6 +109,7 @@ instance ToJSON Issue where
 instance Arbitrary Issue where
     arbitrary = Issue
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

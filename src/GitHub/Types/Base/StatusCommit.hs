@@ -22,6 +22,7 @@ data StatusCommit = StatusCommit
     , statusCommitCommit      :: CommitDetails
     , statusCommitCommitter   :: Maybe User
     , statusCommitHtmlUrl     :: Text
+    , statusCommitNodeId      :: Text
     , statusCommitParents     :: [CommitRefHtml]
     , statusCommitSha         :: Text
     , statusCommitUrl         :: Text
@@ -35,6 +36,7 @@ instance FromJSON StatusCommit where
         <*> x .: "commit"
         <*> x .: "committer"
         <*> x .: "html_url"
+        <*> x .: "node_id"
         <*> x .: "parents"
         <*> x .: "sha"
         <*> x .: "url"
@@ -49,6 +51,7 @@ instance ToJSON StatusCommit where
         , "commit"       .= statusCommitCommit
         , "committer"    .= statusCommitCommitter
         , "html_url"     .= statusCommitHtmlUrl
+        , "node_id"      .= statusCommitNodeId
         , "parents"      .= statusCommitParents
         , "sha"          .= statusCommitSha
         , "url"          .= statusCommitUrl
@@ -58,6 +61,7 @@ instance ToJSON StatusCommit where
 instance Arbitrary StatusCommit where
     arbitrary = StatusCommit
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

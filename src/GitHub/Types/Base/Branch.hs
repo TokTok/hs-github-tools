@@ -15,14 +15,16 @@ import           GitHub.Types.Base.CommitRef
 -- Branch
 
 data Branch = Branch
-    { branchName   :: Text
-    , branchCommit :: CommitRef
+    { branchName      :: Text
+    , branchProtected :: Bool
+    , branchCommit    :: CommitRef
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON Branch where
     parseJSON (Object x) = Branch
         <$> x .: "name"
+        <*> x .: "protected"
         <*> x .: "commit"
 
     parseJSON _ = fail "Branch"
@@ -30,12 +32,14 @@ instance FromJSON Branch where
 
 instance ToJSON Branch where
     toJSON Branch{..} = object
-        [ "name"   .= branchName
-        , "commit" .= branchCommit
+        [ "name"      .= branchName
+        , "protected" .= branchProtected
+        , "commit"    .= branchCommit
         ]
 
 
 instance Arbitrary Branch where
     arbitrary = Branch
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary

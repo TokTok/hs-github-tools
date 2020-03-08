@@ -22,6 +22,7 @@ data Organization = Organization
     , organizationIssuesUrl        :: Text
     , organizationLogin            :: Text
     , organizationMembersUrl       :: Text
+    , organizationNodeId           :: Text
     , organizationPublicMembersUrl :: Text
     , organizationReposUrl         :: Text
     , organizationUrl              :: Text
@@ -39,6 +40,7 @@ instance FromJSON Organization where
         <*> x .: "issues_url"
         <*> x .: "login"
         <*> x .: "members_url"
+        <*> x .: "node_id"
         <*> x .: "public_members_url"
         <*> x .: "repos_url"
         <*> x .: "url"
@@ -57,6 +59,7 @@ instance ToJSON Organization where
         , "issues_url"         .= organizationIssuesUrl
         , "login"              .= organizationLogin
         , "members_url"        .= organizationMembersUrl
+        , "node_id"            .= organizationNodeId
         , "public_members_url" .= organizationPublicMembersUrl
         , "repos_url"          .= organizationReposUrl
         , "url"                .= organizationUrl
@@ -66,6 +69,7 @@ instance ToJSON Organization where
 instance Arbitrary Organization where
     arbitrary = Organization
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

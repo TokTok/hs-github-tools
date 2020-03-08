@@ -24,6 +24,7 @@ data User = User
     , userId                :: Int
     , userLogin             :: Text
     , userName              :: Maybe Text
+    , userNodeId            :: Text
     , userOrganizationsUrl  :: Text
     , userReceivedEventsUrl :: Text
     , userReposUrl          :: Text
@@ -48,6 +49,7 @@ instance FromJSON User where
         <*> x .: "id"
         <*> x .: "login"
         <*> x .:? "name"
+        <*> x .: "node_id"
         <*> x .: "organizations_url"
         <*> x .: "received_events_url"
         <*> x .: "repos_url"
@@ -73,6 +75,7 @@ instance ToJSON User where
         , "id"                  .= userId
         , "login"               .= userLogin
         , "name"                .= userName
+        , "node_id"             .= userNodeId
         , "organizations_url"   .= userOrganizationsUrl
         , "received_events_url" .= userReceivedEventsUrl
         , "repos_url"           .= userReposUrl
@@ -87,6 +90,7 @@ instance ToJSON User where
 instance Arbitrary User where
     arbitrary = User
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

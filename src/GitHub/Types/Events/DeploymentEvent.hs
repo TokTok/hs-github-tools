@@ -5,6 +5,7 @@ module GitHub.Types.Events.DeploymentEvent where
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
 import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
 import           GitHub.Types.Base
@@ -16,6 +17,7 @@ data DeploymentEvent = DeploymentEvent
     , deploymentEventRepository   :: Repository
     , deploymentEventSender       :: User
 
+    , deploymentEventAction       :: Text
     , deploymentEventDeployment   :: Deployment
     } deriving (Eq, Show, Read)
 
@@ -29,6 +31,7 @@ instance FromJSON DeploymentEvent where
         <*> x .: "repository"
         <*> x .: "sender"
 
+        <*> x .: "action"
         <*> x .: "deployment"
 
     parseJSON _ = fail "DeploymentEvent"
@@ -39,6 +42,7 @@ instance ToJSON DeploymentEvent where
         , "repository"   .= deploymentEventRepository
         , "sender"       .= deploymentEventSender
 
+        , "action"       .= deploymentEventAction
         , "deployment"   .= deploymentEventDeployment
         ]
 
@@ -49,4 +53,5 @@ instance Arbitrary DeploymentEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary

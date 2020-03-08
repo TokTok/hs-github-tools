@@ -26,6 +26,11 @@ library
       GitHub.Types.Base.Branch
       GitHub.Types.Base.Change
       GitHub.Types.Base.Changes
+      GitHub.Types.Base.CheckApp
+      GitHub.Types.Base.CheckCommit
+      GitHub.Types.Base.CheckOutput
+      GitHub.Types.Base.CheckRun
+      GitHub.Types.Base.CheckSuite
       GitHub.Types.Base.Commit
       GitHub.Types.Base.CommitComment
       GitHub.Types.Base.CommitDetails
@@ -48,6 +53,7 @@ library
       GitHub.Types.Base.Organization
       GitHub.Types.Base.PageBuild
       GitHub.Types.Base.PageBuildError
+      GitHub.Types.Base.Permissions
       GitHub.Types.Base.PullRequest
       GitHub.Types.Base.PullRequestLinks
       GitHub.Types.Base.PullRequestRef
@@ -68,6 +74,8 @@ library
       GitHub.Types.Base.Verification
       GitHub.Types.Event
       GitHub.Types.Events
+      GitHub.Types.Events.CheckRunEvent
+      GitHub.Types.Events.CheckSuiteEvent
       GitHub.Types.Events.CommitCommentEvent
       GitHub.Types.Events.CreateEvent
       GitHub.Types.Events.DeleteEvent
@@ -90,6 +98,7 @@ library
       GitHub.Types.Events.PushEvent
       GitHub.Types.Events.ReleaseEvent
       GitHub.Types.Events.RepositoryEvent
+      GitHub.Types.Events.StarEvent
       GitHub.Types.Events.StatusEvent
       GitHub.Types.Events.WatchEvent
       GitHub.Types.PayloadParser
@@ -168,23 +177,22 @@ executable webservice
       -Wall
   build-depends:
       base >= 4 && < 5
+    , Diff
     , github-tools
-    , aeson             >= 0.8.1.0
+    , aeson-pretty
     , bytestring
     , case-insensitive
     , expiring-cache-map
     , github            == 0.25
     , http-media
     , http-types
-    , mtl
+    , pretty
     , servant           >= 0.5
     , servant-server    >= 0.5
     , text
     , time
-    , transformers
     , unordered-containers
     , uuid
-    , vector
     , wai
     , wai-cors
     , wai-extra

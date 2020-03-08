@@ -4,6 +4,11 @@ import           GitHub.Types.Base.Author             as X
 import           GitHub.Types.Base.Branch             as X
 import           GitHub.Types.Base.Change             as X
 import           GitHub.Types.Base.Changes            as X
+import           GitHub.Types.Base.CheckApp           as X
+import           GitHub.Types.Base.CheckCommit        as X
+import           GitHub.Types.Base.CheckOutput        as X
+import           GitHub.Types.Base.CheckRun           as X
+import           GitHub.Types.Base.CheckSuite         as X
 import           GitHub.Types.Base.Commit             as X
 import           GitHub.Types.Base.CommitComment      as X
 import           GitHub.Types.Base.CommitDetails      as X

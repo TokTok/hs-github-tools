@@ -17,6 +17,7 @@ data StatusEvent = StatusEvent
     , statusEventRepository   :: Repository
     , statusEventSender       :: User
 
+    , statusEventAvatarUrl    :: Maybe Text
     , statusEventBranches     :: [Branch]
     , statusEventCommit       :: StatusCommit
     , statusEventContext      :: Text
@@ -40,6 +41,7 @@ instance FromJSON StatusEvent where
         <*> x .: "repository"
         <*> x .: "sender"
 
+        <*> x .: "avatar_url"
         <*> x .: "branches"
         <*> x .: "commit"
         <*> x .: "context"
@@ -60,6 +62,7 @@ instance ToJSON StatusEvent where
         , "repository"   .= statusEventRepository
         , "sender"       .= statusEventSender
 
+        , "avatar_url"   .= statusEventAvatarUrl
         , "branches"     .= statusEventBranches
         , "commit"       .= statusEventCommit
         , "context"      .= statusEventContext
@@ -80,6 +83,7 @@ instance Arbitrary StatusEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

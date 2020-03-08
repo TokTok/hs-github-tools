@@ -36,6 +36,7 @@ data PullRequest = PullRequest
     , pullRequestCreatedAt           :: DateTime
     , pullRequestDeletions           :: Int
     , pullRequestDiffUrl             :: Text
+    , pullRequestDraft               :: Bool
     , pullRequestHead                :: Commit
     , pullRequestHtmlUrl             :: Text
     , pullRequestId                  :: Int
@@ -51,6 +52,7 @@ data PullRequest = PullRequest
     , pullRequestMergedAt            :: Maybe DateTime
     , pullRequestMergedBy            :: Maybe User
     , pullRequestMilestone           :: Maybe Milestone
+    , pullRequestNodeId              :: Text
     , pullRequestNumber              :: Int
     , pullRequestPatchUrl            :: Text
     , pullRequestRebaseable          :: Maybe Bool
@@ -85,6 +87,7 @@ instance FromJSON PullRequest where
         <*> x .: "created_at"
         <*> x .: "deletions"
         <*> x .: "diff_url"
+        <*> x .: "draft"
         <*> x .: "head"
         <*> x .: "html_url"
         <*> x .: "id"
@@ -100,6 +103,7 @@ instance FromJSON PullRequest where
         <*> x .: "merged_at"
         <*> x .: "merged_by"
         <*> x .: "milestone"
+        <*> x .: "node_id"
         <*> x .: "number"
         <*> x .: "patch_url"
         <*> x .: "rebaseable"
@@ -135,6 +139,7 @@ instance ToJSON PullRequest where
         , "created_at"            .= pullRequestCreatedAt
         , "deletions"             .= pullRequestDeletions
         , "diff_url"              .= pullRequestDiffUrl
+        , "draft"                 .= pullRequestDraft
         , "head"                  .= pullRequestHead
         , "html_url"              .= pullRequestHtmlUrl
         , "id"                    .= pullRequestId
@@ -150,6 +155,7 @@ instance ToJSON PullRequest where
         , "merged_at"             .= pullRequestMergedAt
         , "merged_by"             .= pullRequestMergedBy
         , "milestone"             .= pullRequestMilestone
+        , "node_id"               .= pullRequestNodeId
         , "number"                .= pullRequestNumber
         , "patch_url"             .= pullRequestPatchUrl
         , "rebaseable"            .= pullRequestRebaseable
@@ -170,6 +176,8 @@ instance ToJSON PullRequest where
 instance Arbitrary PullRequest where
     arbitrary = PullRequest
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

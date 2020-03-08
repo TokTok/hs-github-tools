@@ -11,7 +11,9 @@ import           GitHub.Types.Events
 
 
 data Payload
-    = CommitCommentEventPayload            CommitCommentEvent
+    = CheckRunEventPayload                 CheckRunEvent
+    | CheckSuiteEventPayload               CheckSuiteEvent
+    | CommitCommentEventPayload            CommitCommentEvent
     | CreateEventPayload                   CreateEvent
     | DeleteEventPayload                   DeleteEvent
     | DeploymentEventPayload               DeploymentEvent
@@ -33,12 +35,15 @@ data Payload
     | PushEventPayload                     PushEvent
     | ReleaseEventPayload                  ReleaseEvent
     | RepositoryEventPayload               RepositoryEvent
+    | StarEventPayload                     StarEvent
     | StatusEventPayload                   StatusEvent
     | WatchEventPayload                    WatchEvent
     deriving (Eq, Show, Read)
 
 
 instance ToJSON Payload where
+    toJSON (CheckRunEventPayload                 x) = toJSON x
+    toJSON (CheckSuiteEventPayload               x) = toJSON x
     toJSON (CommitCommentEventPayload            x) = toJSON x
     toJSON (CreateEventPayload                   x) = toJSON x
     toJSON (DeleteEventPayload                   x) = toJSON x
@@ -62,6 +67,7 @@ instance ToJSON Payload where
     toJSON (ReleaseEventPayload                  x) = toJSON x
     toJSON (RepositoryEventPayload               x) = toJSON x
     toJSON (StatusEventPayload                   x) = toJSON x
+    toJSON (StarEventPayload                     x) = toJSON x
     toJSON (WatchEventPayload                    x) = toJSON x
 
 
@@ -74,7 +80,9 @@ data PayloadParser = PayloadParser
 
 payloadParsers :: [PayloadParser]
 payloadParsers =
-    [ eventParser CommitCommentEventPayload
+    [ eventParser CheckRunEventPayload
+    , eventParser CheckSuiteEventPayload
+    , eventParser CommitCommentEventPayload
     , eventParser CreateEventPayload
     , eventParser DeleteEventPayload
     , eventParser DeploymentEventPayload
@@ -97,6 +105,7 @@ payloadParsers =
     , eventParser ReleaseEventPayload
     , eventParser RepositoryEventPayload
     , eventParser StatusEventPayload
+    , eventParser StarEventPayload
     , eventParser WatchEventPayload
     ]
   where

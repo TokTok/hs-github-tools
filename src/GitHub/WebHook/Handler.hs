@@ -78,8 +78,12 @@ removeNulls :: ToJSON a => a -> Value
 removeNulls = go . toJSON
   where
     go (Array  x) = Array . Vector.map go $ x
-    go (Object x) = Object . HashMap.map go . HashMap.filter (/= Null) $ x
+    go (Object x) = Object . HashMap.map go . HashMap.filter (not . isEmpty) $ x
     go         x  = x
+
+    isEmpty Null      = True
+    isEmpty (Array x) = null x
+    isEmpty _         = False
 
 
 toSuccess :: Value -> Payload -> Either Error Payload

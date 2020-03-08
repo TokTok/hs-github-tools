@@ -22,6 +22,7 @@ data PullRequestEvent = PullRequestEvent
     , pullRequestEventAssignee      :: Maybe User
     , pullRequestEventBefore        :: Maybe Text
     , pullRequestEventChanges       :: Maybe Changes
+    , pullRequestEventLabel         :: Maybe Label
     , pullRequestEventNumber        :: Int
     , pullRequestEventPullRequest   :: PullRequest
     , pullRequestEventRequestedTeam :: Maybe Team
@@ -42,6 +43,7 @@ instance FromJSON PullRequestEvent where
         <*> x .:? "assignee"
         <*> x .:? "before"
         <*> x .:? "changes"
+        <*> x .:? "label"
         <*> x .: "number"
         <*> x .: "pull_request"
         <*> x .:? "requested_team"
@@ -59,6 +61,7 @@ instance ToJSON PullRequestEvent where
         , "assignee"       .= pullRequestEventAssignee
         , "before"         .= pullRequestEventBefore
         , "changes"        .= pullRequestEventChanges
+        , "label"          .= pullRequestEventLabel
         , "number"         .= pullRequestEventNumber
         , "pull_request"   .= pullRequestEventPullRequest
         , "requested_team" .= pullRequestEventRequestedTeam
@@ -71,6 +74,7 @@ instance Arbitrary PullRequestEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
