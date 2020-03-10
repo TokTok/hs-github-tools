@@ -1,5 +1,6 @@
 ---
 language: generic
+dist: xenial
 os: linux
 
 cache:
