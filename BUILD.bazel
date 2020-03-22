@@ -10,8 +10,6 @@ haskell_library(
     srcs = glob(["src/**/*.*hs"]),
     compiler_flags = [
         "-j4",
-        "-Wall",
-        "-Werror",
         "-Wno-unused-imports",
     ],
     src_strip_prefix = "src",
@@ -51,8 +49,6 @@ hspec_test(
     compiler_flags = [
         "-threaded",
         "-rtsopts",
-        "-Wall",
-        "-Werror",
         "-Wno-unused-imports",
     ],
     deps = [
