@@ -39,8 +39,8 @@ haskell_library(
 )
 
 hspec_test(
-    name = "test",
-    timeout = "long",
+    name = "testsuite",
+    size = "small",
     args = [
         "-j4",
         "+RTS",

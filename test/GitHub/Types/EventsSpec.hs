@@ -3,10 +3,13 @@
 module GitHub.Types.EventsSpec where
 
 import           Data.Aeson          (decode, encode)
-import           Test.Hspec
-import           Test.QuickCheck
+import           Test.Hspec          (Spec, describe, it, parallel, shouldBe)
+import qualified Test.QuickCheck     as QC
 
 import           GitHub.Types.Events
+
+property :: QC.Testable prop => prop -> QC.Property
+property = QC.withMaxSuccess 20 . QC.property
 
 
 spec :: Spec
