@@ -1,5 +1,5 @@
 name:                github-tools
-version:             0.1.1
+version:             0.1.2
 synopsis:            Various Github helper utilities.
 homepage:            https://toktok.github.io/
 license:             GPL-3
@@ -15,7 +15,7 @@ description:
 
 source-repository head
   type:             git
-  location:         https://github.com/TokTok/github-tools.git
+  location:         https://github.com/TokTok/hs-github-tools.git
 
 library
   exposed-modules:
