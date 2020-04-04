@@ -31,7 +31,6 @@ case "$BRANCH" in
     else
       git checkout $BRANCH
     fi
-    git checkout $BRANCH
     git rebase upstream/master
     ;;
 esac

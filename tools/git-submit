@@ -2,12 +2,22 @@
 
 set -eu
 
-BRANCH=$1
+REMOTE=""
+BRANCH="${1-master}"
 
-git checkout "$BRANCH"
+if (echo "$BRANCH" | grep ':' > /dev/null); then
+  REMOTE="$(echo "$BRANCH" | grep -o '^[^:]*')"
+  BRANCH="$(echo "$BRANCH" | grep -o '[^:]*$')"
+  REMOTE="$(git remote -v | grep ":$REMOTE/.* (push)" | grep -o '^\S*')"
+fi
+
+if [ -n "$REMOTE" ]; then
+  git checkout --track "$REMOTE/$BRANCH"
+else
+  git checkout $BRANCH
+fi
+
 git push upstream "$BRANCH:master"
-git checkout master
-git merge upstream/master
-git push
+git sync
 git branch -d "$BRANCH"
 git push origin ":$BRANCH"
