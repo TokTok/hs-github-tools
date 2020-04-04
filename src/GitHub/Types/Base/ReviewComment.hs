@@ -17,71 +17,103 @@ import           GitHub.Types.Base.User
 -- ReviewComment
 
 data ReviewComment = ReviewComment
-    { reviewCommentUrl                 :: Text
-    , reviewCommentHtmlUrl             :: Text
-    , reviewCommentId                  :: Int
-    , reviewCommentUser                :: User
-    , reviewCommentPullRequestUrl      :: Text
-    , reviewCommentOriginalPosition    :: Maybe Int
-    , reviewCommentPosition            :: Maybe Int
-    , reviewCommentPath                :: Maybe Text
+    { reviewCommentAuthorAssociation   :: Text
+    , reviewCommentBody                :: Text
     , reviewCommentCommitId            :: Text
     , reviewCommentCreatedAt           :: DateTime
-    , reviewCommentUpdatedAt           :: DateTime
-    , reviewCommentBody                :: Text
-    , reviewCommentPullRequestReviewId :: Int
-    , reviewCommentLinks               :: ReviewCommentLinks
     , reviewCommentDiffHunk            :: Text
+    , reviewCommentHtmlUrl             :: Text
+    , reviewCommentId                  :: Int
+    , reviewCommentLine                :: Int
+    , reviewCommentLinks               :: ReviewCommentLinks
+    , reviewCommentNodeId              :: Text
     , reviewCommentOriginalCommitId    :: Text
+    , reviewCommentOriginalLine        :: Int
+    , reviewCommentOriginalPosition    :: Maybe Int
+    , reviewCommentOriginalStartLine   :: Maybe Int
+    , reviewCommentPath                :: Maybe Text
+    , reviewCommentPosition            :: Maybe Int
+    , reviewCommentPullRequestReviewId :: Int
+    , reviewCommentPullRequestUrl      :: Text
+    , reviewCommentSide                :: Text
+    , reviewCommentStartLine           :: Maybe Int
+    , reviewCommentStartSide           :: Maybe Text
+    , reviewCommentUpdatedAt           :: DateTime
+    , reviewCommentUrl                 :: Text
+    , reviewCommentUser                :: User
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON ReviewComment where
     parseJSON (Object x) = ReviewComment
-        <$> x .: "url"
-        <*> x .: "html_url"
-        <*> x .: "id"
-        <*> x .: "user"
-        <*> x .: "pull_request_url"
-        <*> x .: "original_position"
-        <*> x .: "position"
-        <*> x .: "path"
+        <$> x .: "author_association"
+        <*> x .: "body"
         <*> x .: "commit_id"
         <*> x .: "created_at"
-        <*> x .: "updated_at"
-        <*> x .: "body"
-        <*> x .: "pull_request_review_id"
-        <*> x .: "_links"
         <*> x .: "diff_hunk"
+        <*> x .: "html_url"
+        <*> x .: "id"
+        <*> x .: "line"
+        <*> x .: "_links"
+        <*> x .: "node_id"
         <*> x .: "original_commit_id"
+        <*> x .: "original_line"
+        <*> x .: "original_position"
+        <*> x .: "original_start_line"
+        <*> x .: "path"
+        <*> x .: "position"
+        <*> x .: "pull_request_review_id"
+        <*> x .: "pull_request_url"
+        <*> x .: "side"
+        <*> x .: "start_line"
+        <*> x .: "start_side"
+        <*> x .: "updated_at"
+        <*> x .: "url"
+        <*> x .: "user"
 
     parseJSON _ = fail "ReviewComment"
 
 
 instance ToJSON ReviewComment where
     toJSON ReviewComment{..} = object
-        [ "url"                    .= reviewCommentUrl
-        , "html_url"               .= reviewCommentHtmlUrl
-        , "id"                     .= reviewCommentId
-        , "user"                   .= reviewCommentUser
-        , "pull_request_url"       .= reviewCommentPullRequestUrl
-        , "original_position"      .= reviewCommentOriginalPosition
-        , "position"               .= reviewCommentPosition
-        , "path"                   .= reviewCommentPath
+        [ "author_association"     .= reviewCommentAuthorAssociation
+        , "body"                   .= reviewCommentBody
         , "commit_id"              .= reviewCommentCommitId
         , "created_at"             .= reviewCommentCreatedAt
-        , "updated_at"             .= reviewCommentUpdatedAt
-        , "body"                   .= reviewCommentBody
-        , "pull_request_review_id" .= reviewCommentPullRequestReviewId
-        , "_links"                 .= reviewCommentLinks
         , "diff_hunk"              .= reviewCommentDiffHunk
+        , "html_url"               .= reviewCommentHtmlUrl
+        , "id"                     .= reviewCommentId
+        , "line"                   .= reviewCommentLine
+        , "_links"                 .= reviewCommentLinks
+        , "node_id"                .= reviewCommentNodeId
         , "original_commit_id"     .= reviewCommentOriginalCommitId
+        , "original_line"          .= reviewCommentOriginalLine
+        , "original_position"      .= reviewCommentOriginalPosition
+        , "original_start_line"    .= reviewCommentOriginalStartLine
+        , "path"                   .= reviewCommentPath
+        , "position"               .= reviewCommentPosition
+        , "pull_request_review_id" .= reviewCommentPullRequestReviewId
+        , "pull_request_url"       .= reviewCommentPullRequestUrl
+        , "side"                   .= reviewCommentSide
+        , "start_line"             .= reviewCommentStartLine
+        , "start_side"             .= reviewCommentStartSide
+        , "updated_at"             .= reviewCommentUpdatedAt
+        , "url"                    .= reviewCommentUrl
+        , "user"                   .= reviewCommentUser
         ]
 
 
 instance Arbitrary ReviewComment where
     arbitrary = ReviewComment
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

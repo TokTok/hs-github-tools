@@ -1,8 +1,15 @@
-#!/bin/sh
+#!/bin/bash
+
+REMOTE=""
+BRANCH="${1-master}"
+
+if (echo "$BRANCH" | grep ':' > /dev/null); then
+  REMOTE="$(echo "$BRANCH" | grep -o '^[^:]*')"
+  BRANCH="$(echo "$BRANCH" | grep -o '[^:]*$')"
+  REMOTE="$(git remote -v | grep ":$REMOTE/.* (push)" | grep -o '^\S*')"
+fi
 
 set -eux
-
-BRANCH=$1
 
 case "$BRANCH" in
   --continue)
@@ -10,7 +17,20 @@ case "$BRANCH" in
     BRANCH=`git rev-parse --abbrev-ref HEAD`
     ;;
 
+  master)
+    git fetch upstream
+    git checkout master
+    git merge upstream/master
+    git push
+    exit 0
+    ;;
+
   *)
+    if [ -n "$REMOTE" ]; then
+      git checkout --track "$REMOTE/$BRANCH"
+    else
+      git checkout $BRANCH
+    fi
     git checkout $BRANCH
     git rebase upstream/master
     ;;

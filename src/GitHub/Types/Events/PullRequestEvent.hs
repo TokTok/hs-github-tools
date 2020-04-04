@@ -13,19 +13,20 @@ import           GitHub.Types.Event
 
 
 data PullRequestEvent = PullRequestEvent
-    { pullRequestEventOrganization  :: Organization
-    , pullRequestEventRepository    :: Repository
-    , pullRequestEventSender        :: User
+    { pullRequestEventOrganization      :: Organization
+    , pullRequestEventRepository        :: Repository
+    , pullRequestEventSender            :: User
 
-    , pullRequestEventAction        :: Text
-    , pullRequestEventAfter         :: Maybe Text
-    , pullRequestEventAssignee      :: Maybe User
-    , pullRequestEventBefore        :: Maybe Text
-    , pullRequestEventChanges       :: Maybe Changes
-    , pullRequestEventLabel         :: Maybe Label
-    , pullRequestEventNumber        :: Int
-    , pullRequestEventPullRequest   :: PullRequest
-    , pullRequestEventRequestedTeam :: Maybe Team
+    , pullRequestEventAction            :: Text
+    , pullRequestEventAfter             :: Maybe Text
+    , pullRequestEventAssignee          :: Maybe User
+    , pullRequestEventBefore            :: Maybe Text
+    , pullRequestEventChanges           :: Maybe Changes
+    , pullRequestEventLabel             :: Maybe Label
+    , pullRequestEventNumber            :: Int
+    , pullRequestEventPullRequest       :: PullRequest
+    , pullRequestEventRequestedReviewer :: Maybe User
+    , pullRequestEventRequestedTeam     :: Maybe Team
     } deriving (Eq, Show, Read)
 
 instance Event PullRequestEvent where
@@ -46,25 +47,27 @@ instance FromJSON PullRequestEvent where
         <*> x .:? "label"
         <*> x .: "number"
         <*> x .: "pull_request"
+        <*> x .:? "requested_reviewer"
         <*> x .:? "requested_team"
 
     parseJSON _ = fail "PullRequestEvent"
 
 instance ToJSON PullRequestEvent where
     toJSON PullRequestEvent{..} = object
-        [ "organization"   .= pullRequestEventOrganization
-        , "repository"     .= pullRequestEventRepository
-        , "sender"         .= pullRequestEventSender
+        [ "organization"       .= pullRequestEventOrganization
+        , "repository"         .= pullRequestEventRepository
+        , "sender"             .= pullRequestEventSender
 
-        , "action"         .= pullRequestEventAction
-        , "after"          .= pullRequestEventAfter
-        , "assignee"       .= pullRequestEventAssignee
-        , "before"         .= pullRequestEventBefore
-        , "changes"        .= pullRequestEventChanges
-        , "label"          .= pullRequestEventLabel
-        , "number"         .= pullRequestEventNumber
-        , "pull_request"   .= pullRequestEventPullRequest
-        , "requested_team" .= pullRequestEventRequestedTeam
+        , "action"             .= pullRequestEventAction
+        , "after"              .= pullRequestEventAfter
+        , "assignee"           .= pullRequestEventAssignee
+        , "before"             .= pullRequestEventBefore
+        , "changes"            .= pullRequestEventChanges
+        , "label"              .= pullRequestEventLabel
+        , "number"             .= pullRequestEventNumber
+        , "pull_request"       .= pullRequestEventPullRequest
+        , "requested_reviewer" .= pullRequestEventRequestedReviewer
+        , "requested_team"     .= pullRequestEventRequestedTeam
         ]
 
 
@@ -74,6 +77,7 @@ instance Arbitrary PullRequestEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

@@ -18,6 +18,7 @@ data PullRequestReviewEvent = PullRequestReviewEvent
     , pullRequestReviewEventSender       :: User
 
     , pullRequestReviewEventAction       :: Text
+    , pullRequestReviewEventChanges      :: Changes
     , pullRequestReviewEventPullRequest  :: SimplePullRequest
     , pullRequestReviewEventReview       :: Review
     } deriving (Eq, Show, Read)
@@ -33,6 +34,7 @@ instance FromJSON PullRequestReviewEvent where
         <*> x .: "sender"
 
         <*> x .: "action"
+        <*> x .: "changes"
         <*> x .: "pull_request"
         <*> x .: "review"
 
@@ -45,6 +47,7 @@ instance ToJSON PullRequestReviewEvent where
         , "sender"       .= pullRequestReviewEventSender
 
         , "action"       .= pullRequestReviewEventAction
+        , "changes"      .= pullRequestReviewEventChanges
         , "pull_request" .= pullRequestReviewEventPullRequest
         , "review"       .= pullRequestReviewEventReview
         ]
@@ -56,6 +59,7 @@ instance Arbitrary PullRequestReviewEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
