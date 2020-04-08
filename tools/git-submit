@@ -11,7 +11,7 @@ if (echo "$BRANCH" | grep ':' > /dev/null); then
   REMOTE="$(git remote -v | grep ":$REMOTE/.* (push)" | grep -o '^\S*')"
 fi
 
-if [ -n "$REMOTE" ]; then
+if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" > /dev/null); then
   git checkout --track "$REMOTE/$BRANCH"
 else
   git checkout $BRANCH

@@ -15,74 +15,78 @@ import           GitHub.Types.Base.User
 -- Release
 
 data Release = Release
-    { releaseTagName         :: Text
-    , releaseTarballUrl      :: Text
-    , releaseBody            :: Text
-    , releaseUrl             :: Text
-    , releasePrerelease      :: Bool
-    , releaseZipballUrl      :: Text
-    , releaseName            :: Text
+    { releaseAssets          :: [Text]
     , releaseAssetsUrl       :: Text
-    , releaseUploadUrl       :: Text
-    , releasePublishedAt     :: DateTime
-    , releaseCreatedAt       :: DateTime
-    , releaseTargetCommitish :: Text
     , releaseAuthor          :: User
+    , releaseBody            :: Text
+    , releaseCreatedAt       :: DateTime
     , releaseDraft           :: Bool
-    , releaseId              :: Int
-    , releaseAssets          :: [Text]
     , releaseHtmlUrl         :: Text
+    , releaseId              :: Int
+    , releaseName            :: Text
+    , releaseNodeId          :: Text
+    , releasePrerelease      :: Bool
+    , releasePublishedAt     :: DateTime
+    , releaseTagName         :: Text
+    , releaseTarballUrl      :: Maybe Text
+    , releaseTargetCommitish :: Text
+    , releaseUploadUrl       :: Text
+    , releaseUrl             :: Text
+    , releaseZipballUrl      :: Text
     } deriving (Eq, Show, Read)
 
 
 instance FromJSON Release where
     parseJSON (Object x) = Release
-        <$> x .: "tag_name"
-        <*> x .: "tarball_url"
-        <*> x .: "body"
-        <*> x .: "url"
-        <*> x .: "prerelease"
-        <*> x .: "zipball_url"
-        <*> x .: "name"
+        <$> x .: "assets"
         <*> x .: "assets_url"
-        <*> x .: "upload_url"
-        <*> x .: "published_at"
-        <*> x .: "created_at"
-        <*> x .: "target_commitish"
         <*> x .: "author"
+        <*> x .: "body"
+        <*> x .: "created_at"
         <*> x .: "draft"
-        <*> x .: "id"
-        <*> x .: "assets"
         <*> x .: "html_url"
+        <*> x .: "id"
+        <*> x .: "name"
+        <*> x .: "node_id"
+        <*> x .: "prerelease"
+        <*> x .: "published_at"
+        <*> x .: "tag_name"
+        <*> x .: "tarball_url"
+        <*> x .: "target_commitish"
+        <*> x .: "upload_url"
+        <*> x .: "url"
+        <*> x .: "zipball_url"
 
     parseJSON _ = fail "Release"
 
 
 instance ToJSON Release where
     toJSON Release{..} = object
-        [ "tag_name"         .= releaseTagName
-        , "tarball_url"      .= releaseTarballUrl
-        , "body"             .= releaseBody
-        , "url"              .= releaseUrl
-        , "prerelease"       .= releasePrerelease
-        , "zipball_url"      .= releaseZipballUrl
-        , "name"             .= releaseName
+        [ "assets"           .= releaseAssets
         , "assets_url"       .= releaseAssetsUrl
-        , "upload_url"       .= releaseUploadUrl
-        , "published_at"     .= releasePublishedAt
-        , "created_at"       .= releaseCreatedAt
-        , "target_commitish" .= releaseTargetCommitish
         , "author"           .= releaseAuthor
+        , "body"             .= releaseBody
+        , "created_at"       .= releaseCreatedAt
         , "draft"            .= releaseDraft
-        , "id"               .= releaseId
-        , "assets"           .= releaseAssets
         , "html_url"         .= releaseHtmlUrl
+        , "id"               .= releaseId
+        , "name"             .= releaseName
+        , "node_id"          .= releaseNodeId
+        , "prerelease"       .= releasePrerelease
+        , "published_at"     .= releasePublishedAt
+        , "tag_name"         .= releaseTagName
+        , "tarball_url"      .= releaseTarballUrl
+        , "target_commitish" .= releaseTargetCommitish
+        , "upload_url"       .= releaseUploadUrl
+        , "url"              .= releaseUrl
+        , "zipball_url"      .= releaseZipballUrl
         ]
 
 
 instance Arbitrary Release where
     arbitrary = Release
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
