@@ -4,7 +4,7 @@ module GitHub.Types.Events.WatchEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data WatchEvent = WatchEvent
-    { watchEventOrganization :: Organization
+    { watchEventInstallation :: Maybe Installation
+    , watchEventOrganization :: Organization
     , watchEventRepository   :: Repository
     , watchEventSender       :: User
 
@@ -26,7 +27,8 @@ instance Event WatchEvent where
 
 instance FromJSON WatchEvent where
     parseJSON (Object x) = WatchEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -36,7 +38,8 @@ instance FromJSON WatchEvent where
 
 instance ToJSON WatchEvent where
     toJSON WatchEvent{..} = object
-        [ "organization" .= watchEventOrganization
+        [ "installation" .= watchEventInstallation
+        , "organization" .= watchEventOrganization
         , "repository"   .= watchEventRepository
         , "sender"       .= watchEventSender
 
@@ -47,6 +50,7 @@ instance ToJSON WatchEvent where
 instance Arbitrary WatchEvent where
     arbitrary = WatchEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

@@ -18,7 +18,7 @@ data Milestone = Milestone
     { milestoneCreator      :: User
     , milestoneClosedIssues :: Int
     , milestoneState        :: Text
-    , milestoneDueOn        :: Text
+    , milestoneDueOn        :: Maybe Text
     , milestoneUrl          :: Text
     , milestoneUpdatedAt    :: DateTime
     , milestoneCreatedAt    :: DateTime

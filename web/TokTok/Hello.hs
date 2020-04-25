@@ -36,18 +36,18 @@ type GitHubCache a = ECM IO MVar () HashMap () a
 
 
 data ApiContext = ApiContext
-  { changelogInfo :: GitHubCache Changelogs.ChangeLog
-  , roadmapInfo   :: GitHubCache Changelogs.ChangeLog
-  , pullInfos     :: GitHubCache [[PullRequestInfo]]
-  }
+    { changelogInfo :: GitHubCache Changelogs.ChangeLog
+    , roadmapInfo   :: GitHubCache Changelogs.ChangeLog
+    , pullInfos     :: GitHubCache [[PullRequestInfo]]
+    }
 
 
 newGitHubCache :: Int -> IO a -> IO (GitHubCache a)
-newGitHubCache timeout fetchUpdates =
-  newECMIO
+newGitHubCache timeout fetchUpdates = newECMIO
     (consistentDuration timeout $ \state () -> do
-      infos <- fetchUpdates
-      return (state, infos))
+        infos <- fetchUpdates
+        return (state, infos)
+    )
     (round <$> POSIX.getPOSIXTime)
     1
     (CacheWithLRUList 1 1 1)
@@ -55,19 +55,19 @@ newGitHubCache timeout fetchUpdates =
 
 newContext :: IO ApiContext
 newContext = do
-  auth <- Just . GitHub.OAuth . BS8.pack <$> getEnv "GITHUB_TOKEN"
+    auth <- Just . GitHub.OAuth . BS8.pack <$> getEnv "GITHUB_TOKEN"
 
-  ApiContext
-    <$> newGitHubCache 300 (Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth)
-    <*> newGitHubCache 300 (Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth)
-    <*> newGitHubCache  30 (PullStatus.getPullInfos "TokTok" "TokTok" auth)
+    ApiContext
+        <$> newGitHubCache 300 (Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth)
+        <*> newGitHubCache 300 (Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth)
+        <*> newGitHubCache  30 (PullStatus.getPullInfos "TokTok" "TokTok" auth)
 
 
 data HTML
 instance Accept HTML where
-  contentType _ = "text" // "html" /: ("charset", "utf-8")
+    contentType _ = "text" // "html" /: ("charset", "utf-8")
 instance MimeRender HTML Text where
-  mimeRender _ = LBS.fromStrict . encodeUtf8
+    mimeRender _ = LBS.fromStrict . encodeUtf8
 
 -- API specification
 type TestApi =
@@ -98,9 +98,9 @@ server ctx =
     sourceH = return "https://github.com/TokTok/github-tools"
 
     changelogH = liftIO $
-      Changelogs.formatChangeLog False <$> lookupECM (changelogInfo ctx) ()
+        Changelogs.formatChangeLog False <$> lookupECM (changelogInfo ctx) ()
     roadmapH = liftIO $
-      Changelogs.formatChangeLog True  <$> lookupECM (roadmapInfo   ctx) ()
+        Changelogs.formatChangeLog True  <$> lookupECM (roadmapInfo   ctx) ()
 
     pullsHtmlH = liftIO $ lookupECM (pullInfos ctx) () >>= PullStatus.showPullInfos True
     pullsH = liftIO $ lookupECM (pullInfos ctx) ()

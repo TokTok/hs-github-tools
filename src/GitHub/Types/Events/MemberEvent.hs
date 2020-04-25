@@ -4,7 +4,7 @@ module GitHub.Types.Events.MemberEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data MemberEvent = MemberEvent
-    { memberEventOrganization :: Organization
+    { memberEventInstallation :: Maybe Installation
+    , memberEventOrganization :: Organization
     , memberEventRepository   :: Repository
     , memberEventSender       :: User
 
@@ -26,7 +27,8 @@ instance Event MemberEvent where
 
 instance FromJSON MemberEvent where
     parseJSON (Object x) = MemberEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -36,7 +38,8 @@ instance FromJSON MemberEvent where
 
 instance ToJSON MemberEvent where
     toJSON MemberEvent{..} = object
-        [ "organization" .= memberEventOrganization
+        [ "installation" .= memberEventInstallation
+        , "organization" .= memberEventOrganization
         , "repository"   .= memberEventRepository
         , "sender"       .= memberEventSender
 
@@ -47,6 +50,7 @@ instance ToJSON MemberEvent where
 instance Arbitrary MemberEvent where
     arbitrary = MemberEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

@@ -4,7 +4,7 @@ module GitHub.Types.Events.DeploymentStatusEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data DeploymentStatusEvent = DeploymentStatusEvent
-    { deploymentStatusEventOrganization     :: Organization
+    { deploymentStatusEventInstallation     :: Maybe Installation
+    , deploymentStatusEventOrganization     :: Organization
     , deploymentStatusEventRepository       :: Repository
     , deploymentStatusEventSender           :: User
 
@@ -28,7 +29,8 @@ instance Event DeploymentStatusEvent where
 
 instance FromJSON DeploymentStatusEvent where
     parseJSON (Object x) = DeploymentStatusEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -40,7 +42,8 @@ instance FromJSON DeploymentStatusEvent where
 
 instance ToJSON DeploymentStatusEvent where
     toJSON DeploymentStatusEvent{..} = object
-        [ "organization"       .= deploymentStatusEventOrganization
+        [ "installation"       .= deploymentStatusEventInstallation
+        , "organization"       .= deploymentStatusEventOrganization
         , "repository"         .= deploymentStatusEventRepository
         , "sender"             .= deploymentStatusEventSender
 
@@ -53,6 +56,7 @@ instance ToJSON DeploymentStatusEvent where
 instance Arbitrary DeploymentStatusEvent where
     arbitrary = DeploymentStatusEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

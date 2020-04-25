@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data IssuesEvent = IssuesEvent
-    { issuesEventOrganization :: Organization
+    { issuesEventInstallation :: Maybe Installation
+    , issuesEventOrganization :: Organization
     , issuesEventRepository   :: Repository
     , issuesEventSender       :: User
 
@@ -31,7 +32,8 @@ instance Event IssuesEvent where
 
 instance FromJSON IssuesEvent where
     parseJSON (Object x) = IssuesEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -46,7 +48,8 @@ instance FromJSON IssuesEvent where
 
 instance ToJSON IssuesEvent where
     toJSON IssuesEvent{..} = object
-        [ "organization" .= issuesEventOrganization
+        [ "installation" .= issuesEventInstallation
+        , "organization" .= issuesEventOrganization
         , "repository"   .= issuesEventRepository
         , "sender"       .= issuesEventSender
 
@@ -62,6 +65,7 @@ instance ToJSON IssuesEvent where
 instance Arbitrary IssuesEvent where
     arbitrary = IssuesEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

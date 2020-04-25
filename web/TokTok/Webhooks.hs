@@ -40,7 +40,9 @@ decodeUtf8 = Text.decodeUtf8With Text.lenientDecode
 showDiff :: Text -> Text -> Text
 showDiff a b = Text.pack . PP.render . toDoc $ diff
   where
-    toDoc = Diff.prettyContextDiff (PP.text "payload") (PP.text "value") (PP.text . Text.unpack)
+    toDoc = Diff.prettyContextDiff (PP.text "payload")
+                                   (PP.text "value")
+                                   (PP.text . Text.unpack)
     diff = Diff.getContextDiff linesOfContext (Text.lines a) (Text.lines b)
     linesOfContext = 3
 
@@ -49,67 +51,71 @@ showError :: Error -> Text
 showError InvalidRequest   = "InvalidRequest"
 showError UnsignedRequest  = "UnsignedRequest"
 showError InvalidSignature = "InvalidSignature"
-showError (ParseError err) =
-  "ParseError " <> (Text.pack . show $ err)
+showError (ParseError err) = "ParseError " <> (Text.pack . show $ err)
 showError (IncompleteParse value payload) =
-  let
-    a = json . removeNulls $ payload
-    b = json . removeNulls $ value
-    diff = showDiff a b
-  in
-  "IncompleteParse:"
-  <> "\n=== Diff ===\n"    <> diff
---  <> "\n=== Payload ===\n" <> a
---  <> "\n=== Value ===\n"   <> b
-  where
-    json = decodeUtf8 . LBS.toStrict . Aeson.encodePretty
+    let a    = json . removeNulls $ payload
+        b    = json . removeNulls $ value
+        diff = showDiff a b
+    in  "IncompleteParse:"
+            <> "\n=== Diff ===\n"
+            <> diff
+            {-
+            <> "\n=== Payload ===\n"
+            <> a
+            <> "\n=== Value ===\n"
+            <> b
+            -}
+    where json = decodeUtf8 . LBS.toStrict . Aeson.encodePretty
 
 
-handleError :: BS.ByteString -> [(HeaderName, BS.ByteString)] -> Error -> IO Response
+handleError
+    :: BS.ByteString -> [(HeaderName, BS.ByteString)] -> Error -> IO Response
 handleError event headers err = do
-  let res = showError err
-  Text.putStrLn $ "Failure in event " <> Text.pack (show event) <> ": " <> res
-  Text.putStrLn $ "HTTP headers: " <> Text.pack (show headers)
-  return . responseError . LBS.fromStrict . Text.encodeUtf8 $ res
+    let res = showError err
+    Text.putStrLn $ "Failure in event " <> Text.pack (show event) <> ": " <> res
+    Text.putStrLn $ "HTTP headers: " <> Text.pack (show headers)
+    return . responseError . LBS.fromStrict . Text.encodeUtf8 $ res
 
 
 handlePayload :: Bool -> BS.ByteString -> UUID -> Payload -> IO Response
 handlePayload isSigned event uuid _payload = do
-  Text.putStrLn $ unsignedMsg <> "Success in event " <> Text.pack (show event) <> ": UUID=" <> Text.pack (show uuid)
-  return responseOK
-  where
-    unsignedMsg = if isSigned then "" else "[UNSIGNED!] "
+    Text.putStrLn
+        $  unsignedMsg
+        <> "Success in event "
+        <> Text.pack (show event)
+        <> ": UUID="
+        <> Text.pack (show uuid)
+    return responseOK
+    where unsignedMsg = if isSigned then "" else "[UNSIGNED!] "
 
 
 handleRequest :: BS.ByteString -> [String] -> Request -> IO Response
 handleRequest event secretKeys req = do
-  body <- fullRequestBody mempty
-  parsed <- runHandler Handler
-    { hSecretKeys = secretKeys
-    , hBody       = return body
-    , hHeader     = return . flip lookup (requestHeaders req) . CI.mk
-    }
-  case parsed of
-    Left err              -> handleError event (requestHeaders req) err
-    Right (uuid, payload) -> handlePayload (not $ null secretKeys) event uuid payload
+    body   <- fullRequestBody mempty
+    parsed <- runHandler Handler
+        { hSecretKeys = secretKeys
+        , hBody       = return body
+        , hHeader     = return . flip lookup (requestHeaders req) . CI.mk
+        }
+    case parsed of
+        Left err -> handleError event (requestHeaders req) err
+        Right (uuid, payload) ->
+            handlePayload (not $ null secretKeys) event uuid payload
 
   where
     fullRequestBody body = do
-      chunk <- getRequestBodyChunk req
-      if BS.null chunk
-        then return body
-        else fullRequestBody $ body <> chunk
+        chunk <- getRequestBodyChunk req
+        if BS.null chunk then return body else fullRequestBody $ body <> chunk
 
 
 app :: Application
-app req respond =
-  case lookup "X-GitHub-Event" . requestHeaders $ req of
+app req respond = case lookup "X-GitHub-Event" . requestHeaders $ req of
     Nothing -> do
       -- Respond OK if we don't get an event.
-      putStrLn "Ignoring request without event type"
-      respond responseOK
+        putStrLn "Ignoring request without event type"
+        respond responseOK
     Just event -> do
-      putStrLn $ "Handling GitHub event: " ++ show event
-      -- Get the github secret keys.
-      secretKeys <- Maybe.maybeToList <$> lookupEnv "GITHUB_SECRET"
-      respond =<< handleRequest event secretKeys req
+        putStrLn $ "Handling GitHub event: " ++ show event
+        -- Get the github secret keys.
+        secretKeys <- Maybe.maybeToList <$> lookupEnv "GITHUB_SECRET"
+        respond =<< handleRequest event secretKeys req

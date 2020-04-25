@@ -4,7 +4,7 @@ module GitHub.Types.Events.PingEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data PingEvent = PingEvent
-    { pingEventOrganization :: Organization
+    { pingEventInstallation :: Maybe Installation
+    , pingEventOrganization :: Organization
     , pingEventSender       :: User
 
     , pingEventHook         :: Hook
@@ -27,7 +28,8 @@ instance Event PingEvent where
 
 instance FromJSON PingEvent where
     parseJSON (Object x) = PingEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "sender"
 
         <*> x .: "hook"
@@ -38,7 +40,8 @@ instance FromJSON PingEvent where
 
 instance ToJSON PingEvent where
     toJSON PingEvent{..} = object
-        [ "organization" .= pingEventOrganization
+        [ "installation" .= pingEventInstallation
+        , "organization" .= pingEventOrganization
         , "sender"       .= pingEventSender
 
         , "hook"         .= pingEventHook
@@ -50,6 +53,7 @@ instance ToJSON PingEvent where
 instance Arbitrary PingEvent where
     arbitrary = PingEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
 
         <*> arbitrary

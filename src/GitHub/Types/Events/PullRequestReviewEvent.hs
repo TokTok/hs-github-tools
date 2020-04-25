@@ -4,7 +4,7 @@ module GitHub.Types.Events.PullRequestReviewEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data PullRequestReviewEvent = PullRequestReviewEvent
-    { pullRequestReviewEventOrganization :: Organization
+    { pullRequestReviewEventInstallation :: Maybe Installation
+    , pullRequestReviewEventOrganization :: Organization
     , pullRequestReviewEventRepository   :: Repository
     , pullRequestReviewEventSender       :: User
 
@@ -29,7 +30,8 @@ instance Event PullRequestReviewEvent where
 
 instance FromJSON PullRequestReviewEvent where
     parseJSON (Object x) = PullRequestReviewEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -42,7 +44,8 @@ instance FromJSON PullRequestReviewEvent where
 
 instance ToJSON PullRequestReviewEvent where
     toJSON PullRequestReviewEvent{..} = object
-        [ "organization" .= pullRequestReviewEventOrganization
+        [ "installation" .= pullRequestReviewEventInstallation
+        , "organization" .= pullRequestReviewEventOrganization
         , "repository"   .= pullRequestReviewEventRepository
         , "sender"       .= pullRequestReviewEventSender
 
@@ -56,6 +59,7 @@ instance ToJSON PullRequestReviewEvent where
 instance Arbitrary PullRequestReviewEvent where
     arbitrary = PullRequestReviewEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

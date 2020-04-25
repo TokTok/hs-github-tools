@@ -4,7 +4,7 @@ module GitHub.Types.Events.LabelEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data LabelEvent = LabelEvent
-    { labelEventOrganization :: Organization
+    { labelEventInstallation :: Maybe Installation
+    , labelEventOrganization :: Organization
     , labelEventRepository   :: Repository
     , labelEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event LabelEvent where
 
 instance FromJSON LabelEvent where
     parseJSON (Object x) = LabelEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON LabelEvent where
 
 instance ToJSON LabelEvent where
     toJSON LabelEvent{..} = object
-        [ "organization"     .= labelEventOrganization
+        [ "installation"     .= labelEventInstallation
+        , "organization"     .= labelEventOrganization
         , "repository"       .= labelEventRepository
         , "sender"           .= labelEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON LabelEvent where
 instance Arbitrary LabelEvent where
     arbitrary = LabelEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

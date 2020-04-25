@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data IssueCommentEvent = IssueCommentEvent
-    { issueCommentEventOrganization :: Organization
+    { issueCommentEventInstallation :: Maybe Installation
+    , issueCommentEventOrganization :: Organization
     , issueCommentEventRepository   :: Repository
     , issueCommentEventSender       :: User
 
@@ -29,7 +30,8 @@ instance Event IssueCommentEvent where
 
 instance FromJSON IssueCommentEvent where
     parseJSON (Object x) = IssueCommentEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -42,7 +44,8 @@ instance FromJSON IssueCommentEvent where
 
 instance ToJSON IssueCommentEvent where
     toJSON IssueCommentEvent{..} = object
-        [ "organization" .= issueCommentEventOrganization
+        [ "installation" .= issueCommentEventInstallation
+        , "organization" .= issueCommentEventOrganization
         , "repository"   .= issueCommentEventRepository
         , "sender"       .= issueCommentEventSender
 
@@ -56,6 +59,7 @@ instance ToJSON IssueCommentEvent where
 instance Arbitrary IssueCommentEvent where
     arbitrary = IssueCommentEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

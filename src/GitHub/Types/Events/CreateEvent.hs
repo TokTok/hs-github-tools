@@ -4,7 +4,7 @@ module GitHub.Types.Events.CreateEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data CreateEvent = CreateEvent
-    { createEventOrganization :: Organization
+    { createEventInstallation :: Maybe Installation
+    , createEventOrganization :: Organization
     , createEventRepository   :: Repository
     , createEventSender       :: User
 
@@ -30,7 +31,8 @@ instance Event CreateEvent where
 
 instance FromJSON CreateEvent where
     parseJSON (Object x) = CreateEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -44,7 +46,8 @@ instance FromJSON CreateEvent where
 
 instance ToJSON CreateEvent where
     toJSON CreateEvent{..} = object
-        [ "organization"  .= createEventOrganization
+        [ "installation"  .= createEventInstallation
+        , "organization"  .= createEventOrganization
         , "repository"    .= createEventRepository
         , "sender"        .= createEventSender
 
@@ -59,6 +62,7 @@ instance ToJSON CreateEvent where
 instance Arbitrary CreateEvent where
     arbitrary = CreateEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

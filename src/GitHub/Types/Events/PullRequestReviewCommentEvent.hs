@@ -4,7 +4,7 @@ module GitHub.Types.Events.PullRequestReviewCommentEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data PullRequestReviewCommentEvent = PullRequestReviewCommentEvent
-    { pullRequestReviewCommentEventOrganization :: Organization
+    { pullRequestReviewCommentEventInstallation :: Maybe Installation
+    , pullRequestReviewCommentEventOrganization :: Organization
     , pullRequestReviewCommentEventRepository   :: Repository
     , pullRequestReviewCommentEventSender       :: User
 
@@ -28,7 +29,8 @@ instance Event PullRequestReviewCommentEvent where
 
 instance FromJSON PullRequestReviewCommentEvent where
     parseJSON (Object x) = PullRequestReviewCommentEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -40,7 +42,8 @@ instance FromJSON PullRequestReviewCommentEvent where
 
 instance ToJSON PullRequestReviewCommentEvent where
     toJSON PullRequestReviewCommentEvent{..} = object
-        [ "organization" .= pullRequestReviewCommentEventOrganization
+        [ "installation" .= pullRequestReviewCommentEventInstallation
+        , "organization" .= pullRequestReviewCommentEventOrganization
         , "repository"   .= pullRequestReviewCommentEventRepository
         , "sender"       .= pullRequestReviewCommentEventSender
 
@@ -53,6 +56,7 @@ instance ToJSON PullRequestReviewCommentEvent where
 instance Arbitrary PullRequestReviewCommentEvent where
     arbitrary = PullRequestReviewCommentEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

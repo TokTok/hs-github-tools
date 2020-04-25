@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data PullRequestEvent = PullRequestEvent
-    { pullRequestEventOrganization      :: Organization
+    { pullRequestEventInstallation      :: Maybe Installation
+    , pullRequestEventOrganization      :: Organization
     , pullRequestEventRepository        :: Repository
     , pullRequestEventSender            :: User
 
@@ -35,7 +36,8 @@ instance Event PullRequestEvent where
 
 instance FromJSON PullRequestEvent where
     parseJSON (Object x) = PullRequestEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -54,7 +56,8 @@ instance FromJSON PullRequestEvent where
 
 instance ToJSON PullRequestEvent where
     toJSON PullRequestEvent{..} = object
-        [ "organization"       .= pullRequestEventOrganization
+        [ "installation"       .= pullRequestEventInstallation
+        , "organization"       .= pullRequestEventOrganization
         , "repository"         .= pullRequestEventRepository
         , "sender"             .= pullRequestEventSender
 
@@ -74,6 +77,7 @@ instance ToJSON PullRequestEvent where
 instance Arbitrary PullRequestEvent where
     arbitrary = PullRequestEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

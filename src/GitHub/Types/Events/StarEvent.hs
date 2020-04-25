@@ -4,7 +4,7 @@ module GitHub.Types.Events.StarEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data StarEvent = StarEvent
-    { starEventOrganization :: Organization
+    { starEventInstallation :: Maybe Installation
+    , starEventOrganization :: Organization
     , starEventRepository   :: Repository
     , starEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event StarEvent where
 
 instance FromJSON StarEvent where
     parseJSON (Object x) = StarEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON StarEvent where
 
 instance ToJSON StarEvent where
     toJSON StarEvent{..} = object
-        [ "organization" .= starEventOrganization
+        [ "installation" .= starEventInstallation
+        , "organization" .= starEventOrganization
         , "repository"   .= starEventRepository
         , "sender"       .= starEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON StarEvent where
 instance Arbitrary StarEvent where
     arbitrary = StarEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

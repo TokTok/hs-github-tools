@@ -19,6 +19,7 @@ import           GitHub.Types.Base.Deployment         as X
 import           GitHub.Types.Base.DeploymentStatus   as X
 import           GitHub.Types.Base.Hook               as X
 import           GitHub.Types.Base.HookConfig         as X
+import           GitHub.Types.Base.Installation       as X
 import           GitHub.Types.Base.Invitation         as X
 import           GitHub.Types.Base.Issue              as X
 import           GitHub.Types.Base.IssueComment       as X

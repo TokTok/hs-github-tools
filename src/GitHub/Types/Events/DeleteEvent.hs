@@ -4,7 +4,7 @@ module GitHub.Types.Events.DeleteEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data DeleteEvent = DeleteEvent
-    { deleteEventOrganization :: Organization
+    { deleteEventInstallation :: Maybe Installation
+    , deleteEventOrganization :: Organization
     , deleteEventRepository   :: Repository
     , deleteEventSender       :: User
 
@@ -28,7 +29,8 @@ instance Event DeleteEvent where
 
 instance FromJSON DeleteEvent where
     parseJSON (Object x) = DeleteEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -40,7 +42,8 @@ instance FromJSON DeleteEvent where
 
 instance ToJSON DeleteEvent where
     toJSON DeleteEvent{..} = object
-        [ "organization" .= deleteEventOrganization
+        [ "installation" .= deleteEventInstallation
+        , "organization" .= deleteEventOrganization
         , "repository"   .= deleteEventRepository
         , "sender"       .= deleteEventSender
 
@@ -53,6 +56,7 @@ instance ToJSON DeleteEvent where
 instance Arbitrary DeleteEvent where
     arbitrary = DeleteEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

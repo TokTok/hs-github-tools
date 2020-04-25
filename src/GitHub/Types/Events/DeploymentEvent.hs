@@ -4,7 +4,7 @@ module GitHub.Types.Events.DeploymentEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data DeploymentEvent = DeploymentEvent
-    { deploymentEventOrganization :: Organization
+    { deploymentEventInstallation :: Maybe Installation
+    , deploymentEventOrganization :: Organization
     , deploymentEventRepository   :: Repository
     , deploymentEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event DeploymentEvent where
 
 instance FromJSON DeploymentEvent where
     parseJSON (Object x) = DeploymentEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON DeploymentEvent where
 
 instance ToJSON DeploymentEvent where
     toJSON DeploymentEvent{..} = object
-        [ "organization" .= deploymentEventOrganization
+        [ "installation" .= deploymentEventInstallation
+        , "organization" .= deploymentEventOrganization
         , "repository"   .= deploymentEventRepository
         , "sender"       .= deploymentEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON DeploymentEvent where
 instance Arbitrary DeploymentEvent where
     arbitrary = DeploymentEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

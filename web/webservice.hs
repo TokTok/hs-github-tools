@@ -16,22 +16,24 @@ import qualified TokTok.Webhooks             as Webhooks
 
 newApp :: IO Application
 newApp = do
-  helloApp <- Hello.newApp
-  return $ mapUrls $
-        mount "hello" (simpleCors helloApp)
-    <|> mount "webhooks" Webhooks.app
+    helloApp <- Hello.newApp
+    return $ mapUrls $
+            mount "hello" (simpleCors helloApp)
+        <|> mount "webhooks" Webhooks.app
 
 
 -- Run the server.
 runTestServer :: Port -> IO ()
-runTestServer port = run port =<< newApp
+runTestServer port = do
+    putStrLn $ "Running webserver on port " ++ show port
+    run port =<< newApp
 
 -- Put this all to work!
 main :: IO ()
 main = do
   -- So real time logging works correctly.
-  hSetBuffering stdout LineBuffering
-  args <- getArgs
-  case args of
-    [port] -> runTestServer $ read port
-    _      -> runTestServer 8001
+    hSetBuffering stdout LineBuffering
+    args <- getArgs
+    case args of
+        [port] -> runTestServer $ read port
+        _      -> runTestServer 8001

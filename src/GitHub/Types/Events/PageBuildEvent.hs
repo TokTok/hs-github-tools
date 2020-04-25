@@ -4,7 +4,7 @@ module GitHub.Types.Events.PageBuildEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
 import           GitHub.Types.Base
@@ -12,7 +12,8 @@ import           GitHub.Types.Event
 
 
 data PageBuildEvent = PageBuildEvent
-    { pageBuildEventOrganization :: Organization
+    { pageBuildEventInstallation :: Maybe Installation
+    , pageBuildEventOrganization :: Organization
     , pageBuildEventRepository   :: Repository
     , pageBuildEventSender       :: User
 
@@ -26,7 +27,8 @@ instance Event PageBuildEvent where
 
 instance FromJSON PageBuildEvent where
     parseJSON (Object x) = PageBuildEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -37,7 +39,8 @@ instance FromJSON PageBuildEvent where
 
 instance ToJSON PageBuildEvent where
     toJSON PageBuildEvent{..} = object
-        [ "organization" .= pageBuildEventOrganization
+        [ "installation" .= pageBuildEventInstallation
+        , "organization" .= pageBuildEventOrganization
         , "repository"   .= pageBuildEventRepository
         , "sender"       .= pageBuildEventSender
 
@@ -49,6 +52,7 @@ instance ToJSON PageBuildEvent where
 instance Arbitrary PageBuildEvent where
     arbitrary = PageBuildEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data PushEvent = PushEvent
-    { pushEventOrganization    :: Organization
+    { pushEventInstallation    :: Maybe Installation
+    , pushEventOrganization    :: Organization
     , pushEventRepository      :: Repository
     , pushEventSender          :: User
 
@@ -38,7 +39,8 @@ instance Event PushEvent where
 
 instance FromJSON PushEvent where
     parseJSON (Object x) = PushEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -60,7 +62,8 @@ instance FromJSON PushEvent where
 
 instance ToJSON PushEvent where
     toJSON PushEvent{..} = object
-        [ "organization"     .= pushEventOrganization
+        [ "installation"     .= pushEventInstallation
+        , "organization"     .= pushEventOrganization
         , "repository"       .= pushEventRepository
         , "sender"           .= pushEventSender
 
@@ -83,6 +86,7 @@ instance ToJSON PushEvent where
 instance Arbitrary PushEvent where
     arbitrary = PushEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

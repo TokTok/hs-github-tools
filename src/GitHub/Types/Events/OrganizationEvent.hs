@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data OrganizationEvent = OrganizationEvent
-    { organizationEventOrganization :: Organization
+    { organizationEventInstallation :: Maybe Installation
+    , organizationEventOrganization :: Organization
     , organizationEventSender       :: User
 
     , organizationEventAction       :: Text
@@ -28,7 +29,8 @@ instance Event OrganizationEvent where
 
 instance FromJSON OrganizationEvent where
     parseJSON (Object x) = OrganizationEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "sender"
 
         <*> x .: "action"
@@ -40,7 +42,8 @@ instance FromJSON OrganizationEvent where
 
 instance ToJSON OrganizationEvent where
     toJSON OrganizationEvent{..} = object
-        [ "organization" .= organizationEventOrganization
+        [ "installation" .= organizationEventInstallation
+        , "organization" .= organizationEventOrganization
         , "sender"       .= organizationEventSender
 
         , "action"       .= organizationEventAction
@@ -53,6 +56,7 @@ instance ToJSON OrganizationEvent where
 instance Arbitrary OrganizationEvent where
     arbitrary = OrganizationEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
 
         <*> arbitrary

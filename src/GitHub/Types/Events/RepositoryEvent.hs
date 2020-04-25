@@ -4,7 +4,7 @@ module GitHub.Types.Events.RepositoryEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data RepositoryEvent = RepositoryEvent
-    { repositoryEventOrganization :: Organization
+    { repositoryEventInstallation :: Maybe Installation
+    , repositoryEventOrganization :: Organization
     , repositoryEventRepository   :: Repository
     , repositoryEventSender       :: User
 
@@ -26,7 +27,8 @@ instance Event RepositoryEvent where
 
 instance FromJSON RepositoryEvent where
     parseJSON (Object x) = RepositoryEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -36,7 +38,8 @@ instance FromJSON RepositoryEvent where
 
 instance ToJSON RepositoryEvent where
     toJSON RepositoryEvent{..} = object
-        [ "organization"     .= repositoryEventOrganization
+        [ "installation"     .= repositoryEventInstallation
+        , "organization"     .= repositoryEventOrganization
         , "repository"       .= repositoryEventRepository
         , "sender"           .= repositoryEventSender
 
@@ -47,6 +50,7 @@ instance ToJSON RepositoryEvent where
 instance Arbitrary RepositoryEvent where
     arbitrary = RepositoryEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

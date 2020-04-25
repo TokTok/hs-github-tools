@@ -4,7 +4,7 @@ module GitHub.Types.Events.CommitCommentEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data CommitCommentEvent = CommitCommentEvent
-    { commitCommentEventOrganization :: Organization
+    { commitCommentEventInstallation :: Maybe Installation
+    , commitCommentEventOrganization :: Organization
     , commitCommentEventRepository   :: Repository
     , commitCommentEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event CommitCommentEvent where
 
 instance FromJSON CommitCommentEvent where
     parseJSON (Object x) = CommitCommentEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON CommitCommentEvent where
 
 instance ToJSON CommitCommentEvent where
     toJSON CommitCommentEvent{..} = object
-        [ "organization" .= commitCommentEventOrganization
+        [ "installation" .= commitCommentEventInstallation
+        , "organization" .= commitCommentEventOrganization
         , "repository"   .= commitCommentEventRepository
         , "sender"       .= commitCommentEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON CommitCommentEvent where
 instance Arbitrary CommitCommentEvent where
     arbitrary = CommitCommentEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

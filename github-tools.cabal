@@ -42,6 +42,7 @@ library
       GitHub.Types.Base.DeploymentStatus
       GitHub.Types.Base.Hook
       GitHub.Types.Base.HookConfig
+      GitHub.Types.Base.Installation
       GitHub.Types.Base.Invitation
       GitHub.Types.Base.Issue
       GitHub.Types.Base.IssueComment

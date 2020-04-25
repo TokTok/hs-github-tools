@@ -4,7 +4,7 @@ module GitHub.Types.Events.ForkEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
 import           GitHub.Types.Base
@@ -12,7 +12,8 @@ import           GitHub.Types.Event
 
 
 data ForkEvent = ForkEvent
-    { forkEventOrganization :: Organization
+    { forkEventInstallation :: Maybe Installation
+    , forkEventOrganization :: Organization
     , forkEventRepository   :: Repository
     , forkEventSender       :: User
 
@@ -25,7 +26,8 @@ instance Event ForkEvent where
 
 instance FromJSON ForkEvent where
     parseJSON (Object x) = ForkEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -35,7 +37,8 @@ instance FromJSON ForkEvent where
 
 instance ToJSON ForkEvent where
     toJSON ForkEvent{..} = object
-        [ "organization" .= forkEventOrganization
+        [ "installation" .= forkEventInstallation
+        , "organization" .= forkEventOrganization
         , "repository"   .= forkEventRepository
         , "sender"       .= forkEventSender
 
@@ -46,6 +49,7 @@ instance ToJSON ForkEvent where
 instance Arbitrary ForkEvent where
     arbitrary = ForkEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

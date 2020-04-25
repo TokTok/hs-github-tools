@@ -4,7 +4,7 @@ module GitHub.Types.Events.CheckSuiteEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data CheckSuiteEvent = CheckSuiteEvent
-    { checkSuiteEventOrganization :: Organization
+    { checkSuiteEventInstallation :: Maybe Installation
+    , checkSuiteEventOrganization :: Organization
     , checkSuiteEventRepository   :: Repository
     , checkSuiteEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event CheckSuiteEvent where
 
 instance FromJSON CheckSuiteEvent where
     parseJSON (Object x) = CheckSuiteEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON CheckSuiteEvent where
 
 instance ToJSON CheckSuiteEvent where
     toJSON CheckSuiteEvent{..} = object
-        [ "organization" .= checkSuiteEventOrganization
+        [ "installation" .= checkSuiteEventInstallation
+        , "organization" .= checkSuiteEventOrganization
         , "repository"   .= checkSuiteEventRepository
         , "sender"       .= checkSuiteEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON CheckSuiteEvent where
 instance Arbitrary CheckSuiteEvent where
     arbitrary = CheckSuiteEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

@@ -4,7 +4,7 @@ module GitHub.Types.Events.StatusEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data StatusEvent = StatusEvent
-    { statusEventOrganization :: Organization
+    { statusEventInstallation :: Maybe Installation
+    , statusEventOrganization :: Organization
     , statusEventRepository   :: Repository
     , statusEventSender       :: User
 
@@ -37,7 +38,8 @@ instance Event StatusEvent where
 
 instance FromJSON StatusEvent where
     parseJSON (Object x) = StatusEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -58,7 +60,8 @@ instance FromJSON StatusEvent where
 
 instance ToJSON StatusEvent where
     toJSON StatusEvent{..} = object
-        [ "organization" .= statusEventOrganization
+        [ "installation" .= statusEventInstallation
+        , "organization" .= statusEventOrganization
         , "repository"   .= statusEventRepository
         , "sender"       .= statusEventSender
 
@@ -80,6 +83,7 @@ instance ToJSON StatusEvent where
 instance Arbitrary StatusEvent where
     arbitrary = StatusEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

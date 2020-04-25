@@ -4,7 +4,7 @@ module GitHub.Types.Events.CheckRunEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data CheckRunEvent = CheckRunEvent
-    { checkRunEventOrganization :: Organization
+    { checkRunEventInstallation :: Maybe Installation
+    , checkRunEventOrganization :: Organization
     , checkRunEventRepository   :: Repository
     , checkRunEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event CheckRunEvent where
 
 instance FromJSON CheckRunEvent where
     parseJSON (Object x) = CheckRunEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON CheckRunEvent where
 
 instance ToJSON CheckRunEvent where
     toJSON CheckRunEvent{..} = object
-        [ "organization" .= checkRunEventOrganization
+        [ "installation" .= checkRunEventInstallation
+        , "organization" .= checkRunEventOrganization
         , "repository"   .= checkRunEventRepository
         , "sender"       .= checkRunEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON CheckRunEvent where
 instance Arbitrary CheckRunEvent where
     arbitrary = CheckRunEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

@@ -4,7 +4,7 @@ module GitHub.Types.Events.MilestoneEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data MilestoneEvent = MilestoneEvent
-    { milestoneEventOrganization :: Organization
+    { milestoneEventInstallation :: Maybe Installation
+    , milestoneEventOrganization :: Organization
     , milestoneEventRepository   :: Repository
     , milestoneEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event MilestoneEvent where
 
 instance FromJSON MilestoneEvent where
     parseJSON (Object x) = MilestoneEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON MilestoneEvent where
 
 instance ToJSON MilestoneEvent where
     toJSON MilestoneEvent{..} = object
-        [ "organization" .= milestoneEventOrganization
+        [ "installation" .= milestoneEventInstallation
+        , "organization" .= milestoneEventOrganization
         , "repository"   .= milestoneEventRepository
         , "sender"       .= milestoneEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON MilestoneEvent where
 instance Arbitrary MilestoneEvent where
     arbitrary = MilestoneEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 

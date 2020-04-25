@@ -4,7 +4,7 @@ module GitHub.Types.Events.ReleaseEvent where
 
 import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
+import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Data.Text                 (Text)
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
@@ -13,7 +13,8 @@ import           GitHub.Types.Event
 
 
 data ReleaseEvent = ReleaseEvent
-    { releaseEventOrganization :: Organization
+    { releaseEventInstallation :: Maybe Installation
+    , releaseEventOrganization :: Organization
     , releaseEventRepository   :: Repository
     , releaseEventSender       :: User
 
@@ -27,7 +28,8 @@ instance Event ReleaseEvent where
 
 instance FromJSON ReleaseEvent where
     parseJSON (Object x) = ReleaseEvent
-        <$> x .: "organization"
+        <$> x .:? "installation"
+        <*> x .: "organization"
         <*> x .: "repository"
         <*> x .: "sender"
 
@@ -38,7 +40,8 @@ instance FromJSON ReleaseEvent where
 
 instance ToJSON ReleaseEvent where
     toJSON ReleaseEvent{..} = object
-        [ "organization" .= releaseEventOrganization
+        [ "installation" .= releaseEventInstallation
+        , "organization" .= releaseEventOrganization
         , "repository"   .= releaseEventRepository
         , "sender"       .= releaseEventSender
 
@@ -50,6 +53,7 @@ instance ToJSON ReleaseEvent where
 instance Arbitrary ReleaseEvent where
     arbitrary = ReleaseEvent
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
 
