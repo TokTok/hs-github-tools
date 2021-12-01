@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE StrictData        #-}
 module GitHub.Types.Base.DeploymentStatus where
 
 import           Control.Applicative        ((<$>), (<*>))

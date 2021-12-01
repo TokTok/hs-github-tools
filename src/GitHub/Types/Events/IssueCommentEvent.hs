@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE StrictData        #-}
 module GitHub.Types.Events.IssueCommentEvent where
 
 import           Control.Applicative       ((<$>), (<*>))

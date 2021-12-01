@@ -1,3 +1,4 @@
+{-# LANGUAGE StrictData #-}
 module GitHub.Types.Base.RepoOwner where
 
 import           Control.Applicative       ((<$>), (<|>))

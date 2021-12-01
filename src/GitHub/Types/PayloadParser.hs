@@ -1,3 +1,4 @@
+{-# LANGUAGE StrictData #-}
 module GitHub.Types.PayloadParser where
 
 import           Data.Aeson          (FromJSON (..), ToJSON (..))

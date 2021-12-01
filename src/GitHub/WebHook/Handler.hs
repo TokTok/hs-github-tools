@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData        #-}
 {-# LANGUAGE TupleSections     #-}
 module GitHub.WebHook.Handler
   ( Handler (..)

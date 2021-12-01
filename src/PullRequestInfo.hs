@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData        #-}
 module PullRequestInfo where
 
 import           Control.Monad         (join)
