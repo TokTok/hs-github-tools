@@ -1,3 +1,4 @@
+{-# LANGUAGE StrictData #-}
 module GitHub.Types.Base.DateTime where
 
 import           Control.Applicative       ((<$>), (<|>))

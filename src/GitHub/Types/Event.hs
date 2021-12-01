@@ -1,3 +1,4 @@
+{-# LANGUAGE StrictData #-}
 module GitHub.Types.Event where
 
 import           Data.Text (Text)

@@ -13,6 +13,5 @@ branches:
       required_status_checks:
         contexts:
           - Codacy/PR Quality Review
-          - Travis CI - Pull Request
           - code-review/reviewable
           - coverage/coveralls
