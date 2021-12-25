@@ -118,7 +118,7 @@ library
     , containers
     , cryptohash
     , exceptions
-    , github            == 0.25
+    , github            >= 0.25 && <= 0.26
     , html
     , http-client       >= 0.4.30
     , http-client-tls
@@ -139,9 +139,9 @@ executable hub-pulls
   hs-source-dirs:      tools
   default-language:    Haskell2010
   build-depends:
-      base >= 4 && < 5
+      base
     , bytestring
-    , github            == 0.25
+    , github
     , github-tools
     , text
 
@@ -152,9 +152,9 @@ executable hub-changelog
   hs-source-dirs:      tools
   default-language:    Haskell2010
   build-depends:
-      base >= 4 && < 5
+      base
     , bytestring
-    , github            == 0.25
+    , github
     , github-tools
     , text
 
@@ -165,9 +165,9 @@ executable hub-roadmap
   hs-source-dirs:      tools
   default-language:    Haskell2010
   build-depends:
-      base >= 4 && < 5
+      base
     , bytestring
-    , github            == 0.25
+    , github
     , github-tools
     , text
 
@@ -181,14 +181,14 @@ executable webservice
       TokTok.Hello
       TokTok.Webhooks
   build-depends:
-      base >= 4 && < 5
+      base
     , Diff
     , github-tools
     , aeson-pretty
     , bytestring
     , case-insensitive
     , expiring-cache-map
-    , github            == 0.25
+    , github
     , http-media
     , http-types
     , pretty

@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
 REMOTE=""
-BRANCH="${1-master}"
+BRANCH="${1-$(git rev-parse --abbrev-ref HEAD)}"
 
 if (echo "$BRANCH" | grep ':' > /dev/null); then
   REMOTE="$(echo "$BRANCH" | grep -o '^[^:]*')"
@@ -20,4 +20,5 @@ fi
 git push upstream "$BRANCH:master"
 git sync
 git branch -d "$BRANCH"
+sleep 2
 git push origin ":$BRANCH"
