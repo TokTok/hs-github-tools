@@ -14,7 +14,7 @@ fi
 if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" > /dev/null); then
   git checkout --track "$REMOTE/$BRANCH"
 else
-  git checkout $BRANCH
+  git checkout "$BRANCH"
 fi
 
 git push upstream "$BRANCH:master"
