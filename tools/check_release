@@ -38,8 +38,8 @@ def github_repo():
     if repo:
         return repo
     return subprocess.run(
-            ["git", "remote", "get-url", "upstream"], check=True,
-            capture_output=True).stdout.decode("utf-8").strip().split(":")[1]
+        ["git", "remote", "get-url", "upstream"], check=True,
+        capture_output=True).stdout.decode("utf-8").strip().split(":")[1]
 
 
 def release_github():
