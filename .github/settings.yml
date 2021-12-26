@@ -12,5 +12,7 @@ branches:
     protection:
       required_status_checks:
         contexts:
+          - "build-cabal"
+          - "build-stack"
           - "cirrus-ci"
           - "code-review/reviewable"
