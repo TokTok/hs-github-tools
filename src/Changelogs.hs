@@ -7,13 +7,11 @@ module Changelogs
   , ChangeLog
   ) where
 
-import           Control.Applicative     ((<$>), (<*>))
 import           Control.Arrow           (first, second, (&&&))
 import           Data.List               (foldl')
 import qualified Data.List               as List
 import qualified Data.Map                as Map
 import qualified Data.Maybe              as Maybe
-import           Data.Monoid             ((<>))
 import           Data.Text               (Text)
 import qualified Data.Text               as Text
 import qualified Data.Vector             as V

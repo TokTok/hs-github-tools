@@ -3,7 +3,6 @@
 {-# LANGUAGE StrictData        #-}
 module GitHub.Types.Base.Deployment where
 
-import           Control.Applicative                 ((<$>), (<*>))
 import           Data.Aeson                          (FromJSON (..),
                                                       ToJSON (..), object)
 import           Data.Aeson.Types                    (Value (..), (.:), (.=))

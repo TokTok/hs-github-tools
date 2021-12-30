@@ -1,7 +1,7 @@
 {-# LANGUAGE StrictData #-}
 module GitHub.Types.Base.DateTime where
 
-import           Control.Applicative       ((<$>), (<|>))
+import           Control.Applicative       ((<|>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..))
 import           Data.Text                 (Text)
 import           Data.Text.Arbitrary       ()

@@ -6,7 +6,6 @@ module PullRequestInfo where
 import           Control.Monad         (join)
 import           Data.Aeson            (FromJSON, ToJSON)
 import qualified Data.List             as List
-import           Data.Monoid           ((<>))
 import           Data.Text             (Text)
 import qualified Data.Text             as Text
 import           Data.Time.Clock       (UTCTime, diffUTCTime)

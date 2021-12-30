@@ -3,7 +3,6 @@
 {-# LANGUAGE StrictData        #-}
 module GitHub.Types.Events.ForkEvent where
 
-import           Control.Applicative       ((<$>), (<*>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
 import           Data.Aeson.Types          (Value (..), (.:), (.:?), (.=))
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))

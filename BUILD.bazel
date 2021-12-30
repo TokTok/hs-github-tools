@@ -3,15 +3,12 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_library")
 load("//third_party/haskell/hspec-discover:build_defs.bzl", "hspec_test")
 load("//tools/project:build_defs.bzl", "project")
 
-project(custom_github = True)
+project()
 
 haskell_library(
     name = "hs-github-tools",
     srcs = glob(["src/**/*.*hs"]),
-    compiler_flags = [
-        "-j4",
-        "-Wno-unused-imports",
-    ],
+    compiler_flags = ["-j4"],
     src_strip_prefix = "src",
     version = "0.1.2",
     visibility = ["//visibility:public"],
@@ -49,7 +46,6 @@ hspec_test(
     compiler_flags = [
         "-threaded",
         "-rtsopts",
-        "-Wno-unused-imports",
     ],
     deps = [
         ":hs-github-tools",

@@ -12,7 +12,7 @@ branches:
     protection:
       required_status_checks:
         contexts:
-          - "build-cabal"
-          - "build-stack"
-          - "cirrus-ci"
+          - "bazel-release"
+          - "build / cabal"
+          - "build / stack"
           - "code-review/reviewable"

@@ -1,6 +1,3 @@
-# WARNING: Actions in this file can access repository secrets. They should never
-# execute code of the pull request. All scripts should be fetched from merged
-# TokTok code.
 name: checks
 
 on:
@@ -8,21 +5,5 @@ on:
     branches: [master]
 
 jobs:
-  check-release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Checkout TokTok/ci-tools
-        uses: actions/checkout@v2
-        with:
-          repository: TokTok/ci-tools
-          path: ci-tools
-
-      - name: Check version against GitHub releases
-        env:
-          GH_USER: ${{ secrets.GH_USER }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: $GITHUB_WORKSPACE/ci-tools/bin/check_release
+  checks:
+    uses: TokTok/ci-tools/.github/workflows/check-release.yml@master

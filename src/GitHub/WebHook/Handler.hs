@@ -8,7 +8,6 @@ module GitHub.WebHook.Handler
   , removeNulls
   ) where
 
-import           Control.Applicative   (Applicative, pure)
 import           Crypto.Hash           (HMAC, SHA1, digestToHexByteString, hmac,
                                         hmacGetDigest)
 import           Data.Aeson            (ToJSON (..), Value (..),
@@ -17,7 +16,6 @@ import           Data.Aeson.Types      (parseEither)
 import           Data.ByteString       (ByteString)
 import qualified Data.ByteString.Char8 as BC8
 import qualified Data.HashMap.Strict   as HashMap
-import           Data.Monoid           ((<>))
 import           Data.Text             (Text)
 import qualified Data.Text             as Text
 import           Data.Text.Encoding    (decodeUtf8)

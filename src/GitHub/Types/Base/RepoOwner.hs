@@ -1,7 +1,7 @@
 {-# LANGUAGE StrictData #-}
 module GitHub.Types.Base.RepoOwner where
 
-import           Control.Applicative       ((<$>), (<|>))
+import           Control.Applicative       ((<|>))
 import           Data.Aeson                (FromJSON (..), ToJSON (..))
 import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 import qualified Test.QuickCheck.Gen       as Gen

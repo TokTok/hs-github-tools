@@ -5,7 +5,6 @@ module PullStatus
   , showPullInfos
   ) where
 
-import           Control.Applicative     ((<$>))
 import qualified Control.Monad.Parallel  as Parallel
 import qualified Data.List               as List
 import           Data.Text               (Text)
