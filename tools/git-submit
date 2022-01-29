@@ -8,12 +8,13 @@ BRANCH="${1-$(git rev-parse --abbrev-ref HEAD)}"
 if (echo "$BRANCH" | grep ':' >/dev/null); then
   REMOTE="$(echo "$BRANCH" | grep -o '^[^:]*')"
   BRANCH="$(echo "$BRANCH" | grep -o '[^:]*$')"
-  REMOTE="$(git remote -v | grep ":$REMOTE/.* (push)" | grep -o '^\S*')"
+  REMOTE="$(git remote -v | grep -i ":$REMOTE/.* (push)" | grep -o '^\S*')"
 fi
 
 if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" >/dev/null); then
   git checkout --track "$REMOTE/$BRANCH"
 else
+  REMOTE=origin
   git checkout "$BRANCH"
 fi
 
@@ -21,4 +22,4 @@ git push upstream "$BRANCH:master"
 git sync
 git branch -d "$BRANCH"
 sleep 2
-git push origin ":$BRANCH"
+git push "$REMOTE" ":$BRANCH"
