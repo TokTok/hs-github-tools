@@ -125,6 +125,7 @@ library
     , monad-parallel
     , QuickCheck
     , quickcheck-text
+    , split
     , tabular
     , text
     , time

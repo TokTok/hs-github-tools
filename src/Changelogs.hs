@@ -8,22 +8,43 @@ module Changelogs
   ) where
 
 import           Control.Arrow           (first, second, (&&&))
+import qualified Control.Monad.Parallel  as P
 import           Data.List               (foldl')
 import qualified Data.List               as List
+import qualified Data.List.Split         as List
 import qualified Data.Map                as Map
 import qualified Data.Maybe              as Maybe
 import           Data.Text               (Text)
 import qualified Data.Text               as Text
 import qualified Data.Vector             as V
+import           Debug.Trace             (traceIO)
 import qualified GitHub
 import           Network.HTTP.Client     (newManager)
 import           Network.HTTP.Client.TLS (tlsManagerSettings)
+import           Text.Read               (readMaybe)
 -- import           Text.Groom              (groom)
 
 import           Requests
 
 
 newtype ChangeLog = ChangeLog { unChangeLog :: [(Text, [Text], [Text])] }
+
+
+data VersionComponent
+  = Number Int
+  | Wildcard
+  deriving (Ord, Eq)
+
+
+instance Read VersionComponent where
+  readsPrec _ ('x':s) = [(Wildcard, s)]
+  readsPrec p input   = map (first Number) . readsPrec p $ input
+
+
+data Version
+  = VersionNumber [VersionComponent]
+  | VersionString Text
+  deriving (Ord, Eq)
 
 
 formatChangeLog :: Bool -> ChangeLog -> Text
@@ -72,8 +93,7 @@ groupByMilestone add = flip $ foldr (\item group ->
         case Map.lookup (clMilestone item) group of
           Just old -> add item old
           Nothing  -> add item ([], [])
-      ) group
-  )
+      ) group)
 
 
 formatChangeLogItem
@@ -103,6 +123,7 @@ makeChangeLog
   -> ChangeLog
 makeChangeLog wantRoadmap ownerName repoName pulls issues =
   ChangeLog
+  . reverseIfChangelog
   . sortChangelog
   . Map.foldlWithKey (\changes milestone (msIssues, msPulls) ->
       if milestone == "meta"
@@ -117,12 +138,25 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
   . groupByMilestone (second . (:)) changeLogPrs
   $ Map.empty
   where
-    sortChangelog l =
+    reverseIfChangelog l =
       if wantRoadmap
-        then case reverse l of
+        then l
+        else case reverse l of
           []   -> []
           x:xs -> xs ++ [x] -- Put "Backlog" last.
-        else l
+
+    sortChangelog :: [(Text, [Text], [Text])] -> [(Text, [Text], [Text])]
+    sortChangelog = List.sortOn $ \(v, _, _) -> parseVersion v
+
+    parseVersion :: Text -> Version
+    parseVersion v =
+        case Text.unpack v of
+            -- Milestones starting with "v" must be versions.
+            'v':version ->
+                case map readMaybe $ List.splitOn "." version of
+                  [Just major, Just minor, Just rev] -> VersionNumber [major, minor, rev]
+                  _ -> error $ "invalid version: " <> version
+            _ -> VersionString v
 
     (mergedPrs, openPrs) = List.partition (\case
         GitHub.SimplePullRequest
@@ -210,11 +244,23 @@ fetchChangeLog wantRoadmap ownerName repoName auth = do
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
-  let pulls  state = V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName state GitHub.FetchAll)
-  let issues state = V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName state GitHub.FetchAll)
+  let fetchPulls state = do
+          traceIO $ "Fetching pull requests"
+          l <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName state GitHub.FetchAll)
+          traceIO $ "Got " <> show (length l) <> " pull requests"
+          return l
+  let fetchIssues state = do
+          traceIO $ "Fetching issues"
+          l <- V.toList <$> request auth mgr (GitHub.issuesForRepoR   ownerName repoName state GitHub.FetchAll)
+          traceIO $ "Got " <> show (length l) <> " issues"
+          return l
 
   -- issues >>= putStrLn . groom
 
-  if wantRoadmap
-    then makeChangeLog wantRoadmap ownerName repoName <$> pulls GitHub.stateOpen   <*> issues GitHub.stateOpen
-    else makeChangeLog wantRoadmap ownerName repoName <$> pulls GitHub.stateClosed <*> issues GitHub.stateClosed
+  (pulls, issues) <- uncurry (P.bindM2 (\p i -> return (p, i))) $
+          if wantRoadmap
+             then (fetchPulls GitHub.stateOpen  , fetchIssues GitHub.stateOpen  )
+             else (fetchPulls GitHub.stateClosed, fetchIssues GitHub.stateClosed)
+
+  traceIO "Formatting changelog/roadmap"
+  return $ makeChangeLog wantRoadmap ownerName repoName pulls issues
