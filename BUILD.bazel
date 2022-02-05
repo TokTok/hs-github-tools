@@ -28,6 +28,7 @@ haskell_library(
         hazel_library("http-client-tls"),
         hazel_library("monad-parallel"),
         hazel_library("quickcheck-text"),
+        hazel_library("split"),
         hazel_library("tabular"),
         hazel_library("text"),
         hazel_library("time"),

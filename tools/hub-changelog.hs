@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import           Control.Applicative   ((<$>))
 import qualified Data.ByteString.Char8 as BS8
 import           Data.String           (fromString)
 import qualified Data.Text             as Text
@@ -26,4 +25,4 @@ main = do
     repoLocation [ownerName, repoName] =
       return (fromString ownerName, fromString repoName)
     repoLocation _ =
-      fail "Usage: changelog <owner> <repo>"
+      fail "Usage: hub-changelog <owner> <repo>"
