@@ -17,7 +17,8 @@ import           GitHub.Types.Base.RepoOwner
 -- Repository
 
 data Repository = Repository
-    { repositoryArchived         :: Bool
+    { repositoryAllowForking     :: Bool
+    , repositoryArchived         :: Bool
     , repositoryArchiveUrl       :: Text
     , repositoryAssigneesUrl     :: Text
     , repositoryBlobsUrl         :: Text
@@ -45,6 +46,7 @@ data Repository = Repository
     , repositoryGitRefsUrl       :: Text
     , repositoryGitTagsUrl       :: Text
     , repositoryGitUrl           :: Text
+    , repositoryIsTemplate       :: Bool
     , repositoryHasDownloads     :: Bool
     , repositoryHasIssues        :: Bool
     , repositoryHasPages         :: Bool
@@ -89,9 +91,11 @@ data Repository = Repository
     , repositorySvnUrl           :: Text
     , repositoryTagsUrl          :: Text
     , repositoryTeamsUrl         :: Text
+    , repositoryTopics           :: [Text]
     , repositoryTreesUrl         :: Text
     , repositoryUpdatedAt        :: DateTime
     , repositoryUrl              :: Text
+    , repositoryVisibility       :: Text
     , repositoryWatchers         :: Int
     , repositoryWatchersCount    :: Int
     } deriving (Eq, Show, Read)
@@ -99,7 +103,8 @@ data Repository = Repository
 
 instance FromJSON Repository where
     parseJSON (Object x) = Repository
-        <$> x .: "archived"
+        <$> x .: "allow_forking"
+        <*> x .: "archived"
         <*> x .: "archive_url"
         <*> x .: "assignees_url"
         <*> x .: "blobs_url"
@@ -127,6 +132,7 @@ instance FromJSON Repository where
         <*> x .: "git_refs_url"
         <*> x .: "git_tags_url"
         <*> x .: "git_url"
+        <*> x .: "is_template"
         <*> x .: "has_downloads"
         <*> x .: "has_issues"
         <*> x .: "has_pages"
@@ -171,9 +177,11 @@ instance FromJSON Repository where
         <*> x .: "svn_url"
         <*> x .: "tags_url"
         <*> x .: "teams_url"
+        <*> x .: "topics"
         <*> x .: "trees_url"
         <*> x .: "updated_at"
         <*> x .: "url"
+        <*> x .: "visibility"
         <*> x .: "watchers"
         <*> x .: "watchers_count"
 
@@ -181,7 +189,8 @@ instance FromJSON Repository where
 
 instance ToJSON Repository where
     toJSON Repository{..} = object
-        [ "archived"          .= repositoryArchived
+        [ "allow_forking"     .= repositoryAllowForking
+        , "archived"          .= repositoryArchived
         , "archive_url"       .= repositoryArchiveUrl
         , "assignees_url"     .= repositoryAssigneesUrl
         , "blobs_url"         .= repositoryBlobsUrl
@@ -209,6 +218,7 @@ instance ToJSON Repository where
         , "git_refs_url"      .= repositoryGitRefsUrl
         , "git_tags_url"      .= repositoryGitTagsUrl
         , "git_url"           .= repositoryGitUrl
+        , "is_template"       .= repositoryIsTemplate
         , "has_downloads"     .= repositoryHasDownloads
         , "has_issues"        .= repositoryHasIssues
         , "has_pages"         .= repositoryHasPages
@@ -253,9 +263,11 @@ instance ToJSON Repository where
         , "svn_url"           .= repositorySvnUrl
         , "tags_url"          .= repositoryTagsUrl
         , "teams_url"         .= repositoryTeamsUrl
+        , "topics"            .= repositoryTopics
         , "trees_url"         .= repositoryTreesUrl
         , "updated_at"        .= repositoryUpdatedAt
         , "url"               .= repositoryUrl
+        , "visibility"        .= repositoryVisibility
         , "watchers"          .= repositoryWatchers
         , "watchers_count"    .= repositoryWatchersCount
         ]
@@ -264,6 +276,10 @@ instance ToJSON Repository where
 instance Arbitrary Repository where
     arbitrary = Repository
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

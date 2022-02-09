@@ -28,6 +28,8 @@ data CheckSuite = CheckSuite
     , checkSuiteLatestCheckRunsCount :: Maybe Int
     , checkSuiteNodeId               :: Text
     , checkSuitePullRequests         :: [Text]
+    , checkSuiteRerequestable        :: Bool
+    , checkSuiteRunsRerequestable    :: Bool
     , checkSuiteStatus               :: Text
     , checkSuiteUrl                  :: Text
     , checkSuiteUpdatedAt            :: Text
@@ -49,6 +51,8 @@ instance FromJSON CheckSuite where
         <*> x .:? "latest_check_runs_count"
         <*> x .: "node_id"
         <*> x .: "pull_requests"
+        <*> x .: "rerequestable"
+        <*> x .: "runs_rerequestable"
         <*> x .: "status"
         <*> x .: "url"
         <*> x .: "updated_at"
@@ -71,6 +75,8 @@ instance ToJSON CheckSuite where
         , "latest_check_runs_count" .= checkSuiteLatestCheckRunsCount
         , "node_id"                 .= checkSuiteNodeId
         , "pull_requests"           .= checkSuitePullRequests
+        , "rerequestable"           .= checkSuiteRerequestable
+        , "runs_rerequestable"      .= checkSuiteRunsRerequestable
         , "status"                  .= checkSuiteStatus
         , "url"                     .= checkSuiteUrl
         , "updated_at"              .= checkSuiteUpdatedAt
@@ -81,6 +87,8 @@ instance ToJSON CheckSuite where
 instance Arbitrary CheckSuite where
     arbitrary = CheckSuite
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
