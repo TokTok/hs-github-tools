@@ -5,7 +5,7 @@ load("//tools/project:build_defs.bzl", "project")
 
 package(features = ["-layering_check"])
 
-project()
+project(custom_github = True)
 
 haskell_library(
     name = "hs-github-tools",
