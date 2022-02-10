@@ -1,6 +1,4 @@
 FROM toxchat/haskell:hs-github-tools AS build
-RUN ["stack", "install", "github-tools"]
-
 FROM ubuntu:20.04
 
 RUN apt-get update \
