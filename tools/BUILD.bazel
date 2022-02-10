@@ -15,6 +15,19 @@ haskell_binary(
 )
 
 haskell_binary(
+    name = "hub-pulls",
+    srcs = ["hub-pulls.hs"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//hs-github-tools",
+        hazel_library("base"),
+        hazel_library("bytestring"),
+        hazel_library("github"),
+        hazel_library("text"),
+    ],
+)
+
+haskell_binary(
     name = "hub-roadmap",
     srcs = ["hub-roadmap.hs"],
     visibility = ["//visibility:public"],

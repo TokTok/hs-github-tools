@@ -3,6 +3,12 @@ RUN ["stack", "install", "github-tools"]
 
 FROM ubuntu:20.04
 
+RUN apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+ ca-certificates \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /home/builder/.local/bin/webservice /app/
 CMD ["/app/webservice"]
 

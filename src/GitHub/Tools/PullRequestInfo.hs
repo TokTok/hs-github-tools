@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module PullRequestInfo where
+module GitHub.Tools.PullRequestInfo where
 
 import           Control.Monad         (join)
 import           Data.Aeson            (FromJSON, ToJSON)

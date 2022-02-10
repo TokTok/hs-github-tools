@@ -8,13 +8,58 @@ package(features = ["-layering_check"])
 project()
 
 haskell_library(
-    name = "hs-github-tools",
-    srcs = glob(["src/**/*.*hs"]),
+    name = "github-base",
+    srcs = glob([
+        "src/GitHub/Types/Base/*.hs",
+        "src/GitHub/Types/Base*.hs",
+    ]),
     compiler_flags = ["-j4"],
+    src_strip_prefix = "src",
+    visibility = ["//visibility:public"],
+    deps = [
+        hazel_library("QuickCheck"),
+        hazel_library("aeson"),
+        hazel_library("base"),
+        hazel_library("quickcheck-text"),
+        hazel_library("text"),
+    ],
+)
+
+haskell_library(
+    name = "github-events",
+    srcs = glob([
+        "src/GitHub/Types/Events/*.hs",
+        "src/GitHub/Types/Event*.hs",
+    ]),
+    compiler_flags = ["-j4"],
+    src_strip_prefix = "src",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":github-base",
+        hazel_library("QuickCheck"),
+        hazel_library("aeson"),
+        hazel_library("base"),
+        hazel_library("text"),
+    ],
+)
+
+haskell_library(
+    name = "hs-github-tools",
+    srcs = glob(
+        ["src/**/*.*hs"],
+        exclude = [
+            "src/GitHub/Types/Base/*.hs",
+            "src/GitHub/Types/Base*.hs",
+            "src/GitHub/Types/Events/*.hs",
+            "src/GitHub/Types/Event*.hs",
+        ],
+    ),
     src_strip_prefix = "src",
     version = "0.1.2",
     visibility = ["//visibility:public"],
     deps = [
+        ":github-base",
+        ":github-events",
         hazel_library("QuickCheck"),
         hazel_library("aeson"),
         hazel_library("base"),
@@ -51,6 +96,8 @@ hspec_test(
         "-rtsopts",
     ],
     deps = [
+        ":github-base",
+        ":github-events",
         ":hs-github-tools",
         hazel_library("QuickCheck"),
         hazel_library("aeson"),

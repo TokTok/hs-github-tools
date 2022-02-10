@@ -1,7 +1,7 @@
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
-module Changelogs
+module GitHub.Tools.Changelogs
   ( fetchChangeLog
   , formatChangeLog
   , ChangeLog
@@ -24,7 +24,7 @@ import           Network.HTTP.Client.TLS (tlsManagerSettings)
 import           Text.Read               (readMaybe)
 -- import           Text.Groom              (groom)
 
-import           Requests
+import           GitHub.Tools.Requests
 
 
 newtype ChangeLog = ChangeLog { unChangeLog :: [(Text, [Text], [Text])] }

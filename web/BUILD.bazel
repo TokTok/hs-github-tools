@@ -1,0 +1,33 @@
+load("@ai_formation_hazel//tools:mangling.bzl", "hazel_library")
+load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
+
+package(features = ["-layering_check"])
+
+haskell_binary(
+    name = "webservice",
+    srcs = glob(["**/*.hs"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//hs-github-tools",
+        hazel_library("Diff"),
+        hazel_library("aeson-pretty"),
+        hazel_library("base"),
+        hazel_library("bytestring"),
+        hazel_library("case-insensitive"),
+        hazel_library("expiring-cache-map"),
+        hazel_library("github"),
+        hazel_library("http-media"),
+        hazel_library("http-types"),
+        hazel_library("pretty"),
+        hazel_library("servant"),
+        hazel_library("servant-server"),
+        hazel_library("text"),
+        hazel_library("time"),
+        hazel_library("unordered-containers"),
+        hazel_library("uuid"),
+        hazel_library("wai"),
+        hazel_library("wai-cors"),
+        hazel_library("wai-extra"),
+        hazel_library("warp"),
+    ],
+)

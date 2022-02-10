@@ -1,23 +1,23 @@
 {-# LANGUAGE OverloadedStrings #-}
-module PullStatus
+module GitHub.Tools.PullStatus
   ( getPullStatus
   , getPullInfos
   , showPullInfos
   ) where
 
-import qualified Control.Monad.Parallel  as Parallel
-import qualified Data.List               as List
-import           Data.Text               (Text)
-import qualified Data.Text               as Text
-import           Data.Time.Clock         (getCurrentTime)
-import qualified Data.Vector             as V
+import qualified Control.Monad.Parallel       as Parallel
+import qualified Data.List                    as List
+import           Data.Text                    (Text)
+import qualified Data.Text                    as Text
+import           Data.Time.Clock              (getCurrentTime)
+import qualified Data.Vector                  as V
 import qualified GitHub
-import           Network.HTTP.Client     (Manager, newManager)
-import           Network.HTTP.Client.TLS (tlsManagerSettings)
+import           Network.HTTP.Client          (Manager, newManager)
+import           Network.HTTP.Client.TLS      (tlsManagerSettings)
 
-import           PullRequestInfo         (PullRequestInfo (..))
-import qualified PullRequestInfo
-import           Requests
+import           GitHub.Tools.PullRequestInfo (PullRequestInfo (..))
+import qualified GitHub.Tools.PullRequestInfo as PullRequestInfo
+import           GitHub.Tools.Requests
 
 
 getFullPr
@@ -80,13 +80,12 @@ getPrsForRepo
   -> GitHub.Name GitHub.Owner
   -> GitHub.Name GitHub.Repo
   -> IO [PullRequestInfo]
-getPrsForRepo auth mgr ownerName repoName = do
-  -- Get PR list.
-  simplePRs <- V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
-
-  prInfos <- Parallel.mapM (getPrInfo auth mgr ownerName repoName) simplePRs
-
-  return $ map (makePullRequestInfo repoName) prInfos
+getPrsForRepo auth mgr ownerName repoName =
+  map (makePullRequestInfo repoName) <$> (
+      -- Get PR list.
+      V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
+      -- Get more details about each PR.
+      >>= Parallel.mapM (getPrInfo auth mgr ownerName repoName))
 
 
 getPullInfos

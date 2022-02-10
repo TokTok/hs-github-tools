@@ -23,9 +23,9 @@ import           Network.HTTP.Media               ((//), (/:))
 import           Servant
 import           System.Environment               (getEnv)
 
-import qualified Changelogs
-import           PullRequestInfo                  (PullRequestInfo)
-import qualified PullStatus
+import qualified GitHub.Tools.Changelogs          as Changelogs
+import           GitHub.Tools.PullRequestInfo     (PullRequestInfo)
+import qualified GitHub.Tools.PullStatus          as PullStatus
 
 
 type GitHubCache a = ECM IO MVar () HashMap () a

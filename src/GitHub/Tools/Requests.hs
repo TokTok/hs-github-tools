@@ -1,5 +1,5 @@
 {-# LANGUAGE DataKinds #-}
-module Requests where
+module GitHub.Tools.Requests where
 
 import           Control.Monad.Catch (throwM)
 import           Data.Aeson          (FromJSON)

@@ -1,13 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import qualified Data.ByteString.Char8 as BS8
-import           Data.String           (fromString)
-import qualified Data.Text             as Text
+import qualified Data.ByteString.Char8   as BS8
+import           Data.String             (fromString)
+import qualified Data.Text               as Text
 import qualified GitHub
-import           System.Environment    (getArgs, lookupEnv)
+import           System.Environment      (getArgs, lookupEnv)
 
-import           Changelogs
+import           GitHub.Tools.Changelogs
 
 
 main :: IO ()

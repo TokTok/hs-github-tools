@@ -19,7 +19,10 @@ source-repository head
 
 library
   exposed-modules:
-      Changelogs
+      GitHub.Tools.Changelogs
+      GitHub.Tools.PullRequestInfo
+      GitHub.Tools.PullStatus
+      GitHub.Tools.Requests
       GitHub.Types
       GitHub.Types.Base
       GitHub.Types.Base.Author
@@ -104,9 +107,6 @@ library
       GitHub.Types.Events.WatchEvent
       GitHub.Types.PayloadParser
       GitHub.WebHook.Handler
-      PullRequestInfo
-      PullStatus
-      Requests
   ghc-options:
       -Wall
   hs-source-dirs:      src
