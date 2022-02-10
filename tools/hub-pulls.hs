@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import           Control.Applicative   ((<$>))
 import qualified Data.ByteString.Char8 as BS8
 import qualified Data.Text             as Text
 import qualified GitHub

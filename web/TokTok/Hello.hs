@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP                   #-}
 {-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -11,7 +10,6 @@ module TokTok.Hello (newApp) where
 import           Caching.ExpiringCacheMap.HashECM (CacheSettings (..), ECM,
                                                    consistentDuration,
                                                    lookupECM, newECMIO)
-import           Control.Applicative              ((<$>), (<*>))
 import           Control.Concurrent.MVar          (MVar)
 import           Control.Monad.IO.Class           (liftIO)
 import qualified Data.ByteString.Char8            as BS8
@@ -22,9 +20,6 @@ import           Data.Text.Encoding               (encodeUtf8)
 import qualified Data.Time.Clock.POSIX            as POSIX
 import qualified GitHub
 import           Network.HTTP.Media               ((//), (/:))
-#if !MIN_VERSION_servant_server(0, 6, 0)
-import           Network.Wai                      (Application)
-#endif
 import           Servant
 import           System.Environment               (getEnv)
 

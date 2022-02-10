@@ -1,14 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 module TokTok.Webhooks (app) where
 
-import           Control.Applicative        ((<$>))
 import qualified Data.Aeson.Encode.Pretty   as Aeson
 import qualified Data.Algorithm.DiffContext as Diff
 import qualified Data.ByteString            as BS
 import qualified Data.ByteString.Lazy       as LBS
 import qualified Data.CaseInsensitive       as CI
 import qualified Data.Maybe                 as Maybe
-import           Data.Monoid                (mempty, (<>))
 import           Data.Text                  (Text)
 import qualified Data.Text                  as Text
 import qualified Data.Text.Encoding         as Text (decodeUtf8With, encodeUtf8)
