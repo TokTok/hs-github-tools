@@ -6,7 +6,7 @@ import           Network.Wai                 (Application)
 import           Network.Wai.Handler.Warp    (Port, run)
 import           Network.Wai.Middleware.Cors (simpleCors)
 import           Network.Wai.UrlMap          (mapUrls, mount)
-import           System.Environment          (getArgs)
+import           System.Environment          (getArgs, getEnv)
 import           System.IO                   (BufferMode (..), hSetBuffering,
                                               stdout)
 
@@ -36,4 +36,4 @@ main = do
     args <- getArgs
     case args of
         [port] -> runTestServer $ read port
-        _      -> runTestServer 8001
+        _      -> runTestServer =<< read <$> getEnv "PORT"

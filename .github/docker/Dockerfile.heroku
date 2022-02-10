@@ -1,0 +1,9 @@
+FROM toxchat/haskell:hs-github-tools AS build
+RUN ["stack", "install", "github-tools"]
+
+FROM ubuntu:20.04
+
+COPY --from=build /home/builder/.local/bin/webservice /app/
+CMD ["/app/webservice"]
+
+# vim:ft=dockerfile

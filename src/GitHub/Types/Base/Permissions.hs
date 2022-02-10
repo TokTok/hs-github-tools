@@ -20,6 +20,7 @@ data Permissions = Permissions
     , permissionsContentReferences    :: Maybe Text
     , permissionsDeployments          :: Maybe Text
     , permissionsDiscussions          :: Maybe Text
+    , permissionsEmails               :: Maybe Text
     , permissionsIssues               :: Maybe Text
     , permissionsMembers              :: Maybe Text
     , permissionsMetadata             :: Maybe Text
@@ -45,6 +46,7 @@ instance FromJSON Permissions where
         <*> x .:? "content_references"
         <*> x .:? "deployments"
         <*> x .:? "discussions"
+        <*> x .:? "emails"
         <*> x .:? "issues"
         <*> x .:? "members"
         <*> x .:? "metadata"
@@ -71,6 +73,7 @@ instance ToJSON Permissions where
         , "content_references"    .= permissionsContentReferences
         , "deployments"           .= permissionsDeployments
         , "discussions"           .= permissionsDiscussions
+        , "emails"                .= permissionsEmails
         , "issues"                .= permissionsIssues
         , "members"               .= permissionsMembers
         , "metadata"              .= permissionsMetadata
@@ -90,6 +93,7 @@ instance ToJSON Permissions where
 instance Arbitrary Permissions where
     arbitrary = Permissions
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
