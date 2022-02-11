@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module GitHub.Tools.PullStatus
-  ( getPullStatus
-  , getPullInfosFor
+  ( getPrInfos
+  , getPullStatus
   , getPullInfos
+  , makePullRequestInfo
   , showPullInfos
   ) where
 
@@ -49,6 +50,17 @@ getPrInfo auth mgr ownerName repoName pr = do
   return (reviewers, fullPr)
 
 
+getPrInfos
+  :: Maybe GitHub.Auth
+  -> Manager
+  -> GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> [GitHub.SimplePullRequest]
+  -> IO [([Text], GitHub.PullRequest)]
+getPrInfos auth mgr ownerName repoName =
+    Parallel.mapM (getPrInfo auth mgr ownerName repoName)
+
+
 makePullRequestInfo
   :: GitHub.Name GitHub.Repo
   -> ([Text], GitHub.PullRequest)
@@ -90,16 +102,7 @@ getPrsForRepo auth mgr ownerName repoName =
       -- Get PR list.
       V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
       -- Get more details about each PR.
-      >>= Parallel.mapM (getPrInfo auth mgr ownerName repoName))
-
-getPullInfosFor
-  :: GitHub.Name GitHub.Owner
-  -> GitHub.Name GitHub.Repo
-  -> Maybe GitHub.Auth
-  -> IO [PullRequestInfo]
-getPullInfosFor ownerName repoName auth = do
-  mgr <- newManager tlsManagerSettings
-  getPrsForRepo auth mgr ownerName repoName
+      >>= getPrInfos auth mgr ownerName repoName)
 
 
 getPullInfos
