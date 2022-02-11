@@ -1,15 +1,25 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
-module GitHub.Tools.AutoMerge (autoMergeRepo, autoMergeAll) where
+module GitHub.Tools.AutoMerge
+    ( autoMergePullRequest
+    , autoMergeAll
+    , trustedAuthors
+    ) where
 
+import qualified Data.ByteString.Char8        as BS8
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
+import qualified Data.Vector                  as V
 import qualified GitHub
+import           Network.HTTP.Client          (newManager)
+import           Network.HTTP.Client.TLS      (tlsManagerSettings)
 import           System.Posix.Directory       (changeWorkingDirectory)
 import           System.Process               (callProcess)
 
 import           GitHub.Tools.PullRequestInfo (PullRequestInfo (..))
-import           GitHub.Tools.PullStatus      (getPullInfos, getPullInfosFor)
+import           GitHub.Tools.PullStatus      (getPrInfos, getPullInfos,
+                                               makePullRequestInfo)
+import           GitHub.Tools.Requests        (request)
 
 
 trustedAuthors :: [Text]
@@ -29,11 +39,11 @@ workDir = "/tmp/automerge"
 
 autoMerge
     :: String
-    -> GitHub.Name GitHub.Organization
+    -> GitHub.Name GitHub.Owner
     -> PullRequestInfo
     -> IO ()
 autoMerge _ _ PullRequestInfo{prOrigin = Nothing} = return ()
-autoMerge token orgName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin = Just prOrigin} = do
+autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin = Just prOrigin} = do
     let clonePath = workDir <> "/" <> Text.unpack prRepoName
     callProcess "rm" ["-rf", clonePath]
     callProcess "git"
@@ -46,7 +56,7 @@ autoMerge token orgName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin =
 
     callProcess "git"
         [ "remote", "add", "upstream"
-        , "https://" <> token <> "@github.com/" <> Text.unpack (GitHub.untagName orgName) <> "/" <> Text.unpack prOrigin
+        , "https://" <> token <> "@github.com/" <> Text.unpack (GitHub.untagName ownerName) <> "/" <> Text.unpack prOrigin
         ]
     callProcess "git"
         [ "push", "upstream", Text.unpack prBranch <> ":master" ]
@@ -61,24 +71,34 @@ mergeable PullRequestInfo{prState, prTrustworthy, prUser} =
     prState == "clean" && (prTrustworthy || prUser `elem` trustedAuthors)
 
 
-autoMergeRepo
-  :: GitHub.Name GitHub.Owner
-  -> GitHub.Name GitHub.Organization
+hasAuthor :: Text -> GitHub.SimplePullRequest -> Bool
+hasAuthor author pr =
+    (GitHub.untagName . GitHub.simpleUserLogin . GitHub.simplePullRequestUser $ pr) == author
+
+
+autoMergePullRequest
+  :: String
+  -> GitHub.Name GitHub.Owner
   -> GitHub.Name GitHub.Repo
-  -> String
-  -> GitHub.Auth
+  -> Text
   -> IO ()
-autoMergeRepo ownerName orgName repoName token auth = do
-    pulls <- filter mergeable <$> getPullInfosFor ownerName repoName (Just auth)
-    mapM_ (autoMerge token orgName) pulls
+autoMergePullRequest token ownerName repoName author = do
+    let auth = Just . GitHub.OAuth . BS8.pack $ token
+    mgr <- newManager tlsManagerSettings
+    pulls <- (filter (hasAuthor author) . V.toList <$>
+        request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll))
+        >>= getPrInfos auth mgr ownerName repoName
+
+    let prInfos = filter mergeable . map (makePullRequestInfo repoName) $ pulls
+    mapM_ (autoMerge token ownerName) prInfos
 
 
 autoMergeAll
   :: GitHub.Name GitHub.Organization
   -> GitHub.Name GitHub.Owner
   -> String
-  -> GitHub.Auth
   -> IO ()
-autoMergeAll orgName ownerName token auth = do
-    pulls <- filter mergeable . concat <$> getPullInfos orgName ownerName (Just auth)
-    mapM_ (autoMerge token orgName) pulls
+autoMergeAll orgName ownerName token = do
+    let auth = Just . GitHub.OAuth . BS8.pack $ token
+    pulls <- filter mergeable . concat <$> getPullInfos orgName ownerName auth
+    mapM_ (autoMerge token ownerName) pulls

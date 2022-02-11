@@ -16,9 +16,9 @@ import qualified TokTok.Webhooks             as Webhooks
 
 newApp :: IO Application
 newApp = do
-    helloApp <- Hello.newApp
+    helloApp <- simpleCors <$> Hello.newApp
     return $ mapUrls $
-            mount "hello" (simpleCors helloApp)
+            mount "hello" helloApp
         <|> mount "webhooks" Webhooks.app
 
 
