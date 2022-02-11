@@ -19,6 +19,7 @@ source-repository head
 
 library
   exposed-modules:
+      GitHub.Tools.AutoMerge
       GitHub.Tools.Changelogs
       GitHub.Tools.PullRequestInfo
       GitHub.Tools.PullStatus
@@ -123,6 +124,7 @@ library
     , http-client       >= 0.4.30
     , http-client-tls
     , monad-parallel
+    , process
     , QuickCheck
     , quickcheck-text
     , split
@@ -132,6 +134,20 @@ library
     , unordered-containers
     , uuid
     , vector
+    , unix
+
+executable hub-automerge
+  main-is:             hub-automerge.hs
+  ghc-options:
+      -Wall
+  hs-source-dirs:      tools
+  default-language:    Haskell2010
+  build-depends:
+      base
+    , bytestring
+    , github
+    , github-tools
+    , text
 
 executable hub-pulls
   main-is:             hub-pulls.hs
@@ -179,6 +195,7 @@ executable webservice
   hs-source-dirs:      web
   default-language:    Haskell2010
   other-modules:
+      TokTok.Handlers
       TokTok.Hello
       TokTok.Webhooks
   build-depends:

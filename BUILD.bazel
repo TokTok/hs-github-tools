@@ -72,6 +72,7 @@ haskell_library(
         hazel_library("http-client"),
         hazel_library("http-client-tls"),
         hazel_library("monad-parallel"),
+        hazel_library("process"),
         hazel_library("quickcheck-text"),
         hazel_library("split"),
         hazel_library("tabular"),
@@ -80,6 +81,7 @@ haskell_library(
         hazel_library("unordered-containers"),
         hazel_library("uuid"),
         hazel_library("vector"),
+        hazel_library("unix"),
     ],
 )
 

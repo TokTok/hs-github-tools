@@ -22,6 +22,7 @@ import           Network.Wai                (Application, Request, Response,
                                              requestHeaders, responseLBS)
 import           System.Environment         (lookupEnv)
 import qualified Text.PrettyPrint           as PP
+import           TokTok.Handlers            (handleEvent)
 
 
 responseOK :: Response
@@ -76,13 +77,14 @@ handleError event headers err = do
 
 
 handlePayload :: Bool -> BS.ByteString -> UUID -> Payload -> IO Response
-handlePayload isSigned event uuid _payload = do
+handlePayload isSigned event uuid payload = do
     Text.putStrLn
         $  unsignedMsg
         <> "Success in event "
         <> Text.pack (show event)
         <> ": UUID="
         <> Text.pack (show uuid)
+    handleEvent payload
     return responseOK
     where unsignedMsg = if isSigned then "" else "[UNSIGNED!] "
 
