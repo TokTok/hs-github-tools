@@ -33,6 +33,7 @@ library
       GitHub.Types.Base.CheckApp
       GitHub.Types.Base.CheckCommit
       GitHub.Types.Base.CheckOutput
+      GitHub.Types.Base.CheckPullRequest
       GitHub.Types.Base.CheckRun
       GitHub.Types.Base.CheckSuite
       GitHub.Types.Base.Commit

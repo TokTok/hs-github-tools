@@ -3,14 +3,16 @@
 {-# LANGUAGE StrictData        #-}
 module GitHub.Types.Base.CheckSuite where
 
-import           Data.Aeson                    (FromJSON (..), ToJSON (..),
-                                                object)
-import           Data.Aeson.Types              (Value (..), (.:), (.:?), (.=))
-import           Data.Text                     (Text)
-import           Test.QuickCheck.Arbitrary     (Arbitrary (..))
+import           Data.Aeson                         (FromJSON (..), ToJSON (..),
+                                                     object)
+import           Data.Aeson.Types                   (Value (..), (.:), (.:?),
+                                                     (.=))
+import           Data.Text                          (Text)
+import           Test.QuickCheck.Arbitrary          (Arbitrary (..))
 
 import           GitHub.Types.Base.CheckApp
 import           GitHub.Types.Base.CheckCommit
+import           GitHub.Types.Base.CheckPullRequest
 
 ------------------------------------------------------------------------------
 -- CheckSuite
@@ -27,7 +29,7 @@ data CheckSuite = CheckSuite
     , checkSuiteId                   :: Int
     , checkSuiteLatestCheckRunsCount :: Maybe Int
     , checkSuiteNodeId               :: Text
-    , checkSuitePullRequests         :: [Text]
+    , checkSuitePullRequests         :: [CheckPullRequest]
     , checkSuiteRerequestable        :: Bool
     , checkSuiteRunsRerequestable    :: Bool
     , checkSuiteStatus               :: Text
