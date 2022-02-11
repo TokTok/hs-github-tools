@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module GitHub.Tools.PullStatus
   ( getPullStatus
+  , getPullInfosFor
   , getPullInfos
   , showPullInfos
   ) where
@@ -90,6 +91,15 @@ getPrsForRepo auth mgr ownerName repoName =
       V.toList <$> request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
       -- Get more details about each PR.
       >>= Parallel.mapM (getPrInfo auth mgr ownerName repoName))
+
+getPullInfosFor
+  :: GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Repo
+  -> Maybe GitHub.Auth
+  -> IO [PullRequestInfo]
+getPullInfosFor ownerName repoName auth = do
+  mgr <- newManager tlsManagerSettings
+  getPrsForRepo auth mgr ownerName repoName
 
 
 getPullInfos

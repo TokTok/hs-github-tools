@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
-module GitHub.Tools.AutoMerge (autoMergeAll) where
+module GitHub.Tools.AutoMerge (autoMergeRepo, autoMergeAll) where
 
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
@@ -9,7 +9,7 @@ import           System.Posix.Directory       (changeWorkingDirectory)
 import           System.Process               (callProcess)
 
 import           GitHub.Tools.PullRequestInfo (PullRequestInfo (..))
-import           GitHub.Tools.PullStatus      (getPullInfos)
+import           GitHub.Tools.PullStatus      (getPullInfos, getPullInfosFor)
 
 
 trustedAuthors :: [Text]
@@ -23,6 +23,10 @@ trustedAuthors =
     ]
 
 
+workDir :: FilePath
+workDir = "/tmp/automerge"
+
+
 autoMerge
     :: String
     -> GitHub.Name GitHub.Organization
@@ -30,7 +34,7 @@ autoMerge
     -> IO ()
 autoMerge _ _ PullRequestInfo{prOrigin = Nothing} = return ()
 autoMerge token orgName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin = Just prOrigin} = do
-    let clonePath = "/tmp/automerge/" <> Text.unpack prRepoName
+    let clonePath = workDir <> "/" <> Text.unpack prRepoName
     callProcess "rm" ["-rf", clonePath]
     callProcess "git"
         [ "clone", "--depth=2"  -- 2 so we have a base commit (hopefully the master HEAD commit)
@@ -47,10 +51,26 @@ autoMerge token orgName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin =
     callProcess "git"
         [ "push", "upstream", Text.unpack prBranch <> ":master" ]
 
+    -- Go back to a directory that will definitely exist even when next time
+    -- we "rm -rf" the git repo cloned above.
+    changeWorkingDirectory workDir
+
 
 mergeable :: PullRequestInfo -> Bool
 mergeable PullRequestInfo{prState, prTrustworthy, prUser} =
     prState == "clean" && (prTrustworthy || prUser `elem` trustedAuthors)
+
+
+autoMergeRepo
+  :: GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Organization
+  -> GitHub.Name GitHub.Repo
+  -> String
+  -> GitHub.Auth
+  -> IO ()
+autoMergeRepo ownerName orgName repoName token auth = do
+    pulls <- filter mergeable <$> getPullInfosFor ownerName repoName (Just auth)
+    mapM_ (autoMerge token orgName) pulls
 
 
 autoMergeAll
