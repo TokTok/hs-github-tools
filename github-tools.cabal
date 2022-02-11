@@ -205,6 +205,7 @@ executable webservice
     , aeson-pretty
     , bytestring
     , case-insensitive
+    , containers
     , expiring-cache-map
     , github
     , http-media
@@ -212,8 +213,10 @@ executable webservice
     , pretty
     , servant           >= 0.5
     , servant-server    >= 0.5
+    , suspend
     , text
     , time
+    , timers
     , unordered-containers
     , uuid
     , wai

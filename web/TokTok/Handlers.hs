@@ -4,6 +4,7 @@ module TokTok.Handlers
   ( handleEvent
   ) where
 
+import           Data.Text              (Text)
 import           GitHub.Data.Name       (Name (..))
 import           GitHub.Tools.AutoMerge (autoMergePullRequest, trustedAuthors)
 import           GitHub.Types           (Author (..), CheckCommit (..),
@@ -12,7 +13,7 @@ import           GitHub.Types           (Author (..), CheckCommit (..),
 import           System.Environment     (getEnv)
 
 
-handleEvent :: Payload -> IO ()
+handleEvent :: Payload -> Maybe (Text, IO ())
 handleEvent (CheckSuiteEventPayload (CheckSuiteEvent
     { checkSuiteEventCheckSuite = CheckSuite
         { checkSuiteConclusion = Just "success"
@@ -22,9 +23,10 @@ handleEvent (CheckSuiteEventPayload (CheckSuiteEvent
             })
         }
     , checkSuiteEventRepository = Repository{ repositoryName = repo }
-    })) | branch /= Just "master" && author `elem` trustedAuthors = do
-      -- Get auth token from the $GITHUB_TOKEN environment variable.
-      token <- getEnv "GITHUB_TOKEN"
-      autoMergePullRequest token "TokTok" (N repo) author
+    })) | branch /= Just "master" && author `elem` trustedAuthors =
+        Just (repo <> "/" <> author, do
+            -- Get auth token from the $GITHUB_TOKEN environment variable.
+            token <- getEnv "GITHUB_TOKEN"
+            autoMergePullRequest token "TokTok" (N repo) author)
 
-handleEvent _ = return ()
+handleEvent _ = Nothing
