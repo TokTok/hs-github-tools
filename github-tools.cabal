@@ -119,7 +119,7 @@ library
     , containers
     , cryptohash
     , exceptions
-    , github            >= 0.25 && <= 0.26
+    , github            >= 0.25 && <= 0.27
     , html
     , http-client       >= 0.4.30
     , http-client-tls
