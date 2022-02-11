@@ -16,10 +16,11 @@ import qualified TokTok.Webhooks             as Webhooks
 
 newApp :: IO Application
 newApp = do
-    helloApp <- simpleCors <$> Hello.newApp
+    hello <- simpleCors <$> Hello.newApp
+    webhooks <- Webhooks.newApp
     return $ mapUrls $
-            mount "hello" helloApp
-        <|> mount "webhooks" Webhooks.app
+            mount "hello" hello
+        <|> mount "webhooks" webhooks
 
 
 -- Run the server.
