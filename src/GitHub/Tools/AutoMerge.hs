@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
-module GitHub.Tools.AutoMerge (autoMergeAll) where
+module GitHub.Tools.AutoMerge (autoMergeRepo, autoMergeAll) where
 
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
@@ -9,7 +9,7 @@ import           System.Posix.Directory       (changeWorkingDirectory)
 import           System.Process               (callProcess)
 
 import           GitHub.Tools.PullRequestInfo (PullRequestInfo (..))
-import           GitHub.Tools.PullStatus      (getPullInfos)
+import           GitHub.Tools.PullStatus      (getPullInfos, getPullInfosFor)
 
 
 trustedAuthors :: [Text]
@@ -51,6 +51,18 @@ autoMerge token orgName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin =
 mergeable :: PullRequestInfo -> Bool
 mergeable PullRequestInfo{prState, prTrustworthy, prUser} =
     prState == "clean" && (prTrustworthy || prUser `elem` trustedAuthors)
+
+
+autoMergeRepo
+  :: GitHub.Name GitHub.Owner
+  -> GitHub.Name GitHub.Organization
+  -> GitHub.Name GitHub.Repo
+  -> String
+  -> GitHub.Auth
+  -> IO ()
+autoMergeRepo ownerName orgName repoName token auth = do
+    pulls <- filter mergeable <$> getPullInfosFor ownerName repoName (Just auth)
+    mapM_ (autoMerge token orgName) pulls
 
 
 autoMergeAll
