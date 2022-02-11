@@ -11,6 +11,7 @@ import           Test.QuickCheck.Arbitrary     (Arbitrary (..))
 
 import           GitHub.Types.Base.CheckApp
 import           GitHub.Types.Base.CheckCommit
+import           GitHub.Types.Base.CheckPullRequest
 
 ------------------------------------------------------------------------------
 -- CheckSuite
@@ -27,7 +28,7 @@ data CheckSuite = CheckSuite
     , checkSuiteId                   :: Int
     , checkSuiteLatestCheckRunsCount :: Maybe Int
     , checkSuiteNodeId               :: Text
-    , checkSuitePullRequests         :: [Text]
+    , checkSuitePullRequests         :: [CheckPullRequest]
     , checkSuiteRerequestable        :: Bool
     , checkSuiteRunsRerequestable    :: Bool
     , checkSuiteStatus               :: Text
