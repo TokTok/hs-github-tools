@@ -18,23 +18,28 @@ import qualified Text.Tabular.Html     as Html
 
 
 data PullRequestInfo = PullRequestInfo
-  { prRepoName  :: Text
+  { prRepoName    :: Text
     -- ^ The repository for which the pull request is.
-  , prNumber    :: Int
+  , prNumber      :: Int
     -- ^ The assigned pull request issue number.
-  , prUser      :: Text
+  , prUser        :: Text
     -- ^ The user who proposed this PR.
-  , prBranch    :: Text
+  , prBranch      :: Text
     -- ^ The branch name from which the pull request came.
-  , prCreated   :: UTCTime
+  , prCreated     :: UTCTime
     -- ^ Creation time of pull request. I.e. when it was proposed.
-  , prTitle     :: Text
+  , prTitle       :: Text
     -- ^ Title of pull request.
-  , prReviewers :: [Text]
+  , prReviewers   :: [Text]
     -- ^ The list of pull request reviewers (assignees).
-  , prState     :: Text
+  , prState       :: Text
+    -- ^ The mergeability state of the PR (clean = it's mergeable now).
+  , prOrigin      :: Maybe Text
+    -- ^ The origin repository as user/reponame string.
+  , prTrustworthy :: Bool
+    -- ^ Whether the author is an org member (True) or an outside contributor (False).
   }
-  deriving (Ord, Eq, Generic)
+  deriving (Ord, Eq, Generic, Show)
 
 instance ToJSON PullRequestInfo
 instance FromJSON PullRequestInfo

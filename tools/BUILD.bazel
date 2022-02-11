@@ -1,9 +1,9 @@
 load("@ai_formation_hazel//tools:mangling.bzl", "hazel_library")
 load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
 
-haskell_binary(
-    name = "hub-changelog",
-    srcs = ["hub-changelog.hs"],
+[haskell_binary(
+    name = file[:-3],
+    srcs = [file],
     visibility = ["//visibility:public"],
     deps = [
         "//hs-github-tools",
@@ -12,30 +12,4 @@ haskell_binary(
         hazel_library("github"),
         hazel_library("text"),
     ],
-)
-
-haskell_binary(
-    name = "hub-pulls",
-    srcs = ["hub-pulls.hs"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//hs-github-tools",
-        hazel_library("base"),
-        hazel_library("bytestring"),
-        hazel_library("github"),
-        hazel_library("text"),
-    ],
-)
-
-haskell_binary(
-    name = "hub-roadmap",
-    srcs = ["hub-roadmap.hs"],
-    visibility = ["//visibility:public"],
-    deps = [
-        "//hs-github-tools",
-        hazel_library("base"),
-        hazel_library("bytestring"),
-        hazel_library("github"),
-        hazel_library("text"),
-    ],
-)
+) for file in glob(["*.hs"])]

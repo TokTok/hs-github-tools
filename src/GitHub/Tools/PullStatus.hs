@@ -53,14 +53,18 @@ makePullRequestInfo
   -> ([Text], GitHub.PullRequest)
   -> PullRequestInfo
 makePullRequestInfo repoName (reviewers, pr) = PullRequestInfo
-  { prRepoName  = GitHub.untagName repoName
-  , prNumber    = GitHub.unIssueNumber $ GitHub.pullRequestNumber pr
-  , prUser      = user
-  , prBranch    = Text.tail branch
-  , prCreated   = GitHub.pullRequestCreatedAt pr
-  , prTitle     = GitHub.pullRequestTitle pr
-  , prReviewers = reviewers
-  , prState     = showMergeableState $ GitHub.pullRequestMergeableState pr
+  { prRepoName    = GitHub.untagName repoName
+  , prNumber      = GitHub.unIssueNumber $ GitHub.pullRequestNumber pr
+  , prUser        = user
+  , prBranch      = Text.tail branch
+  , prCreated     = GitHub.pullRequestCreatedAt pr
+  , prTitle       = GitHub.pullRequestTitle pr
+  , prReviewers   = reviewers
+  , prState       = showMergeableState $ GitHub.pullRequestMergeableState pr
+  , prOrigin      = GitHub.untagName . GitHub.repoName <$> GitHub.pullRequestCommitRepo (GitHub.pullRequestBase pr)
+  -- TODO(iphydf): The Haskell github package doesn't support this yet.
+  -- , prTrustworthy = GitHub.pullRequestAuthorAssociation pr
+  , prTrustworthy = False
   }
   where
     (user, branch) = Text.breakOn ":" . GitHub.pullRequestCommitLabel . GitHub.pullRequestHead $ pr
