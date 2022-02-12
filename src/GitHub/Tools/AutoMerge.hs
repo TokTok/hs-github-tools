@@ -71,21 +71,15 @@ mergeable PullRequestInfo{prState, prTrustworthy, prUser} =
     prState == "clean" && (prTrustworthy || prUser `elem` trustedAuthors)
 
 
-hasAuthor :: Text -> GitHub.SimplePullRequest -> Bool
-hasAuthor author pr =
-    (GitHub.untagName . GitHub.simpleUserLogin . GitHub.simplePullRequestUser $ pr) == author
-
-
 autoMergePullRequest
   :: String
   -> GitHub.Name GitHub.Owner
   -> GitHub.Name GitHub.Repo
-  -> Text
   -> IO ()
-autoMergePullRequest token ownerName repoName author = do
+autoMergePullRequest token ownerName repoName = do
     let auth = Just . GitHub.OAuth . BS8.pack $ token
     mgr <- newManager tlsManagerSettings
-    pulls <- (filter (hasAuthor author) . V.toList <$>
+    pulls <- (V.toList <$>
         request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll))
         >>= getPrInfos auth mgr ownerName repoName
 

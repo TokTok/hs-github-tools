@@ -14,6 +14,6 @@ main = do
     args <- getArgs
     token <- getEnv "GITHUB_TOKEN"
     case args of
-      []             -> autoMergeAll "TokTok" "TokTok" token
-      [repo, author] -> autoMergePullRequest token "TokTok" (fromString repo) (fromString author)
-      _              -> error "Usage: hub-automerge [repo] [author]"
+      []     -> autoMergeAll "TokTok" "TokTok" token
+      [repo] -> autoMergePullRequest token "TokTok" (fromString repo)
+      _      -> error "Usage: hub-automerge [repo] [author]"

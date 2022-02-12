@@ -131,7 +131,7 @@ newApp = do
     -- Initialise task queue
     tasks <- newMVar Map.empty
     -- Start the task queue processing timer.
-    timer <- oneShotTimer (processTasks tasks) (sDelay 10)  -- after 10 seconds
+    timer <- oneShotTimer (processTasks tasks) (sDelay 30)  -- after 30 seconds
     return $ app (addTasks timer tasks)
   where
     processTasks :: MVar (Map Text (IO ())) -> IO ()
