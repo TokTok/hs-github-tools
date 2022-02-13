@@ -47,7 +47,7 @@ autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin
     let clonePath = workDir <> "/" <> Text.unpack prRepoName
     callProcess "rm" ["-rf", clonePath]
     callProcess "git"
-        [ "clone", "--depth=2"  -- 2 so we have a base commit (hopefully the master HEAD commit)
+        [ "clone", "--depth=6"  -- 6 so we can merge up to 5 commits on top of the master HEAD commit
         , "--branch=" <> Text.unpack prBranch
         , "https://github.com/" <> Text.unpack prUser <> "/" <> Text.unpack prOrigin
         , clonePath
@@ -81,10 +81,14 @@ autoMergePullRequest token ownerName repoName = do
     mgr <- newManager tlsManagerSettings
     pulls <- (V.toList <$>
         request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll))
-        >>= getPrInfos auth mgr ownerName repoName
+        >>= fmap (map $ makePullRequestInfo repoName) . getPrInfos auth mgr ownerName repoName
+    putStrLn $ "found " <> show (length pulls) <> " pulls"
 
-    let prInfos = filter mergeable . map (makePullRequestInfo repoName) $ pulls
-    mapM_ (autoMerge token ownerName) prInfos
+    let mergeablePulls = filter mergeable pulls
+    putStrLn $ "selected " <> show (length mergeablePulls) <> " mergeable pulls:"
+    mapM_ print mergeablePulls
+
+    mapM_ (autoMerge token ownerName) mergeablePulls
 
 
 autoMergeAll
