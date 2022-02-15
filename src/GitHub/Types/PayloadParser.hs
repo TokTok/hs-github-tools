@@ -39,6 +39,8 @@ data Payload
     | StarEventPayload                     StarEvent
     | StatusEventPayload                   StatusEvent
     | WatchEventPayload                    WatchEvent
+    | WorkflowJobEventPayload              WorkflowJobEvent
+    | WorkflowRunEventPayload              WorkflowRunEvent
     deriving (Eq, Show, Read)
 
 
@@ -70,6 +72,8 @@ instance ToJSON Payload where
     toJSON (StatusEventPayload                   x) = toJSON x
     toJSON (StarEventPayload                     x) = toJSON x
     toJSON (WatchEventPayload                    x) = toJSON x
+    toJSON (WorkflowJobEventPayload              x) = toJSON x
+    toJSON (WorkflowRunEventPayload              x) = toJSON x
 
 
 data PayloadParser = PayloadParser
@@ -108,11 +112,13 @@ payloadParsers =
     , eventParser StatusEventPayload
     , eventParser StarEventPayload
     , eventParser WatchEventPayload
+    , eventParser WorkflowJobEventPayload
+    , eventParser WorkflowRunEventPayload
     ]
   where
     eventParser' :: FromJSON a => TypeName a -> EventName a -> (a -> Payload) -> PayloadParser
     eventParser' (TypeName ty) (EventName ev) tycon =
-      PayloadParser ty ev (fmap tycon . parseJSON)
+        PayloadParser ty ev (fmap tycon . parseJSON)
 
     eventParser :: (FromJSON a, Event a) => (a -> Payload) -> PayloadParser
     eventParser = eventParser' typeName eventName
@@ -121,9 +127,9 @@ payloadParsers =
 
 eventPayloadParser :: Text -> Value -> Parser Payload
 eventPayloadParser eventType x =
-  case List.find ((== eventType) . payloadParserTypeName) payloadParsers of
-    Nothing -> fail $ "eventPayloadParser: unknown event type: " ++ Text.unpack eventType
-    Just p  -> payloadParser p x
+    case List.find ((== eventType) . payloadParserTypeName) payloadParsers of
+        Nothing -> fail $ "eventPayloadParser: unknown event type: " ++ Text.unpack eventType
+        Just p  -> payloadParser p x
 
 -- | Since the event type is included through different means (X-GitHub-Event
 -- header, or inline in the JSON object), it's not possible to make 'Event'
@@ -131,6 +137,6 @@ eventPayloadParser eventType x =
 -- parser.
 webhookPayloadParser :: Text -> Value -> Parser Payload
 webhookPayloadParser eventType x =
-  case List.find ((== eventType) . payloadParserWebhookName) payloadParsers of
-    Nothing -> fail $ "webhookPayloadParser: unknown event type: " ++ Text.unpack eventType
-    Just p  -> payloadParser p x
+    case List.find ((== eventType) . payloadParserWebhookName) payloadParsers of
+        Nothing -> fail $ "webhookPayloadParser: unknown event type: " ++ Text.unpack eventType
+        Just p  -> payloadParser p x

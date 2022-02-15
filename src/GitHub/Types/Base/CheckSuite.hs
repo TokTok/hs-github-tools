@@ -30,8 +30,8 @@ data CheckSuite = CheckSuite
     , checkSuiteLatestCheckRunsCount :: Maybe Int
     , checkSuiteNodeId               :: Text
     , checkSuitePullRequests         :: [CheckPullRequest]
-    , checkSuiteRerequestable        :: Bool
-    , checkSuiteRunsRerequestable    :: Bool
+    , checkSuiteRerequestable        :: Maybe Bool
+    , checkSuiteRunsRerequestable    :: Maybe Bool
     , checkSuiteStatus               :: Text
     , checkSuiteUrl                  :: Text
     , checkSuiteUpdatedAt            :: Text
@@ -53,8 +53,8 @@ instance FromJSON CheckSuite where
         <*> x .:? "latest_check_runs_count"
         <*> x .: "node_id"
         <*> x .: "pull_requests"
-        <*> x .: "rerequestable"
-        <*> x .: "runs_rerequestable"
+        <*> x .:? "rerequestable"
+        <*> x .:? "runs_rerequestable"
         <*> x .: "status"
         <*> x .: "url"
         <*> x .: "updated_at"

@@ -13,12 +13,13 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 -- Label
 
 data Label = Label
-    { labelColor   :: Text
-    , labelDefault :: Bool
-    , labelUrl     :: Text
-    , labelName    :: Text
-    , labelId      :: Int
-    , labelNodeId  :: Text
+    { labelColor       :: Text
+    , labelDefault     :: Bool
+    , labelDescription :: Text
+    , labelUrl         :: Text
+    , labelName        :: Text
+    , labelId          :: Int
+    , labelNodeId      :: Text
     } deriving (Eq, Show, Read)
 
 
@@ -26,6 +27,7 @@ instance FromJSON Label where
     parseJSON (Object x) = Label
         <$> x .: "color"
         <*> x .: "default"
+        <*> x .: "description"
         <*> x .: "url"
         <*> x .: "name"
         <*> x .: "id"
@@ -36,18 +38,20 @@ instance FromJSON Label where
 
 instance ToJSON Label where
     toJSON Label{..} = object
-        [ "color"   .= labelColor
-        , "default" .= labelDefault
-        , "url"     .= labelUrl
-        , "name"    .= labelName
-        , "id"      .= labelId
-        , "node_id" .= labelNodeId
+        [ "color"       .= labelColor
+        , "default"     .= labelDefault
+        , "description" .= labelDescription
+        , "url"         .= labelUrl
+        , "name"        .= labelName
+        , "id"          .= labelId
+        , "node_id"     .= labelNodeId
         ]
 
 
 instance Arbitrary Label where
     arbitrary = Label
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

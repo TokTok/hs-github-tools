@@ -32,6 +32,8 @@ library
       GitHub.Types.Base.Changes
       GitHub.Types.Base.CheckApp
       GitHub.Types.Base.CheckCommit
+      GitHub.Types.Base.CheckCommitRef
+      GitHub.Types.Base.CheckCommitRepo
       GitHub.Types.Base.CheckOutput
       GitHub.Types.Base.CheckPullRequest
       GitHub.Types.Base.CheckRun
@@ -72,12 +74,17 @@ library
       GitHub.Types.Base.ReviewCommentLinks
       GitHub.Types.Base.ReviewLinks
       GitHub.Types.Base.SimplePullRequest
+      GitHub.Types.Base.SimpleRepository
       GitHub.Types.Base.StatusCommit
       GitHub.Types.Base.Team
       GitHub.Types.Base.User
       GitHub.Types.Base.UserRef
       GitHub.Types.Base.UserStamp
       GitHub.Types.Base.Verification
+      GitHub.Types.Base.Workflow
+      GitHub.Types.Base.WorkflowJob
+      GitHub.Types.Base.WorkflowRun
+      GitHub.Types.Base.WorkflowStep
       GitHub.Types.Event
       GitHub.Types.Events
       GitHub.Types.Events.CheckRunEvent
@@ -107,6 +114,8 @@ library
       GitHub.Types.Events.StarEvent
       GitHub.Types.Events.StatusEvent
       GitHub.Types.Events.WatchEvent
+      GitHub.Types.Events.WorkflowJobEvent
+      GitHub.Types.Events.WorkflowRunEvent
       GitHub.Types.PayloadParser
       GitHub.WebHook.Handler
   ghc-options:

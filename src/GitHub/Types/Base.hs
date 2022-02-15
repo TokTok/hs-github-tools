@@ -47,3 +47,6 @@ import           GitHub.Types.Base.Team               as X
 import           GitHub.Types.Base.User               as X
 import           GitHub.Types.Base.UserRef            as X
 import           GitHub.Types.Base.UserStamp          as X
+import           GitHub.Types.Base.Workflow           as X
+import           GitHub.Types.Base.WorkflowJob        as X
+import           GitHub.Types.Base.WorkflowRun        as X
