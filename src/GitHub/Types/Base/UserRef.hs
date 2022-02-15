@@ -14,7 +14,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 
 data UserRef = UserRef
     { userRefName  :: Text
-    , userRefEmail :: Text
+    , userRefEmail :: Maybe Text
     } deriving (Eq, Show, Read)
 
 

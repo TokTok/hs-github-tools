@@ -3,19 +3,20 @@
 {-# LANGUAGE StrictData        #-}
 module GitHub.Types.Base.CheckPullRequest where
 
-import           Data.Aeson                (FromJSON (..), ToJSON (..), object)
-import           Data.Aeson.Types          (Value (..), (.:), (.=))
-import           Data.Text                 (Text)
-import           Test.QuickCheck.Arbitrary (Arbitrary (..))
+import           Data.Aeson                       (FromJSON (..), ToJSON (..),
+                                                   object)
+import           Data.Aeson.Types                 (Value (..), (.:), (.=))
+import           Data.Text                        (Text)
+import           Test.QuickCheck.Arbitrary        (Arbitrary (..))
 
-import           GitHub.Types.Base.Commit
+import           GitHub.Types.Base.CheckCommitRef
 
 ------------------------------------------------------------------------------
 -- CheckPullRequest
 
 data CheckPullRequest = CheckPullRequest
-    { checkPullRequestBase   :: Commit
-    , checkPullRequestHead   :: Commit
+    { checkPullRequestBase   :: CheckCommitRef
+    , checkPullRequestHead   :: CheckCommitRef
     , checkPullRequestId     :: Int
     , checkPullRequestNumber :: Int
     , checkPullRequestUrl    :: Text

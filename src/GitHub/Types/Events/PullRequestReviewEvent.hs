@@ -19,7 +19,7 @@ data PullRequestReviewEvent = PullRequestReviewEvent
     , pullRequestReviewEventSender       :: User
 
     , pullRequestReviewEventAction       :: Text
-    , pullRequestReviewEventChanges      :: Changes
+    , pullRequestReviewEventChanges      :: Maybe Changes
     , pullRequestReviewEventPullRequest  :: SimplePullRequest
     , pullRequestReviewEventReview       :: Review
     } deriving (Eq, Show, Read)
@@ -36,7 +36,7 @@ instance FromJSON PullRequestReviewEvent where
         <*> x .: "sender"
 
         <*> x .: "action"
-        <*> x .: "changes"
+        <*> x .:? "changes"
         <*> x .: "pull_request"
         <*> x .: "review"
 
