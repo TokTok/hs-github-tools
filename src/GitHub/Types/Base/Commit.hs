@@ -5,7 +5,7 @@ module GitHub.Types.Base.Commit where
 
 import           Data.Aeson                   (FromJSON (..), ToJSON (..),
                                                object)
-import           Data.Aeson.Types             (Value (..), (.:), (.=))
+import           Data.Aeson.Types             (Value (..), (.:), (.:?), (.=))
 import           Data.Text                    (Text)
 import           Test.QuickCheck.Arbitrary    (Arbitrary (..))
 
@@ -17,7 +17,7 @@ import           GitHub.Types.Base.User
 
 data Commit = Commit
     { commitSha   :: Text
-    , commitUser  :: User
+    , commitUser  :: Maybe User
     , commitRepo  :: Maybe Repository
     , commitLabel :: Text
     , commitRef   :: Text
@@ -27,7 +27,7 @@ data Commit = Commit
 instance FromJSON Commit where
     parseJSON (Object x) = Commit
         <$> x .: "sha"
-        <*> x .: "user"
+        <*> x .:? "user"
         <*> x .: "repo"
         <*> x .: "label"
         <*> x .: "ref"
