@@ -27,3 +27,5 @@ import           GitHub.Types.Events.RepositoryEvent               as X
 import           GitHub.Types.Events.StarEvent                     as X
 import           GitHub.Types.Events.StatusEvent                   as X
 import           GitHub.Types.Events.WatchEvent                    as X
+import           GitHub.Types.Events.WorkflowJobEvent              as X
+import           GitHub.Types.Events.WorkflowRunEvent              as X

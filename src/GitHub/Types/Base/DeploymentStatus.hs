@@ -23,6 +23,7 @@ data DeploymentStatus = DeploymentStatus
     , deploymentStatusDescription   :: Text
     , deploymentStatusEnvironment   :: Text
     , deploymentStatusTargetUrl     :: Text
+    , deploymentStatusLogUrl        :: Text
     , deploymentStatusCreatedAt     :: DateTime
     , deploymentStatusUpdatedAt     :: DateTime
     , deploymentStatusDeploymentUrl :: Text
@@ -39,6 +40,7 @@ instance FromJSON DeploymentStatus where
         <*> x .: "description"
         <*> x .: "environment"
         <*> x .: "target_url"
+        <*> x .: "log_url"
         <*> x .: "created_at"
         <*> x .: "updated_at"
         <*> x .: "deployment_url"
@@ -56,6 +58,7 @@ instance ToJSON DeploymentStatus where
         , "description"    .= deploymentStatusDescription
         , "environment"    .= deploymentStatusEnvironment
         , "target_url"     .= deploymentStatusTargetUrl
+        , "log_url"        .= deploymentStatusLogUrl
         , "created_at"     .= deploymentStatusCreatedAt
         , "updated_at"     .= deploymentStatusUpdatedAt
         , "deployment_url" .= deploymentStatusDeploymentUrl
@@ -66,6 +69,7 @@ instance ToJSON DeploymentStatus where
 instance Arbitrary DeploymentStatus where
     arbitrary = DeploymentStatus
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
