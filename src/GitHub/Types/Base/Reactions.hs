@@ -28,13 +28,13 @@ data Reactions = Reactions
 
 instance FromJSON Reactions where
     parseJSON (Object x) = Reactions
-        <$> x .: "confused"  
-        <*> x .: "eyes"      
-        <*> x .: "heart"     
-        <*> x .: "hooray"    
-        <*> x .: "laugh"     
-        <*> x .: "-1"    
-        <*> x .: "+1"     
+        <$> x .: "confused"
+        <*> x .: "eyes"
+        <*> x .: "heart"
+        <*> x .: "hooray"
+        <*> x .: "laugh"
+        <*> x .: "-1"
+        <*> x .: "+1"
         <*> x .: "rocket"
         <*> x .: "total_count"
         <*> x .: "url"
@@ -44,16 +44,16 @@ instance FromJSON Reactions where
 
 instance ToJSON Reactions where
     toJSON Reactions{..} = object
-        [ "confused"    .= reactionsConfused  
-        , "eyes"        .= reactionsEyes      
-        , "heart"       .= reactionsHeart     
-        , "hooray"      .= reactionsHooray    
-        , "laugh"       .= reactionsLaugh     
-        , "-1"          .= reactionsMinus1    
-        , "+1"          .= reactionsPlus1     
-        , "rocket"      .= reactionsRocket    
+        [ "confused"    .= reactionsConfused
+        , "eyes"        .= reactionsEyes
+        , "heart"       .= reactionsHeart
+        , "hooray"      .= reactionsHooray
+        , "laugh"       .= reactionsLaugh
+        , "-1"          .= reactionsMinus1
+        , "+1"          .= reactionsPlus1
+        , "rocket"      .= reactionsRocket
         , "total_count" .= reactionsTotalCount
-        , "url"         .= reactionsUrl       
+        , "url"         .= reactionsUrl
         ]
 
 
