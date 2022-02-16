@@ -13,7 +13,7 @@ import qualified Data.Vector                  as V
 import qualified GitHub
 import           Network.HTTP.Client          (newManager)
 import           Network.HTTP.Client.TLS      (tlsManagerSettings)
-import           System.Posix.Directory       (changeWorkingDirectory)
+import           System.Directory             (setCurrentDirectory)
 import           System.Process               (callProcess)
 
 import           GitHub.Tools.PullRequestInfo (PullRequestInfo (..))
@@ -53,7 +53,7 @@ autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin
         , "https://github.com/" <> Text.unpack prUser <> "/" <> Text.unpack prOrigin
         , clonePath
         ]
-    changeWorkingDirectory clonePath
+    setCurrentDirectory clonePath
 
     callProcess "git"
         [ "remote", "add", "upstream"
@@ -64,7 +64,7 @@ autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin
 
     -- Go back to a directory that will definitely exist even when next time
     -- we "rm -rf" the git repo cloned above.
-    changeWorkingDirectory workDir
+    setCurrentDirectory workDir
 
 
 mergeable :: PullRequestInfo -> Bool

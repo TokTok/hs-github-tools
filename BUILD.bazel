@@ -66,6 +66,7 @@ haskell_library(
         hazel_library("bytestring"),
         hazel_library("containers"),
         hazel_library("cryptohash"),
+        hazel_library("directory"),
         hazel_library("exceptions"),
         hazel_library("github"),
         hazel_library("html"),

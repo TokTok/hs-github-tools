@@ -19,6 +19,7 @@ data ReleaseEvent = ReleaseEvent
     , releaseEventSender       :: User
 
     , releaseEventAction       :: Text
+    , releaseEventChanges      :: Maybe Changes
     , releaseEventRelease      :: Release
     } deriving (Eq, Show, Read)
 
@@ -34,6 +35,7 @@ instance FromJSON ReleaseEvent where
         <*> x .: "sender"
 
         <*> x .: "action"
+        <*> x .:? "changes"
         <*> x .: "release"
 
     parseJSON _ = fail "ForkEvent"
@@ -46,6 +48,7 @@ instance ToJSON ReleaseEvent where
         , "sender"       .= releaseEventSender
 
         , "action"       .= releaseEventAction
+        , "changes"      .= releaseEventChanges
         , "release"      .= releaseEventRelease
         ]
 
@@ -57,5 +60,6 @@ instance Arbitrary ReleaseEvent where
         <*> arbitrary
         <*> arbitrary
 
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary

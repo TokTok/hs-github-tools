@@ -21,6 +21,7 @@ library
   exposed-modules:
       GitHub.Tools.AutoMerge
       GitHub.Tools.Changelogs
+      GitHub.Tools.NetworkGraph
       GitHub.Tools.PullRequestInfo
       GitHub.Tools.PullStatus
       GitHub.Tools.Requests
@@ -130,6 +131,7 @@ library
     , containers
     , cryptohash
     , exceptions
+    , directory
     , github            >= 0.25 && <= 0.27
     , html
     , http-client       >= 0.4.30

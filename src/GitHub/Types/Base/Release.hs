@@ -23,6 +23,7 @@ data Release = Release
     , releaseDraft           :: Bool
     , releaseHtmlUrl         :: Text
     , releaseId              :: Int
+    , releaseMentionsCount   :: Int
     , releaseName            :: Text
     , releaseNodeId          :: Text
     , releasePrerelease      :: Bool
@@ -32,7 +33,7 @@ data Release = Release
     , releaseTargetCommitish :: Text
     , releaseUploadUrl       :: Text
     , releaseUrl             :: Text
-    , releaseZipballUrl      :: Text
+    , releaseZipballUrl      :: Maybe Text
     } deriving (Eq, Show, Read)
 
 
@@ -46,6 +47,7 @@ instance FromJSON Release where
         <*> x .: "draft"
         <*> x .: "html_url"
         <*> x .: "id"
+        <*> x .: "mentions_count"
         <*> x .: "name"
         <*> x .: "node_id"
         <*> x .: "prerelease"
@@ -70,6 +72,7 @@ instance ToJSON Release where
         , "draft"            .= releaseDraft
         , "html_url"         .= releaseHtmlUrl
         , "id"               .= releaseId
+        , "mentions_count"   .= releaseMentionsCount
         , "name"             .= releaseName
         , "node_id"          .= releaseNodeId
         , "prerelease"       .= releasePrerelease
@@ -86,6 +89,7 @@ instance ToJSON Release where
 instance Arbitrary Release where
     arbitrary = Release
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
