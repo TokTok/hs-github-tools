@@ -26,7 +26,7 @@ data PullRequest = PullRequest
     , pullRequestAssignees           :: [User]
     , pullRequestAuthorAssociation   :: Text
     , pullRequestBase                :: Commit
-    , pullRequestBody                :: Text
+    , pullRequestBody                :: Maybe Text
     , pullRequestChangedFiles        :: Int
     , pullRequestClosedAt            :: Maybe DateTime
     , pullRequestComments            :: Int

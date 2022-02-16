@@ -25,7 +25,7 @@ data Issue = Issue
     , issueAssignee              :: Maybe User
     , issueAssignees             :: [User]
     , issueAuthorAssociation     :: Text
-    , issueBody                  :: Text
+    , issueBody                  :: Maybe Text
     , issueClosedAt              :: Maybe DateTime
     , issueComments              :: Int
     , issueCommentsUrl           :: Text
