@@ -66,6 +66,7 @@ library
       GitHub.Types.Base.PullRequestLinks
       GitHub.Types.Base.PullRequestRef
       GitHub.Types.Base.PushCommit
+      GitHub.Types.Base.Reactions
       GitHub.Types.Base.Release
       GitHub.Types.Base.RepoOwner
       GitHub.Types.Base.Repository
