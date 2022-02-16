@@ -15,19 +15,20 @@ import           GitHub.Types.Base.User
 -- DeploymentStatus
 
 data DeploymentStatus = DeploymentStatus
-    { deploymentStatusUrl           :: Text
-    , deploymentStatusId            :: Int
-    , deploymentStatusState         :: Text
-    , deploymentStatusNodeId        :: Text
-    , deploymentStatusCreator       :: User
-    , deploymentStatusDescription   :: Text
-    , deploymentStatusEnvironment   :: Text
-    , deploymentStatusTargetUrl     :: Text
-    , deploymentStatusLogUrl        :: Text
-    , deploymentStatusCreatedAt     :: DateTime
-    , deploymentStatusUpdatedAt     :: DateTime
-    , deploymentStatusDeploymentUrl :: Text
-    , deploymentStatusRepositoryUrl :: Text
+    { deploymentStatusUrl            :: Text
+    , deploymentStatusId             :: Int
+    , deploymentStatusState          :: Text
+    , deploymentStatusNodeId         :: Text
+    , deploymentStatusCreator        :: User
+    , deploymentStatusDescription    :: Text
+    , deploymentStatusEnvironment    :: Text
+    , deploymentStatusTargetUrl      :: Text
+    , deploymentStatusLogUrl         :: Text
+    , deploymentStatusCreatedAt      :: DateTime
+    , deploymentStatusUpdatedAt      :: DateTime
+    , deploymentStatusDeploymentUrl  :: Text
+    , deploymentStatusRepositoryUrl  :: Text
+    , deploymentStatusEnvironmentUrl :: Text
     } deriving (Eq, Show, Read)
 
 instance FromJSON DeploymentStatus where
@@ -45,30 +46,33 @@ instance FromJSON DeploymentStatus where
         <*> x .: "updated_at"
         <*> x .: "deployment_url"
         <*> x .: "repository_url"
+        <*> x .: "environment_url"
 
     parseJSON _ = fail "DeploymentStatus"
 
 instance ToJSON DeploymentStatus where
     toJSON DeploymentStatus{..} = object
-        [ "url"            .= deploymentStatusUrl
-        , "id"             .= deploymentStatusId
-        , "state"          .= deploymentStatusState
-        , "node_id"        .= deploymentStatusNodeId
-        , "creator"        .= deploymentStatusCreator
-        , "description"    .= deploymentStatusDescription
-        , "environment"    .= deploymentStatusEnvironment
-        , "target_url"     .= deploymentStatusTargetUrl
-        , "log_url"        .= deploymentStatusLogUrl
-        , "created_at"     .= deploymentStatusCreatedAt
-        , "updated_at"     .= deploymentStatusUpdatedAt
-        , "deployment_url" .= deploymentStatusDeploymentUrl
-        , "repository_url" .= deploymentStatusRepositoryUrl
+        [ "url"             .= deploymentStatusUrl
+        , "id"              .= deploymentStatusId
+        , "state"           .= deploymentStatusState
+        , "node_id"         .= deploymentStatusNodeId
+        , "creator"         .= deploymentStatusCreator
+        , "description"     .= deploymentStatusDescription
+        , "environment"     .= deploymentStatusEnvironment
+        , "target_url"      .= deploymentStatusTargetUrl
+        , "log_url"         .= deploymentStatusLogUrl
+        , "created_at"      .= deploymentStatusCreatedAt
+        , "updated_at"      .= deploymentStatusUpdatedAt
+        , "deployment_url"  .= deploymentStatusDeploymentUrl
+        , "repository_url"  .= deploymentStatusRepositoryUrl
+        , "environment_url" .= deploymentStatusEnvironmentUrl
         ]
 
 
 instance Arbitrary DeploymentStatus where
     arbitrary = DeploymentStatus
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

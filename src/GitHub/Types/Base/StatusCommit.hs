@@ -17,7 +17,7 @@ import           GitHub.Types.Base.User
 -- StatusCommit
 
 data StatusCommit = StatusCommit
-    { statusCommitAuthor      :: User
+    { statusCommitAuthor      :: Maybe User
     , statusCommitCommentsUrl :: Text
     , statusCommitCommit      :: CommitDetails
     , statusCommitCommitter   :: Maybe User

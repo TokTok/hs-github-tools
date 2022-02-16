@@ -27,7 +27,7 @@ data Milestone = Milestone
     , milestoneTitle        :: Text
     , milestoneClosedAt     :: Maybe DateTime
     , milestoneNumber       :: Int
-    , milestoneDescription  :: Text
+    , milestoneDescription  :: Maybe Text
     , milestoneLabelsUrl    :: Text
     , milestoneHtmlUrl      :: Text
     , milestoneOpenIssues   :: Int

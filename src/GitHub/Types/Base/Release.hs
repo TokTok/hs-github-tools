@@ -26,7 +26,7 @@ data Release = Release
     , releaseName            :: Text
     , releaseNodeId          :: Text
     , releasePrerelease      :: Bool
-    , releasePublishedAt     :: DateTime
+    , releasePublishedAt     :: Maybe DateTime
     , releaseTagName         :: Text
     , releaseTarballUrl      :: Maybe Text
     , releaseTargetCommitish :: Text
