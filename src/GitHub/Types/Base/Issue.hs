@@ -30,7 +30,7 @@ data Issue = Issue
     , issueComments              :: Int
     , issueCommentsUrl           :: Text
     , issueCreatedAt             :: DateTime
-    , issueDraft                 :: Bool
+    , issueDraft                 :: Maybe Bool
     , issueEventsUrl             :: Text
     , issueHtmlUrl               :: Text
     , issueId                    :: Int

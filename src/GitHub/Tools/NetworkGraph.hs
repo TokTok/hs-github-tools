@@ -165,9 +165,10 @@ getNetworkGraph auth repos@(rootRepo:seedRepos) = do
         hPutStrLn stderr $ "Adding remotes for " <> show (V.length forks) <> " forks"
         V.mapM_ addRemote forks
 
+        hPutStrLn stderr "Fetching all remotes"
+        fetchAll
+
     setCurrentDirectory clonePath
-    hPutStrLn stderr "Fetching all remotes"
-    fetchAll
     dotLines <- concatMap toDot <$> gitLog
 
     return . unlines . concat $
@@ -193,8 +194,7 @@ getNetworkGraph auth repos@(rootRepo:seedRepos) = do
         callProcess "git" ["remote", "add", owner, urlBase <> repoPath repo]
 
     fetchAll =
-        -- callProcess "git" ["fetch", "--all", "--prune", "--jobs=10"]
-        return ()
+        callProcess "git" ["fetch", "--all", "--prune", "--jobs=10"]
 
     gitLog =
         map read
