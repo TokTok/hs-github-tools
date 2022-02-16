@@ -24,9 +24,9 @@ import           Servant
 import           System.Environment               (getEnv)
 
 import qualified GitHub.Tools.Changelogs          as Changelogs
+import qualified GitHub.Tools.NetworkGraph        as NetworkGraph
 import           GitHub.Tools.PullRequestInfo     (PullRequestInfo)
 import qualified GitHub.Tools.PullStatus          as PullStatus
-import qualified GitHub.Tools.NetworkGraph          as NetworkGraph
 
 
 type GitHubCache a = ECM IO MVar () HashMap () a
