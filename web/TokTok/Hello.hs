@@ -24,6 +24,7 @@ import           Servant
 import           System.Environment               (getEnv)
 
 import qualified GitHub.Tools.Changelogs          as Changelogs
+import qualified GitHub.Tools.NetworkGraph        as NetworkGraph
 import           GitHub.Tools.PullRequestInfo     (PullRequestInfo)
 import qualified GitHub.Tools.PullStatus          as PullStatus
 
@@ -35,6 +36,7 @@ data ApiContext = ApiContext
     { changelogInfo :: GitHubCache Changelogs.ChangeLog
     , roadmapInfo   :: GitHubCache Changelogs.ChangeLog
     , pullInfos     :: GitHubCache [[PullRequestInfo]]
+    , networkGraph  :: GitHubCache String
     }
 
 
@@ -57,6 +59,7 @@ newContext = do
         <$> newGitHubCache 300 (Changelogs.fetchChangeLog False "TokTok" "c-toxcore" auth)
         <*> newGitHubCache 300 (Changelogs.fetchChangeLog True  "TokTok" "c-toxcore" auth)
         <*> newGitHubCache  30 (PullStatus.getPullInfos "TokTok" "TokTok" auth)
+        <*> newGitHubCache 900 (NetworkGraph.getNetworkGraph auth [("TokTok", "c-toxcore"), ("irungentoo", "toxcore")])
 
 
 data HTML
@@ -73,6 +76,7 @@ type TestApi =
   :<|> "roadmap" :> Get '[PlainText] Text
   :<|> "pulls.html" :> Get '[HTML] Text
   :<|> "pulls" :> Get '[JSON] [[PullRequestInfo]]
+  :<|> "network" :> Get '[PlainText] String
 
 testApi :: Proxy TestApi
 testApi = Proxy
@@ -90,13 +94,16 @@ server ctx =
   :<|> roadmapH
   :<|> pullsHtmlH
   :<|> pullsH
+  :<|> networkH
   where
-    sourceH = return "https://github.com/TokTok/github-tools"
+    sourceH = return "https://github.com/TokTok/hs-github-tools"
 
     changelogH = liftIO $
         Changelogs.formatChangeLog False <$> lookupECM (changelogInfo ctx) ()
     roadmapH = liftIO $
         Changelogs.formatChangeLog True  <$> lookupECM (roadmapInfo   ctx) ()
+    networkH = liftIO $
+        lookupECM (networkGraph ctx) ()
 
     pullsHtmlH = liftIO $ lookupECM (pullInfos ctx) () >>= PullStatus.showPullInfos True
     pullsH = liftIO $ lookupECM (pullInfos ctx) ()
