@@ -141,9 +141,7 @@ makeChangeLog wantRoadmap ownerName repoName pulls issues =
     reverseIfChangelog l =
       if wantRoadmap
         then l
-        else case reverse l of
-          []   -> []
-          x:xs -> xs ++ [x] -- Put "Backlog" last.
+        else reverse l
 
     sortChangelog :: [(Text, [Text], [Text])] -> [(Text, [Text], [Text])]
     sortChangelog = List.sortOn $ \(v, _, _) -> parseVersion v

@@ -3,7 +3,7 @@ module Main (main) where
 
 import qualified Data.ByteString.Char8   as BS8
 import           Data.String             (fromString)
-import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import qualified GitHub
 import           System.Environment      (getArgs, lookupEnv)
 
@@ -17,7 +17,7 @@ main = do
   -- Get auth token from the $GITHUB_TOKEN environment variable.
   auth <- fmap (GitHub.OAuth . BS8.pack) <$> lookupEnv "GITHUB_TOKEN"
 
-  fetchChangeLog False ownerName repoName auth >>= putStr . Text.unpack . formatChangeLog False
+  fetchChangeLog False ownerName repoName auth >>= Text.putStr . formatChangeLog False
 
   where
     repoLocation [] =
