@@ -57,7 +57,7 @@ autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin
 
     callProcess "git"
         [ "remote", "add", "upstream"
-        , "https://" <> token <> "@github.com/" <> Text.unpack (GitHub.untagName ownerName) <> "/" <> Text.unpack prOrigin
+        , "https://" <> token <> "@github.com/" <> Text.unpack (GitHub.untagName ownerName) <> "/" <> Text.unpack prRepoName
         ]
     callProcess "git"
         [ "push", "upstream", Text.unpack prBranch <> ":master" ]
