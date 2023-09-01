@@ -12,10 +12,10 @@ import           Crypto.Hash           (HMAC, SHA1, digestToHexByteString, hmac,
                                         hmacGetDigest)
 import           Data.Aeson            (ToJSON (..), Value (..),
                                         eitherDecodeStrict')
+import qualified Data.Aeson.KeyMap     as KeyMap
 import           Data.Aeson.Types      (parseEither)
 import           Data.ByteString       (ByteString)
 import qualified Data.ByteString.Char8 as BC8
-import qualified Data.HashMap.Strict   as HashMap
 import           Data.Text             (Text)
 import qualified Data.Text             as Text
 import           Data.Text.Encoding    (decodeUtf8)
@@ -77,7 +77,7 @@ removeNulls :: ToJSON a => a -> Value
 removeNulls = go . toJSON
   where
     go (Array  x) = Array . Vector.map go $ x
-    go (Object x) = Object . HashMap.map go . HashMap.filter (not . isEmpty) $ x
+    go (Object x) = Object . KeyMap.map go . KeyMap.filter (not . isEmpty) $ x
     go         x  = x
 
     isEmpty Null      = True
