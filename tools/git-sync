@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 REMOTE=""
 BRANCH="${1-master}"
 
-if (echo "$BRANCH" | grep ':' > /dev/null); then
+if (echo "$BRANCH" | grep ':' >/dev/null); then
   REMOTE="$(echo "$BRANCH" | grep -o '^[^:]*')"
   BRANCH="$(echo "$BRANCH" | grep -o '[^:]*$')"
   REMOTE="$(git remote -v | grep ":$REMOTE/.* (push)" | grep -o '^\S*')"
@@ -14,7 +14,7 @@ set -eux
 case "$BRANCH" in
   --continue)
     git rebase --continue
-    BRANCH=`git rev-parse --abbrev-ref HEAD`
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
     ;;
 
   master)
@@ -26,10 +26,10 @@ case "$BRANCH" in
     ;;
 
   *)
-    if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" > /dev/null); then
+    if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" >/dev/null); then
       git checkout --track "$REMOTE/$BRANCH"
     else
-      git checkout $BRANCH
+      git checkout "$BRANCH"
     fi
     git rebase upstream/master
     ;;
@@ -37,4 +37,4 @@ esac
 
 git push --force
 git checkout master
-git branch -d $BRANCH
+git branch -d "$BRANCH"
