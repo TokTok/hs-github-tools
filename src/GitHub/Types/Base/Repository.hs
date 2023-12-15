@@ -36,6 +36,7 @@ data Repository = Repository
     , repositoryContentsUrl              :: Text
     , repositoryContributorsUrl          :: Text
     , repositoryCreatedAt                :: DateTime
+    , repositoryCustomProperties         :: Value  -- TODO(iphydf): Figure out what this actually is.
     , repositoryDefaultBranch            :: Text
     , repositoryDeleteBranchOnMerge      :: Maybe Bool
     , repositoryDeploymentsUrl           :: Text
@@ -130,6 +131,7 @@ instance FromJSON Repository where
         <*> x .: "contents_url"
         <*> x .: "contributors_url"
         <*> x .: "created_at"
+        <*> x .: "custom_properties"
         <*> x .: "default_branch"
         <*> x .:? "delete_branch_on_merge"
         <*> x .: "deployments_url"
@@ -224,6 +226,7 @@ instance ToJSON Repository where
         , "contents_url"                .= repositoryContentsUrl
         , "contributors_url"            .= repositoryContributorsUrl
         , "created_at"                  .= repositoryCreatedAt
+        , "custom_properties"           .= repositoryCustomProperties
         , "default_branch"              .= repositoryDefaultBranch
         , "delete_branch_on_merge"      .= repositoryDeleteBranchOnMerge
         , "deployments_url"             .= repositoryDeploymentsUrl
@@ -300,6 +303,7 @@ instance ToJSON Repository where
 instance Arbitrary Repository where
     arbitrary = Repository
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

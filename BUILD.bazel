@@ -2,8 +2,6 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_library")
 load("//third_party/haskell/hspec-discover:build_defs.bzl", "hspec_test")
 load("//tools/project:build_defs.bzl", "project")
 
-package(features = ["-layering_check"])
-
 project()
 
 haskell_library(
