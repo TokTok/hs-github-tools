@@ -24,7 +24,8 @@ import           GitHub.Tools.Requests        (request)
 
 trustedAuthors :: [Text]
 trustedAuthors =
-    [ "JFreegman"
+    [ "Green-Sky"
+    , "JFreegman"
     , "TokTok"
     , "iphydf"
     , "nurupo"
