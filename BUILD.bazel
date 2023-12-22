@@ -10,7 +10,7 @@ haskell_library(
         "src/GitHub/Types/Base/*.hs",
         "src/GitHub/Types/Base*.hs",
     ]),
-    compiler_flags = ["-j4"],
+    ghcopts = ["-j4"],
     src_strip_prefix = "src",
     visibility = ["//visibility:public"],
     deps = [
@@ -28,7 +28,7 @@ haskell_library(
         "src/GitHub/Types/Events/*.hs",
         "src/GitHub/Types/Event*.hs",
     ]),
-    compiler_flags = ["-j4"],
+    ghcopts = ["-j4"],
     src_strip_prefix = "src",
     visibility = ["//visibility:public"],
     deps = [
@@ -52,7 +52,7 @@ haskell_library(
         ],
     ),
     src_strip_prefix = "src",
-    version = "0.1.2",
+    version = "0.1.3",
     visibility = ["//visibility:public"],
     deps = [
         ":github-base",
@@ -91,7 +91,7 @@ hspec_test(
         "+RTS",
         "-N4",
     ],
-    compiler_flags = [
+    ghcopts = [
         "-threaded",
         "-rtsopts",
     ],
