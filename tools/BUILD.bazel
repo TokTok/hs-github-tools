@@ -3,6 +3,7 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
 [haskell_binary(
     name = file[:-3],
     srcs = [file],
+    tags = ["no-cross"],
     visibility = ["//visibility:public"],
     deps = [
         "//hs-github-tools",
