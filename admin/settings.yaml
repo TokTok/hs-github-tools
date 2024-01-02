@@ -1,0 +1,770 @@
+_common:
+  editRepo: &editRepo
+    private: false
+    has_issues: true
+    has_projects: false
+    has_wiki: false
+    default_branch: "master"
+    delete_branch_on_merge: true
+    is_template: false
+    allow_squash_merge: true
+    allow_merge_commit: false
+    allow_rebase_merge: false
+    archived: false
+    security_and_analysis:
+      secret_scanning:
+        status: "enabled"
+      secret_scanning_push_protection:
+        status: "enabled"
+
+  branchProtection: &branchProtection
+    enforce_admins: true
+    required_pull_request_reviews:
+      require_code_owner_reviews: true
+    required_signatures: true
+    restrictions:
+      users: []
+      teams: ["reviewers"]
+    required_linear_history: true
+    allow_force_pushes: false
+    allow_deletions: false
+    block_creations: true
+    required_conversation_resolution: true
+    lock_branch: false
+
+btox:
+  editRepo:
+    <<: *editRepo
+    name: btox
+    description: Official TokTok mobile Tox client
+    homepage: https://tox.chat/
+    topics: toxcore, network, p2p, security, encryption, cryptography, android, ios, web
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "analyze"
+          - "android-build"
+          - "format"
+          - "ios-build"
+          - "linux-build"
+          - "macos-build"
+          - "test"
+          - "web-build"
+          - "webtox"
+          - "windows-build"
+
+ci-tools:
+  editRepo:
+    <<: *editRepo
+    name: ci-tools
+    description: Common tools for building TokTok repositories on CI
+    topics: haskell, ci
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+
+c-toxcore:
+  editRepo:
+    <<: *editRepo
+    name: "c-toxcore"
+    description: "The future of online communications."
+    homepage: "https://tox.chat"
+    topics: "toxcore, network, p2p, security, encryption, cryptography"
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "CodeFactor"
+          - "bazel-dbg"
+          - "bazel-opt"
+          - "build-android"
+          - "build-macos"
+          - "ci/circleci: asan"
+          - "ci/circleci: bazel-asan"
+          - "ci/circleci: bazel-msan"
+          - "ci/circleci: bazel-tsan"
+          - "ci/circleci: clang-analyze"
+          - "ci/circleci: cpplint"
+          - "ci/circleci: infer"
+          - "ci/circleci: static-analysis"
+          - "ci/circleci: tsan"
+          - "ci/circleci: ubsan"
+          - "cimple"
+          - "cimplefmt"
+          - "common / buildifier"
+          - "coverage-linux"
+          - "docker-bootstrap-node"
+          - "docker-bootstrap-node-websocket"
+          - "docker-clusterfuzz"
+          - "docker-esp32"
+          - "docker-fuzzer"
+          - "docker-toxcore-js"
+          - "docker-win32"
+          - "docker-win64"
+          - "freebsd"
+          - "mypy"
+          - "program-analysis"
+          - "sonar-scan"
+
+c-toxcore-hs:
+  editRepo:
+    <<: *editRepo
+    name: c-toxcore-hs
+    description: C bindings to the Haskell implementation of the Tox protocol
+    topics: toxcore
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          - "bazel-opt"
+
+dockerfiles:
+  editRepo:
+    <<: *editRepo
+    name: dockerfiles
+    description: Dockerfiles for (cross-)compiling TokTok projects for various platforms
+    topics: docker, ghc, android, windows, qt, buildfarm, bazel
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          - "build (alpine-s390x)"
+          - "build (bazel)"
+          - "build (bazel-cache)"
+          - "build (flutter-web)"
+          - "build (frama-c)"
+          - "build (freebsd)"
+          - "build (haskell)"
+          - "ci/circleci: compcert"
+          - "ci/circleci: infer"
+          - "CodeFactor"
+          - "code-review/reviewable"
+          - "ghc-base"
+          - "ghc-android (aarch64)"
+          - "ghc-android (arm)"
+
+experimental:
+  editRepo:
+    <<: *editRepo
+    name: "experimental"
+    description: "Experimental - Anyone can submit anything in here"
+    homepage: "https://toktok.ltd"
+
+  branches:
+    "master":
+      <<: *branchProtection
+      # No code reviews required in experimental.
+      required_pull_request_reviews: null
+      required_status_checks:
+        strict: true
+        contexts:
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "Hound"
+
+go-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: go-toxcore-c
+    description: The golang bindings for libtoxcore (Project Tox).
+    topics: toxcore
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          - bazel-opt
+          - Codacy Static Code Analysis
+          - code-review/reviewable
+
+hs-apigen:
+  editRepo:
+    <<: *editRepo
+    name: hs-apigen
+    description: FFI API generator for TokTok style C API headers.
+    topics: c, ffi, codegen
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          - "bazel-opt"
+          - "build / stack"
+
+hs-cimple:
+  editRepo:
+    <<: *editRepo
+    name: hs-cimple
+    description: Cimple and Apidsl language parsers and tools
+    topics: c, dsl, parser
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+
+hs-github-tools:
+  editRepo:
+    <<: *editRepo
+    name: hs-github-tools
+    description: Small GitHub utilities like pull-status and changelog generator
+    topics: github, haskell
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "common / buildifier"
+          - "checks / check-release"
+
+hs-msgpack-arbitrary:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-arbitrary
+    description: Arbitrary instance for Data.MessagePack.Types.Object.
+    topics: msgpack, haskell
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-msgpack-binary:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-binary
+    description: Haskell implementation of MessagePack / msgpack.org
+    homepage: http://msgpack.org/
+    topics: msgpack, haskell
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-msgpack-rpc-conduit:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-rpc-conduit
+    description: A MessagePack RPC implementation in Haskell
+    topics: msgpack, rpc, protocol, network
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-msgpack-testsuite:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-testsuite
+    description: Haskell implementation of MessagePack / msgpack.org
+    homepage: http://msgpack.org/
+    topics: msgpack, haskell
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-msgpack-types:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-types
+    description: Abstract data types and type classes for Haskell to MessagePack value converters
+    topics: msgpack, haskell
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-schema:
+  editRepo:
+    <<: *editRepo
+    name: hs-schema
+    description: Encoding-independent schemas for Haskell data types
+    homepage: https://hackage.haskell.org/package/schema
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+
+hs-tokstyle:
+  editRepo:
+    <<: *editRepo
+    name: hs-tokstyle
+    description: Style checker for TokTok C projects
+    topics: linter, style, c
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "buildifier"
+          - "check-release"
+
+hs-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: hs-toxcore-c
+    description: Haskell bindings to C toxcore implementation
+    topics: toxcore
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+hs-toxcore:
+  editRepo:
+    <<: *editRepo
+    name: hs-toxcore
+    description: Haskell Tox protocol implementation
+    homepage: https://toktok.ltd/spec
+    topics: haskell, toxcore, network, p2p
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "android-aarch64"
+          - "android-arm"
+          - "android-i686"
+          - "android-x86_64"
+          - "bazel-opt"
+          - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
+
+#hs-toxxi:
+#  editRepo:
+#    <<: *editRepo
+#    name: hs-toxxi
+#    description: A simple console based text client for Tox.
+#    homepage: https://hackage.haskell.org/package/toxxi
+#
+#  branches:
+#    "master":
+#      <<: *branchProtection
+#      required_status_checks:
+#        strict: true
+#        contexts:
+#          # Common
+#          - "Hound"
+#          - "Mergeable"
+#          - "Milestone Check"
+#          - "WIP"
+#          - "code-review/reviewable"
+#          - "restyled"
+#          # Custom
+#          - "bazel-opt"
+#          - "build / stack"
+
+js-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: "js-toxcore-c"
+    description: "Node bindings for toxcore"
+    homepage: "https://toktok.ltd"
+    topics: "toxcore, js, ffi"
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "DeepScan"
+          - "build (12.x)"
+          - "build (13.x)"
+          - "docker"
+          - "codecov/patch"
+          - "codecov/project"
+          - "security/snyk (TokTok)"
+
+py-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: py-toxcore-c
+    description: Python binding for Project-Tox the skype replacement.
+    topics: toxcore, python, ffi
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+
+qTox:
+  editRepo:
+    <<: *editRepo
+    name: qTox
+    description: Powerful Tox chat client that follows the Tox design guidelines.
+    homepage: https://qtox.github.io/
+    topics: tox, chat
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+
+spec:
+  editRepo:
+    <<: *editRepo
+    name: spec
+    description: Tox Protocol Specification
+    homepage: https://toktok.ltd/spec
+    topics: tox, protocol, toxcore
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+
+toktok-stack:
+  editRepo:
+    <<: *editRepo
+    name: "toktok-stack"
+    description: "A snapshot of the complete software stack (excluding some external libraries and programs)"
+    homepage: "https://toktok.ltd"
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "Analyze (go)"
+          - "Analyze (python)"
+          - "CodeQL"
+          - "common / buildifier"
+          - "docker-haskell"
+          - "docker-test"
+          - "hie-bios"
+          - "mypy"
+
+toxic:
+  editRepo:
+    <<: *editRepo
+    name: toxic
+    description: An ncurses-based Tox client
+    topics: tox, console, chat
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "build"
+          - "build-static"
+          - "bazel-opt"
+          - "infer"
+
+toxins:
+  editRepo:
+    <<: *editRepo
+    name: toxins
+    description: A collection of small programs using toxcore.
+    topics: toxcore
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+
+website:
+  editRepo:
+    <<: *editRepo
+    name: website
+    description: The TokTok website
+    topics: toktok, tox
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "docker"
+          # Netlify tests:
+          - "Header rules - toktok"
+          - "Pages changed - toktok"
+          - "Redirect rules - toktok"
+          - "netlify/toktok/deploy-preview"
+
+zig-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: "zig-toxcore-c"
+    description: "Zig wrapper for c-toxcore library."
+    homepage: "https://toktok.ltd"
+
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom

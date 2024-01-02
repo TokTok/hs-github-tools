@@ -18,6 +18,8 @@ haskell_library(
         "//third_party/haskell:QuickCheck",
         "//third_party/haskell:aeson",
         "//third_party/haskell:base",
+        "//third_party/haskell:casing",
+        "//third_party/haskell:generic-arbitrary",
         "//third_party/haskell:quickcheck-text",
         "//third_party/haskell:text",
     ],
@@ -64,6 +66,7 @@ haskell_library(
         "//third_party/haskell:aeson",
         "//third_party/haskell:base",
         "//third_party/haskell:bytestring",
+        "//third_party/haskell:casing",
         "//third_party/haskell:containers",
         "//third_party/haskell:cryptohash",
         "//third_party/haskell:directory",
@@ -83,6 +86,7 @@ haskell_library(
         "//third_party/haskell:unordered-containers",
         "//third_party/haskell:uuid",
         "//third_party/haskell:vector",
+        "//third_party/haskell:yaml",
     ],
 )
 

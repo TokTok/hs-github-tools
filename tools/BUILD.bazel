@@ -10,6 +10,8 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
         "//third_party/haskell:base",
         "//third_party/haskell:bytestring",
         "//third_party/haskell:github",
+        "//third_party/haskell:groom",
         "//third_party/haskell:text",
+        "//third_party/haskell:yaml",
     ],
-) for file in glob(["*.hs"])]
+) for file in glob(["hub-*.hs"])]
