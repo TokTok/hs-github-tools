@@ -128,10 +128,12 @@ library
       aeson                 >=2
     , base                  >=4      && <5
     , bytestring
+    , casing
     , containers
     , cryptohash
     , directory
     , exceptions
+    , generic-arbitrary
     , github                >=0.25   && <0.29
     , html
     , http-client           >=0.4.30
@@ -148,6 +150,7 @@ library
     , unordered-containers
     , uuid
     , vector
+    , yaml
 
 executable hub-automerge
   main-is:          hub-automerge.hs
