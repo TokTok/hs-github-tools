@@ -7,6 +7,7 @@ import           Data.Aeson          (FromJSON, ToJSON (toJSON),
 import qualified Data.Aeson.KeyMap   as KeyMap
 import qualified Data.Vector         as V
 import qualified GitHub
+import           GitHub.Data.Request (MediaType (..))
 import           Network.HTTP.Client (Manager)
 
 removeNulls :: ToJSON a => a -> Value
@@ -45,6 +46,17 @@ mutate
   -> GitHub.Request 'GitHub.RW a
   -> IO a
 mutate auth mgr req = do
+  response <- GitHub.executeRequestWithMgr mgr auth req
+  case response of
+    Left  err -> throwM err
+    Right res -> return res
+
+mutate_
+  :: GitHub.Auth
+  -> Manager
+  -> GitHub.GenRequest 'MtUnit 'GitHub.RW ()
+  -> IO ()
+mutate_ auth mgr req = do
   response <- GitHub.executeRequestWithMgr mgr auth req
   case response of
     Left  err -> throwM err

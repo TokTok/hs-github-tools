@@ -43,6 +43,134 @@ _common:
           - "code-review/reviewable"
           - "restyled"
 
+  # GitHub Issue/PR labels.
+  labels: &labels
+    #############################################################################
+    #
+    # :: PR labels relevant to the release notes.
+    #
+    #############################################################################
+
+    "api break":
+      color: "d96f0b"
+      description: "Change breaks API or ABI"
+
+    "bug":
+      color: "ee0701"
+      description: "Bug fix for the user, not a fix to a build script"
+
+    "chore":
+      color: "f9d0c4"
+      description: "Updating grunt tasks etc; no production code change"
+
+    "cleanup":
+      color: "fef2c0"
+      description: "Internal code cleanup, possibly affecting semantics, e.g. deleting a deprecated feature."
+
+    "dependencies":
+      color: "0366d6"
+      description: "Pull requests that update a dependency file"
+
+    "documentation":
+      color: "1d76db"
+      description: "Changes to the documentation"
+
+    "enhancement":
+      color: "84b6eb"
+      description: "New feature for the user, not a new feature for build script"
+
+    "style":
+      color: "fef2c0"
+      description: "Formatting, missing semi colons, etc; no production code change"
+
+    "performance":
+      color: "fef2c0"
+      description: "A code change that improves performance"
+
+    "refactor":
+      color: "fef2c0"
+      description: "Refactoring production code, eg. renaming a variable, not affecting semantics"
+
+    "test":
+      color: "0e8a16"
+      description: "Adding missing tests, refactoring tests; no production code change"
+
+    #############################################################################
+    #
+    # :: Bug labels
+    #
+    #############################################################################
+
+    "meta":
+      color: "256784"
+      description: "Process related"
+
+    "packaging":
+      color: "1d76db"
+      description: "Packaging"
+
+    "proposal":
+      color: "8effa5"
+      description: "Proposals"
+
+    "question":
+      color: "cc317c"
+      description: "Questions"
+
+    "security":
+      color: "d93f0b"
+      description: "Security"
+
+    "suggestion":
+      color: "d93f0b"
+      description: "Suggestions"
+
+    "good first issue":
+      color: "7057ff"
+      description: "Good first issue"
+
+    "duplicate":
+      color: "cccccc"
+      description: "This issue or pull request already exists"
+
+    "help wanted":
+      color: "128a0c"
+      description: "Extra attention is needed"
+
+    "not reproducible":
+      color: "e6e6e6"
+      description: "Won't Fix (Not reproducible)"
+
+    "wontfix":
+      color: "ffffff"
+      description: "Won't Fix (Intended behaviour)"
+
+    "invalid":
+      color: "d73a49"
+      description: "Irrelevant or spam"
+
+    #############################################################################
+    #
+    # :: Priority labels
+    #
+    #############################################################################
+
+    "P0":
+      color: "d93f0b"
+      description: "Critical priority"
+
+    "P1":
+      color: "eb6420"
+      description: "High priority"
+
+    "P2":
+      color: "ffcccc"
+      description: "Medium priority"
+
+    "P3":
+      color: "eeeeee"
+      description: "Low priority"
+
 btox:
   editRepo:
     <<: *editRepo
@@ -50,6 +178,12 @@ btox:
     description: Official TokTok mobile Tox client
     homepage: https://tox.chat/
     topics: toxcore, network, p2p, security, encryption, cryptography, android, ios, web
+
+  labels:
+    <<: *labels
+    "WIP":
+      color: "ededed"
+      description: "Work in progress"
 
   branches:
     "master":
@@ -83,6 +217,7 @@ ci-tools:
     description: Common tools for building TokTok repositories on CI
     topics: haskell, ci
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -104,6 +239,33 @@ c-toxcore:
     description: "The future of online communications."
     homepage: "https://tox.chat"
     topics: "toxcore, network, p2p, security, encryption, cryptography"
+
+  labels:
+    <<: *labels
+    # Labels specific to c-toxcore.
+    "bootstrap":
+      color: "01707f"
+      description: "Bootstrap"
+
+    "crypto":
+      color: "1d76db"
+      description: "Crypto"
+
+    "file transfers":
+      color: "e02abf"
+      description: "File Transfers"
+
+    "messenger":
+      color: "d93f0b"
+      description: "Messenger"
+
+    "network":
+      color: "d4c5f9"
+      description: "Network"
+
+    "toxav":
+      color: "0052cc"
+      description: "Audio/video"
 
   branches:
     "master":
@@ -158,6 +320,7 @@ c-toxcore-hs:
     description: C bindings to the Haskell implementation of the Tox protocol
     topics: toxcore
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -181,6 +344,7 @@ dockerfiles:
     description: Dockerfiles for (cross-)compiling TokTok projects for various platforms
     topics: docker, ghc, android, windows, qt, buildfarm, bazel
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -216,6 +380,7 @@ experimental:
     description: "Experimental - Anyone can submit anything in here"
     homepage: "https://toktok.ltd"
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -239,6 +404,7 @@ go-toxcore-c:
     description: The golang bindings for libtoxcore (Project Tox).
     topics: toxcore
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -262,6 +428,7 @@ hs-apigen:
     description: FFI API generator for TokTok style C API headers.
     topics: c, ffi, codegen
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -286,6 +453,7 @@ hs-cimple:
     description: Cimple and Apidsl language parsers and tools
     topics: c, dsl, parser
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -311,6 +479,7 @@ hs-github-tools:
     description: Small GitHub utilities like pull-status and changelog generator
     topics: github, haskell
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -337,6 +506,7 @@ hs-msgpack-arbitrary:
     description: Arbitrary instance for Data.MessagePack.Types.Object.
     topics: msgpack, haskell
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -364,6 +534,7 @@ hs-msgpack-binary:
     homepage: http://msgpack.org/
     topics: msgpack, haskell
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -390,6 +561,7 @@ hs-msgpack-rpc-conduit:
     description: A MessagePack RPC implementation in Haskell
     topics: msgpack, rpc, protocol, network
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -417,6 +589,7 @@ hs-msgpack-testsuite:
     homepage: http://msgpack.org/
     topics: msgpack, haskell
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -443,6 +616,7 @@ hs-msgpack-types:
     description: Abstract data types and type classes for Haskell to MessagePack value converters
     topics: msgpack, haskell
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -469,6 +643,7 @@ hs-schema:
     description: Encoding-independent schemas for Haskell data types
     homepage: https://hackage.haskell.org/package/schema
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -493,6 +668,7 @@ hs-tokstyle:
     description: Style checker for TokTok C projects
     topics: linter, style, c
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -519,6 +695,7 @@ hs-toxcore-c:
     description: Haskell bindings to C toxcore implementation
     topics: toxcore
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -546,6 +723,7 @@ hs-toxcore:
     homepage: https://toktok.ltd/spec
     topics: haskell, toxcore, network, p2p
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -576,6 +754,7 @@ hs-toxcore:
 #    description: A simple console based text client for Tox.
 #    homepage: https://hackage.haskell.org/package/toxxi
 #
+#  labels: *labels
 #  branches:
 #    "master":
 #      <<: *branchProtection
@@ -601,6 +780,7 @@ js-toxcore-c:
     homepage: "https://toktok.ltd"
     topics: "toxcore, js, ffi"
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -630,6 +810,12 @@ py-toxcore-c:
     description: Python binding for Project-Tox the skype replacement.
     topics: toxcore, python, ffi
 
+  labels:
+    <<: *labels
+    "error":
+      color: "ededed"
+      description: "Error"
+
   branches:
     "master":
       <<: *branchProtection
@@ -654,6 +840,7 @@ qTox:
     homepage: https://qtox.github.io/
     topics: tox, chat
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -676,6 +863,7 @@ spec:
     homepage: https://toktok.ltd/spec
     topics: tox, protocol, toxcore
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -697,6 +885,7 @@ toktok-stack:
     description: "A snapshot of the complete software stack (excluding some external libraries and programs)"
     homepage: "https://toktok.ltd"
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -727,6 +916,7 @@ toxic:
     description: An ncurses-based Tox client
     topics: tox, console, chat
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -753,6 +943,7 @@ toxins:
     description: A collection of small programs using toxcore.
     topics: toxcore
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -776,6 +967,7 @@ website:
     description: The TokTok website
     topics: toktok, tox
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection
@@ -804,6 +996,7 @@ zig-toxcore-c:
     description: "Zig wrapper for c-toxcore library."
     homepage: "https://toktok.ltd"
 
+  labels: *labels
   branches:
     "master":
       <<: *branchProtection

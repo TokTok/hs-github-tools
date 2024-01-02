@@ -1,21 +1,20 @@
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE TemplateHaskell   #-}
-{-# OPTIONS_GHC -Wwarn #-}
+{-# LANGUAGE ViewPatterns      #-}
 module GitHub.Tools.Settings
   ( syncSettings
   , validateSettings
   ) where
 
-import           Control.Monad               (forM_, unless)
+import           Control.Monad               (forM_, unless, when)
 import           Data.Aeson                  (Value (Array, Object, String))
 import qualified Data.Aeson.KeyMap           as KeyMap
-import           Data.Aeson.TH               (Options (fieldLabelModifier),
-                                              defaultOptions, deriveJSON)
 import qualified Data.ByteString.Char8       as BS
 import           Data.HashMap.Strict         (HashMap)
 import qualified Data.HashMap.Strict         as HashMap
-import           Data.List                   (isPrefixOf, nub, (\\))
+import           Data.List                   (isPrefixOf, nub, sortOn, (\\))
 import           Data.Maybe                  (mapMaybe)
 import           Data.Text                   (Text)
 import qualified Data.Text                   as Text
@@ -24,16 +23,18 @@ import           Data.Yaml                   (encode)
 import qualified GitHub
 import qualified GitHub.Paths.Repos          as Repos
 import qualified GitHub.Paths.Repos.Branches as Branches
-import           GitHub.Tools.Requests       (mutate)
-import           Network.HTTP.Client         (newManager)
+import qualified GitHub.Paths.Repos.Labels   as Labels
+import           GitHub.Tools.Requests       (mutate, mutate_, request)
+import           GitHub.Types.Settings       (Label (Label, labelName),
+                                              Settings (..))
+import           Network.HTTP.Client         (Manager, newManager)
 import           Network.HTTP.Client.TLS     (tlsManagerSettings)
-import           Text.Casing                 (camel)
 
-data Settings = Settings
-  { settingsEditRepo :: Value
-  , settingsBranches :: Maybe (HashMap Text Value)
-  }
-$(deriveJSON defaultOptions{fieldLabelModifier = camel . drop (Text.length "Settings")} ''Settings)
+debug :: Bool
+debug = False
+
+delete :: Bool
+delete = False
 
 syncSettings
   :: GitHub.Auth
@@ -44,14 +45,38 @@ syncSettings auth repos repoFilter = do
   -- Initialise HTTP manager so we can benefit from keep-alive connections.
   mgr <- newManager tlsManagerSettings
 
-  forM_ (filterRepos $ each repos) $ \(repo, Settings{..}) -> do
+  forM_ (sortOn fst . filterRepos . each $ repos) $ \(repo, Settings{..}) -> do
     editRes <- mutate auth mgr (Repos.editRepoR "TokTok" repo settingsEditRepo)
-    BS.putStrLn $ encode editRes
+    when debug $ BS.putStrLn $ encode editRes
+    syncLabels auth mgr repo settingsLabels
     forM_ (maybe [] each settingsBranches) $ \(branch, update) -> do
       protRes <- mutate auth mgr (Branches.addProtectionR "TokTok" repo branch update)
-      BS.putStrLn $ encode protRes
+      when debug $ BS.putStrLn $ encode protRes
   where
     filterRepos = filter ((repoFilter `Text.isPrefixOf`) . fst)
+
+
+syncLabels :: GitHub.Auth -> Manager -> Text -> HashMap Text Label -> IO ()
+syncLabels auth mgr repo labels = do
+  putStrLn $ "Syncing labels to " <> Text.unpack repo
+  let newLabels = nub . map (\(Just -> labelName, label) -> label{labelName}) . HashMap.toList $ labels
+  oldLabels <- nub . V.toList <$> request (Just auth) mgr (Labels.getLabelsR "TokTok" repo)
+  forM_ (oldLabels \\ newLabels) $ \case
+    Label{labelName = Nothing} -> return ()
+    lbl@Label{labelName = Just lblName} -> do
+      if delete
+        then do
+          putStrLn $ "DELETING old label: " <> show lbl
+          mutate_ auth mgr (Labels.deleteLabelR "TokTok" repo lblName)
+        else putStrLn $ "NOT deleting old label: " <> show lbl
+  forM_ (newLabels \\ oldLabels) $ \case
+    Label{labelName = Nothing} -> return ()
+    lbl@Label{labelName = Just lblName} -> do
+      print lbl
+      res <- if any (\old -> labelName old == labelName lbl) oldLabels
+        then mutate auth mgr (Labels.updateLabelR "TokTok" repo lblName lbl)
+        else mutate auth mgr (Labels.createLabelR "TokTok" repo lbl)
+      BS.putStrLn $ encode res
 
 
 validateSettings :: MonadFail m => HashMap Text Settings -> m ()
