@@ -2,7 +2,6 @@
 {-# LANGUAGE NamedFieldPuns    #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE ViewPatterns      #-}
 module GitHub.Tools.Settings
   ( syncSettings
   , validateSettings
@@ -15,7 +14,7 @@ import qualified Data.ByteString.Char8       as BS
 import           Data.HashMap.Strict         (HashMap)
 import qualified Data.HashMap.Strict         as HashMap
 import           Data.List                   (isPrefixOf, nub, sortOn, (\\))
-import           Data.Maybe                  (mapMaybe)
+import           Data.Maybe                  (fromMaybe, mapMaybe)
 import           Data.Text                   (Text)
 import qualified Data.Text                   as Text
 import qualified Data.Vector                 as V
@@ -59,24 +58,21 @@ syncSettings auth repos repoFilter = do
 syncLabels :: GitHub.Auth -> Manager -> Text -> HashMap Text Label -> IO ()
 syncLabels auth mgr repo labels = do
   putStrLn $ "Syncing labels to " <> Text.unpack repo
-  let newLabels = nub . map (\(Just -> labelName, label) -> label{labelName}) . HashMap.toList $ labels
-  oldLabels <- nub . V.toList <$> request (Just auth) mgr (Labels.getLabelsR "TokTok" repo)
-  forM_ (oldLabels \\ newLabels) $ \case
-    Label{labelName = Nothing} -> return ()
-    lbl@Label{labelName = Just lblName} -> do
-      if delete
-        then do
-          putStrLn $ "DELETING old label: " <> show lbl
-          mutate_ auth mgr (Labels.deleteLabelR "TokTok" repo lblName)
-        else putStrLn $ "NOT deleting old label: " <> show lbl
-  forM_ (newLabels \\ oldLabels) $ \case
-    Label{labelName = Nothing} -> return ()
-    lbl@Label{labelName = Just lblName} -> do
-      print lbl
-      res <- if any (\old -> labelName old == labelName lbl) oldLabels
-        then mutate auth mgr (Labels.updateLabelR "TokTok" repo lblName lbl)
-        else mutate auth mgr (Labels.createLabelR "TokTok" repo lbl)
-      BS.putStrLn $ encode res
+  let newLabels = nub . map (\(name, label) -> (name, label{labelName = Just name})) . HashMap.toList $ labels
+  oldLabels <- nub . map (\label@Label{labelName} -> (fromMaybe "" labelName, label)) . V.toList
+    <$> request (Just auth) mgr (Labels.getLabelsR "TokTok" repo)
+  forM_ (oldLabels \\ newLabels) $ \(lblName, lbl) -> do
+    if delete
+      then do
+        putStrLn $ "DELETING old label: " <> show lbl
+        mutate_ auth mgr (Labels.deleteLabelR "TokTok" repo lblName)
+      else putStrLn $ "NOT deleting old label: " <> show lbl
+  forM_ (newLabels \\ oldLabels) $ \(lblName, lbl) -> do
+    print lbl
+    res <- if any ((lblName ==) . fst) oldLabels
+      then mutate auth mgr (Labels.updateLabelR "TokTok" repo lblName lbl)
+      else mutate auth mgr (Labels.createLabelR "TokTok" repo lbl)
+    BS.putStrLn $ encode res
 
 
 validateSettings :: MonadFail m => HashMap Text Settings -> m ()
