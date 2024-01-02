@@ -7,7 +7,7 @@ import           Data.Maybe            (fromMaybe, listToMaybe)
 import qualified Data.Text             as Text
 import           Data.Yaml             (decodeFileThrow)
 import qualified GitHub
-import           GitHub.Tools.Settings (syncSettings)
+import           GitHub.Tools.Settings (syncSettings, validateSettings)
 import           System.Environment    (getArgs, lookupEnv)
 
 main :: IO ()
@@ -20,5 +20,6 @@ main = do
             case args of
                 file:repoFilter -> do
                     yaml <- decodeFileThrow file
+                    validateSettings yaml
                     syncSettings token yaml (Text.pack . fromMaybe "" . listToMaybe $ repoFilter)
                 _      -> fail "Usage: hub-settings <settings.yml>"

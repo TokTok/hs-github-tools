@@ -17,20 +17,31 @@ _common:
       secret_scanning_push_protection:
         status: "enabled"
 
-  branchProtection: &branchProtection
-    enforce_admins: true
-    required_pull_request_reviews:
-      require_code_owner_reviews: true
-    required_signatures: true
-    restrictions:
-      users: []
-      teams: ["reviewers"]
-    required_linear_history: true
-    allow_force_pushes: false
-    allow_deletions: false
-    block_creations: true
-    required_conversation_resolution: true
-    lock_branch: false
+  branches:
+    "master": &branchProtection
+      enforce_admins: true
+      required_pull_request_reviews:
+        require_code_owner_reviews: true
+      required_signatures: true
+      restrictions:
+        users: []
+        teams: ["reviewers"]
+      required_linear_history: true
+      allow_force_pushes: false
+      allow_deletions: false
+      block_creations: true
+      required_conversation_resolution: true
+      lock_branch: false
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
 
 btox:
   editRepo:
@@ -153,6 +164,14 @@ c-toxcore-hs:
       required_status_checks:
         strict: true
         contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
           - "bazel-opt"
 
 dockerfiles:
@@ -168,6 +187,14 @@ dockerfiles:
       required_status_checks:
         strict: true
         contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
           - "build (alpine-s390x)"
           - "build (bazel)"
           - "build (bazel-cache)"
@@ -178,7 +205,6 @@ dockerfiles:
           - "ci/circleci: compcert"
           - "ci/circleci: infer"
           - "CodeFactor"
-          - "code-review/reviewable"
           - "ghc-base"
           - "ghc-android (aarch64)"
           - "ghc-android (arm)"
@@ -198,11 +224,13 @@ experimental:
       required_status_checks:
         strict: true
         contexts:
+          # Common
+          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
           - "code-review/reviewable"
-          - "Hound"
+          - "restyled"
 
 go-toxcore-c:
   editRepo:
@@ -217,9 +245,15 @@ go-toxcore-c:
       required_status_checks:
         strict: true
         contexts:
-          - bazel-opt
-          - Codacy Static Code Analysis
-          - code-review/reviewable
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
 
 hs-apigen:
   editRepo:
@@ -234,6 +268,14 @@ hs-apigen:
       required_status_checks:
         strict: true
         contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
           - "bazel-opt"
           - "build / stack"
 
@@ -250,6 +292,14 @@ hs-cimple:
       required_status_checks:
         strict: true
         contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
