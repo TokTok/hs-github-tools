@@ -694,8 +694,8 @@ hs-tokstyle:
           # Custom
           - "bazel-opt"
           - "build / stack"
-          - "buildifier"
-          - "check-release"
+          - "checks / check-release"
+          - "common / buildifier"
 
 hs-toxcore-c:
   editRepo:
