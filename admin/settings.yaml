@@ -404,7 +404,6 @@ experimental:
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
-          - "code-review/reviewable"
           - "restyled"
 
 go-toxcore-c:

@@ -84,7 +84,7 @@ validateSettings repos = do
     Nothing -> fail "no \"master\" branch in _common section found"
     Just ok -> getContexts "_common" "master" =<< getRequiredStatusChecks "_common" "master" ok
   -- Check that each repo's branch protection contexts start with the common ones.
-  forM_ (each repos) $ \(repo, Settings{..}) ->
+  forM_ (filterRepos . each $ repos) $ \(repo, Settings{..}) ->
     forM_ (maybe [] each settingsBranches) $ \(branch, update) -> do
       contexts <- getContexts repo branch =<< getRequiredStatusChecks repo branch update
       let ctx = repo <> ".branches." <> branch <> ".required_status_checks.contexts"
@@ -95,6 +95,7 @@ validateSettings repos = do
         fail . Text.unpack $ ctx <> " has duplicates: " <> Text.pack (show dups)
 
   where
+    filterRepos = filter $ ("experimental" /=) . fst
     getRequiredStatusChecks repo branch (Object mems) =
       case KeyMap.lookup "required_status_checks" mems of
         Nothing -> fail . Text.unpack $ repo <> ".branches." <> branch <> " should contain required_status_checks"
