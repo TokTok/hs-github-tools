@@ -755,6 +755,11 @@ hs-toxcore:
           - "build / stack"
           - "checks / check-release"
           - "common / buildifier"
+          # Netlify tests:
+          - "Header rules - hs-toxcore"
+          - "Pages changed - hs-toxcore"
+          - "Redirect rules - hs-toxcore"
+          - "netlify/hs-toxcore/deploy-preview"
 
 #hs-toxxi:
 #  editRepo:
