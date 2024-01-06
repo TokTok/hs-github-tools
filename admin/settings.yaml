@@ -290,6 +290,8 @@ c-toxcore:
           - "analysis (misra)"
           - "analysis (tcc)"
           - "analysis (tokstyle)"
+          - "build-msvc (2019)"
+          - "build-msvc (2022)"
           - "build-windows (32)"
           - "build-windows (64)"
           - "bazel-dbg"
