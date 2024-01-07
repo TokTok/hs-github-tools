@@ -1027,3 +1027,7 @@ zig-toxcore-c:
           - "code-review/reviewable"
           - "restyled"
           # Custom
+          - "test (ubuntu-latest)"
+          - "test (macos-latest)"
+          - "test (windows-latest)"
+          - "lint"
