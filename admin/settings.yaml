@@ -171,6 +171,28 @@ _common:
       color: "eeeeee"
       description: "Low priority"
 
+.github:
+  editRepo:
+    <<: *editRepo
+    name: .github
+    description: Global settings for all TokTok repos.
+    topics: tox
+
+  labels: *labels
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+
 btox:
   editRepo:
     <<: *editRepo
