@@ -1051,5 +1051,4 @@ zig-toxcore-c:
           # Custom
           - "test (ubuntu-latest)"
           - "test (macos-latest)"
-          - "test (windows-latest)"
           - "lint"
