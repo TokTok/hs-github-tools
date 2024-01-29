@@ -530,6 +530,31 @@ hs-github-tools:
           - "common / buildifier"
           - "checks / check-release"
 
+hs-happy-arbitrary:
+  editRepo:
+    <<: *editRepo
+    name: hs-happy-arbitrary
+    description: Token list generator for arbitrary Happy grammars.
+    topics: grammar, parsers
+
+  labels: *labels
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
+
 hs-msgpack-arbitrary:
   editRepo:
     <<: *editRepo
@@ -584,6 +609,31 @@ hs-msgpack-binary:
           - "build / stack"
           - "checks / check-release"
           - "common / buildifier"
+
+hs-msgpack-json:
+  editRepo:
+    <<: *editRepo
+    name: hs-msgpack-json
+    description: Aeson adapter for msgpack-types.
+    topics: json, msgpack
+
+  labels: *labels
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Hound"
+          - "Mergeable"
+          - "Milestone Check"
+          - "WIP"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "bazel-opt"
+          - "build / stack"
 
 hs-msgpack-rpc-conduit:
   editRepo:
