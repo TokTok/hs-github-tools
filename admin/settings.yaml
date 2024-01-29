@@ -36,7 +36,6 @@ _common:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -186,7 +185,6 @@ _common:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -214,7 +212,6 @@ btox:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -247,7 +244,6 @@ ci-tools:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -296,7 +292,6 @@ c-toxcore:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -361,7 +356,6 @@ c-toxcore-hs:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -385,7 +379,6 @@ dockerfiles:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -422,7 +415,6 @@ experimental:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -443,7 +435,6 @@ go-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -467,7 +458,6 @@ hs-apigen:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -476,6 +466,8 @@ hs-apigen:
           # Custom
           - "bazel-opt"
           - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
 
 hs-cimple:
   editRepo:
@@ -492,7 +484,6 @@ hs-cimple:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -502,6 +493,7 @@ hs-cimple:
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
+          - "common / buildifier"
 
 hs-github-tools:
   editRepo:
@@ -518,7 +510,6 @@ hs-github-tools:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -527,8 +518,8 @@ hs-github-tools:
           # Custom
           - "bazel-opt"
           - "build / stack"
-          - "common / buildifier"
           - "checks / check-release"
+          - "common / buildifier"
 
 hs-happy-arbitrary:
   editRepo:
@@ -545,7 +536,6 @@ hs-happy-arbitrary:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -554,6 +544,8 @@ hs-happy-arbitrary:
           # Custom
           - "bazel-opt"
           - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
 
 hs-msgpack-arbitrary:
   editRepo:
@@ -570,7 +562,6 @@ hs-msgpack-arbitrary:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -598,7 +589,6 @@ hs-msgpack-binary:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -625,7 +615,6 @@ hs-msgpack-json:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -634,6 +623,8 @@ hs-msgpack-json:
           # Custom
           - "bazel-opt"
           - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
 
 hs-msgpack-rpc-conduit:
   editRepo:
@@ -650,7 +641,6 @@ hs-msgpack-rpc-conduit:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -678,7 +668,6 @@ hs-msgpack-testsuite:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -705,7 +694,6 @@ hs-msgpack-types:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -732,7 +720,6 @@ hs-schema:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -741,6 +728,8 @@ hs-schema:
           # Custom
           - "bazel-opt"
           - "build / stack"
+          - "checks / check-release"
+          - "common / buildifier"
 
 hs-tokstyle:
   editRepo:
@@ -757,7 +746,6 @@ hs-tokstyle:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -784,7 +772,6 @@ hs-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -812,7 +799,6 @@ hs-toxcore:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -848,7 +834,6 @@ hs-toxcore:
 #        strict: true
 #        contexts:
 #          # Common
-#          - "Hound"
 #          - "Mergeable"
 #          - "Milestone Check"
 #          - "WIP"
@@ -857,6 +842,8 @@ hs-toxcore:
 #          # Custom
 #          - "bazel-opt"
 #          - "build / stack"
+#          - "checks / check-release"
+#          - "common / buildifier"
 
 js-toxcore-c:
   editRepo:
@@ -874,7 +861,6 @@ js-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -882,6 +868,7 @@ js-toxcore-c:
           - "restyled"
           # Custom
           - "DeepScan"
+          - "Hound"
           - "build (12.x)"
           - "build (13.x)"
           - "docker"
@@ -909,7 +896,6 @@ py-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -934,7 +920,6 @@ qTox:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -957,7 +942,6 @@ spec:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -979,7 +963,6 @@ toktok-stack:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -1010,7 +993,6 @@ toxic:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -1037,7 +1019,6 @@ toxins:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
@@ -1061,13 +1042,13 @@ website:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
           - "code-review/reviewable"
           - "restyled"
           # Custom
+          - "Hound"
           - "docker"
           # Netlify tests:
           - "Header rules - toktok"
@@ -1090,7 +1071,6 @@ zig-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Hound"
           - "Mergeable"
           - "Milestone Check"
           - "WIP"
