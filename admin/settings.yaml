@@ -944,9 +944,6 @@ toktok-stack:
           - "code-review/reviewable"
           - "restyled"
           # Custom
-          - "Analyze (go)"
-          - "Analyze (python)"
-          - "CodeQL"
           - "common / buildifier"
           - "docker-haskell"
           - "docker-test"
