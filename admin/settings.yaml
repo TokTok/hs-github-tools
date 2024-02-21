@@ -855,6 +855,32 @@ js-toxcore-c:
           - "codecov/project"
           - "security/snyk (TokTok)"
 
+jvm-toxcore-c:
+  editRepo:
+    <<: *editRepo
+    name: "jvm-toxcore-c"
+    description: "JVM (Java/Scala/Kotlin) bindings to toxcore"
+    homepage: "https://toktok.ltd"
+    topics: "toxcore, tox, java, kotlin, ffi"
+
+  labels: *labels
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Mergeable"
+          - "Milestone Check"
+          - "code-review/reviewable"
+          - "restyled"
+          # Custom
+          - "CodeFactor"
+          - "common / buildifier"
+          - "bazel-opt"
+          - "docker-jvm"
+
 py-toxcore-c:
   editRepo:
     <<: *editRepo
