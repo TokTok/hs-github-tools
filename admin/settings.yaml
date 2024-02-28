@@ -996,10 +996,12 @@ toxic:
           - "code-review/reviewable"
           - "restyled"
           # Custom
+          - "common / buildifier"
           - "build"
           - "build-static"
           - "bazel-opt"
           - "infer"
+          - "integration-test"
 
 toxins:
   editRepo:
