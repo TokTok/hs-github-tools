@@ -907,6 +907,9 @@ py-toxcore-c:
           - "restyled"
           # Custom
           - "bazel-opt"
+          - "build_linux"
+          - "common / buildifier"
+          - "docker"
 
 qTox:
   editRepo:
