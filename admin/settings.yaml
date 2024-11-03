@@ -39,7 +39,6 @@ _common:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
 
   # GitHub Issue/PR labels.
   labels: &labels
@@ -187,7 +186,6 @@ _common:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
 
 btox:
   editRepo:
@@ -213,7 +211,6 @@ btox:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "analyze"
           - "android-build"
@@ -244,7 +241,6 @@ ci-tools:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
 
 c-toxcore:
   editRepo:
@@ -291,7 +287,6 @@ c-toxcore:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "CodeFactor"
           - "analysis (autotools)"
@@ -356,7 +351,6 @@ c-toxcore-hs:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
 
@@ -365,7 +359,7 @@ dockerfiles:
     <<: *editRepo
     name: dockerfiles
     description: Dockerfiles for (cross-)compiling TokTok projects for various platforms
-    topics: docker, ghc, android, windows, qt, buildfarm, bazel
+    topics: docker, android, windows, qt, buildfarm, bazel
 
   labels: *labels
   branches:
@@ -378,20 +372,19 @@ dockerfiles:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "build (alpine-s390x)"
           - "build (bazel)"
-          - "build (bazel-cache)"
           - "build (compcert)"
+          - "build (doxygen)"
           - "build (flutter-web)"
           - "build (frama-c)"
           - "build (freebsd)"
           - "build (haskell)"
+          - "build (pkgsrc)"
+          - "buildfarm (server)"
+          - "buildfarm (worker)"
           - "CodeFactor"
-          - "ghc-base"
-          - "ghc-android (aarch64)"
-          - "ghc-android (arm)"
 
 experimental:
   editRepo:
@@ -412,7 +405,6 @@ experimental:
           # Common
           - "Mergeable"
           - "Milestone Check"
-          - "restyled"
 
 go-toxcore-c:
   editRepo:
@@ -432,7 +424,6 @@ go-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
 
@@ -454,7 +445,6 @@ hs-apigen:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -479,7 +469,6 @@ hs-cimple:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -504,7 +493,6 @@ hs-github-tools:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -529,7 +517,6 @@ hs-happy-arbitrary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -554,7 +541,6 @@ hs-msgpack-arbitrary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -580,7 +566,6 @@ hs-msgpack-binary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -605,7 +590,6 @@ hs-msgpack-json:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -630,7 +614,6 @@ hs-msgpack-rpc-conduit:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -656,7 +639,6 @@ hs-msgpack-testsuite:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -681,7 +663,6 @@ hs-msgpack-types:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -706,7 +687,6 @@ hs-schema:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -731,7 +711,6 @@ hs-tokstyle:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -756,7 +735,6 @@ hs-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
@@ -782,7 +760,6 @@ hs-toxcore:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "android-aarch64"
           - "android-arm"
@@ -816,7 +793,6 @@ hs-toxcore:
 #          - "Mergeable"
 #          - "Milestone Check"
 #          - "code-review/reviewable"
-#          - "restyled"
 #          # Custom
 #          - "bazel-opt"
 #          - "build / stack"
@@ -842,7 +818,6 @@ js-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "DeepScan"
           - "Hound"
@@ -872,7 +847,6 @@ jvm-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "CodeFactor"
           - "common / buildifier"
@@ -902,7 +876,6 @@ py-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
           - "build_linux"
@@ -928,7 +901,6 @@ qTox:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
 
 spec:
   editRepo:
@@ -949,7 +921,6 @@ spec:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
 
 toktok-stack:
   editRepo:
@@ -969,7 +940,6 @@ toktok-stack:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "common / buildifier"
           - "docker-haskell"
@@ -995,7 +965,6 @@ toxic:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "common / buildifier"
           - "build"
@@ -1022,7 +991,6 @@ toxins:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "bazel-opt"
 
@@ -1044,7 +1012,6 @@ website:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "Hound"
           - "docker"
@@ -1072,7 +1039,6 @@ zig-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          - "restyled"
           # Custom
           - "test (ubuntu-latest)"
           - "test (macos-latest)"
