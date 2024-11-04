@@ -32,6 +32,7 @@ data User = User
     , userStarredUrl        :: Text
     , userSubscriptionsUrl  :: Text
     , userType              :: Text
+    , userUserViewType      :: Text
     , userUrl               :: Text
     } deriving (Eq, Show, Read)
 
@@ -57,6 +58,7 @@ instance FromJSON User where
         <*> x .: "starred_url"
         <*> x .: "subscriptions_url"
         <*> x .: "type"
+        <*> x .: "user_view_type"
         <*> x .: "url"
 
     parseJSON _ = fail "User"
@@ -83,6 +85,7 @@ instance ToJSON User where
         , "starred_url"         .= userStarredUrl
         , "subscriptions_url"   .= userSubscriptionsUrl
         , "type"                .= userType
+        , "user_view_type"      .= userUserViewType
         , "url"                 .= userUrl
         ]
 
@@ -90,6 +93,7 @@ instance ToJSON User where
 instance Arbitrary User where
     arbitrary = User
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

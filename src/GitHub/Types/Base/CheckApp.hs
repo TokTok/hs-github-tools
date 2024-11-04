@@ -16,7 +16,8 @@ import           GitHub.Types.Base.User
 -- CheckApp
 
 data CheckApp = CheckApp
-    { checkAppCreatedAt   :: Text
+    { checkAppClientId    :: Text
+    , checkAppCreatedAt   :: Text
     , checkAppDescription :: Text
     , checkAppEvents      :: [Text]
     , checkAppExternalUrl :: Text
@@ -33,7 +34,8 @@ data CheckApp = CheckApp
 
 instance FromJSON CheckApp where
     parseJSON (Object x) = CheckApp
-        <$> x .: "created_at"
+        <$> x .: "client_id"
+        <*> x .: "created_at"
         <*> x .: "description"
         <*> x .: "events"
         <*> x .: "external_url"
@@ -51,7 +53,8 @@ instance FromJSON CheckApp where
 
 instance ToJSON CheckApp where
     toJSON CheckApp{..} = object
-        [ "created_at"   .= checkAppCreatedAt
+        [ "client_id"    .= checkAppClientId
+        , "created_at"   .= checkAppCreatedAt
         , "description"  .= checkAppDescription
         , "events"       .= checkAppEvents
         , "external_url" .= checkAppExternalUrl
@@ -69,6 +72,7 @@ instance ToJSON CheckApp where
 instance Arbitrary CheckApp where
     arbitrary = CheckApp
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

@@ -15,6 +15,7 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 data Permissions = Permissions
     { permissionsActions              :: Maybe Text
     , permissionsAdministration       :: Maybe Text
+    , permissionsAttestations         :: Maybe Text
     , permissionsChecks               :: Maybe Text
     , permissionsContents             :: Maybe Text
     , permissionsContentReferences    :: Maybe Text
@@ -45,6 +46,7 @@ instance FromJSON Permissions where
     parseJSON (Object x) = Permissions
         <$> x .:? "actions"
         <*> x .:? "administration"
+        <*> x .:? "attestations"
         <*> x .:? "checks"
         <*> x .:? "contents"
         <*> x .:? "content_references"
@@ -76,6 +78,7 @@ instance ToJSON Permissions where
     toJSON Permissions{..} = object
         [ "actions"               .= permissionsActions
         , "administration"        .= permissionsAdministration
+        , "attestations"          .= permissionsAttestations
         , "checks"                .= permissionsChecks
         , "contents"              .= permissionsContents
         , "content_references"    .= permissionsContentReferences
@@ -105,6 +108,7 @@ instance ToJSON Permissions where
 instance Arbitrary Permissions where
     arbitrary = Permissions
         <$> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
