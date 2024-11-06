@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PackageImports    #-}
 {-# LANGUAGE StrictData        #-}
 {-# LANGUAGE TupleSections     #-}
 module GitHub.WebHook.Handler
@@ -8,19 +9,19 @@ module GitHub.WebHook.Handler
   , removeNulls
   ) where
 
-import           Crypto.Hash           (HMAC, SHA1, digestToHexByteString, hmac,
-                                        hmacGetDigest)
-import           Data.Aeson            (ToJSON (..), Value (..),
-                                        eitherDecodeStrict')
-import qualified Data.Aeson.KeyMap     as KeyMap
-import           Data.Aeson.Types      (parseEither)
-import           Data.ByteString       (ByteString)
-import qualified Data.ByteString.Char8 as BC8
-import           Data.Text             (Text)
-import qualified Data.Text             as Text
-import           Data.Text.Encoding    (decodeUtf8)
-import           Data.UUID             (UUID, fromASCIIBytes)
-import qualified Data.Vector           as Vector
+import           "cryptohash" Crypto.Hash (HMAC, SHA1, digestToHexByteString,
+                                           hmac, hmacGetDigest)
+import           Data.Aeson               (ToJSON (..), Value (..),
+                                           eitherDecodeStrict')
+import qualified Data.Aeson.KeyMap        as KeyMap
+import           Data.Aeson.Types         (parseEither)
+import           Data.ByteString          (ByteString)
+import qualified Data.ByteString.Char8    as BC8
+import           Data.Text                (Text)
+import qualified Data.Text                as Text
+import           Data.Text.Encoding       (decodeUtf8)
+import           Data.UUID                (UUID, fromASCIIBytes)
+import qualified Data.Vector              as Vector
 
 import           GitHub.Types
 
