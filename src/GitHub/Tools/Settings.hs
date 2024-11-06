@@ -89,7 +89,7 @@ validateSettings repos = do
       contexts <- getContexts repo branch =<< getRequiredStatusChecks repo branch update
       let ctx = repo <> ".branches." <> branch <> ".required_status_checks.contexts"
       unless (commonContexts `isPrefixOf` contexts) $
-        fail . Text.unpack $ ctx <> " should start with " <> Text.pack (show contexts)
+        fail . Text.unpack $ ctx <> " should start with " <> Text.pack (show commonContexts)
       let dups = contexts \\ nub contexts
       unless (null dups) $
         fail . Text.unpack $ ctx <> " has duplicates: " <> Text.pack (show dups)

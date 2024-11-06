@@ -39,6 +39,8 @@ _common:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
 
   # GitHub Issue/PR labels.
   labels: &labels
@@ -186,6 +188,8 @@ _common:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
 
 btox:
   editRepo:
@@ -211,6 +215,8 @@ btox:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "analyze"
           - "android-build"
@@ -241,6 +247,8 @@ ci-tools:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
 
 c-toxcore:
   editRepo:
@@ -287,6 +295,8 @@ c-toxcore:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "CodeFactor"
           - "analysis (autotools)"
@@ -318,7 +328,6 @@ c-toxcore:
           - "ci/circleci: ubsan"
           - "cimple"
           - "cimplefmt"
-          - "common / buildifier"
           - "coverage-linux"
           - "docker-bootstrap-node"
           - "docker-bootstrap-node-websocket"
@@ -351,6 +360,8 @@ c-toxcore-hs:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
 
@@ -372,6 +383,8 @@ dockerfiles:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "build (alpine-s390x)"
           - "build (bazel)"
@@ -424,6 +437,8 @@ go-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
 
@@ -445,11 +460,12 @@ hs-apigen:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-cimple:
   editRepo:
@@ -469,11 +485,12 @@ hs-cimple:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-github-tools:
   editRepo:
@@ -493,11 +510,12 @@ hs-github-tools:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-happy-arbitrary:
   editRepo:
@@ -517,11 +535,12 @@ hs-happy-arbitrary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-arbitrary:
   editRepo:
@@ -541,11 +560,12 @@ hs-msgpack-arbitrary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-binary:
   editRepo:
@@ -566,11 +586,12 @@ hs-msgpack-binary:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-json:
   editRepo:
@@ -590,11 +611,12 @@ hs-msgpack-json:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-rpc-conduit:
   editRepo:
@@ -614,11 +636,12 @@ hs-msgpack-rpc-conduit:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-testsuite:
   editRepo:
@@ -639,11 +662,12 @@ hs-msgpack-testsuite:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-msgpack-types:
   editRepo:
@@ -663,11 +687,12 @@ hs-msgpack-types:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-schema:
   editRepo:
@@ -687,11 +712,12 @@ hs-schema:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-tokstyle:
   editRepo:
@@ -711,11 +737,12 @@ hs-tokstyle:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-toxcore-c:
   editRepo:
@@ -735,11 +762,12 @@ hs-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
 
 hs-toxcore:
   editRepo:
@@ -760,6 +788,8 @@ hs-toxcore:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "android-aarch64"
           - "android-arm"
@@ -768,7 +798,6 @@ hs-toxcore:
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          - "common / buildifier"
           # Netlify tests:
           - "Header rules - hs-toxcore"
           - "Pages changed - hs-toxcore"
@@ -793,11 +822,12 @@ hs-toxcore:
 #          - "Mergeable"
 #          - "Milestone Check"
 #          - "code-review/reviewable"
+#          - "common / buildifier"
+#          - "common / restyled"
 #          # Custom
 #          - "bazel-opt"
 #          - "build / stack"
 #          - "checks / check-release"
-#          - "common / buildifier"
 
 js-toxcore-c:
   editRepo:
@@ -818,6 +848,8 @@ js-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "DeepScan"
           - "Hound"
@@ -847,9 +879,10 @@ jvm-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "CodeFactor"
-          - "common / buildifier"
           - "bazel-opt"
           - "docker-jvm"
 
@@ -876,10 +909,11 @@ py-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
           - "build_linux"
-          - "common / buildifier"
           - "docker"
 
 qTox:
@@ -901,6 +935,8 @@ qTox:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
 
 spec:
   editRepo:
@@ -921,6 +957,8 @@ spec:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
 
 toktok-stack:
   editRepo:
@@ -940,8 +978,9 @@ toktok-stack:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          # Custom
           - "common / buildifier"
+          - "common / restyled"
+          # Custom
           - "docker-haskell"
           - "docker-test"
           - "hie-bios"
@@ -965,8 +1004,9 @@ toxic:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
-          # Custom
           - "common / buildifier"
+          - "common / restyled"
+          # Custom
           - "build"
           - "build-static"
           - "bazel-opt"
@@ -991,6 +1031,8 @@ toxins:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "bazel-opt"
 
@@ -1012,6 +1054,8 @@ website:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "Hound"
           - "docker"
@@ -1039,6 +1083,8 @@ zig-toxcore-c:
           - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
           # Custom
           - "test (ubuntu-latest)"
           - "test (macos-latest)"
