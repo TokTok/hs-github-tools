@@ -226,7 +226,6 @@ btox:
           - "macos-build"
           - "test"
           - "web-build"
-          - "webtox"
           - "windows-build"
 
 ci-tools:
