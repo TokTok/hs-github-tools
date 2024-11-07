@@ -15,3 +15,18 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
         "//third_party/haskell:yaml",
     ],
 ) for file in glob(["hub-*.hs"])]
+
+haskell_binary(
+    name = "check-workflows",
+    srcs = ["check-workflows.hs"],
+    tags = ["no-cross"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//hs-github-tools",
+        "//third_party/haskell:Diff",
+        "//third_party/haskell:base",
+        "//third_party/haskell:pretty",
+        "//third_party/haskell:text",
+        "//third_party/haskell:yaml",
+    ],
+)

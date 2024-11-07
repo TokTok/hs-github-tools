@@ -119,6 +119,7 @@ library
     GitHub.Types.Events.WorkflowJobEvent
     GitHub.Types.Events.WorkflowRunEvent
     GitHub.Types.PayloadParser
+    GitHub.Types.Workflow
     GitHub.WebHook.Handler
 
   ghc-options:      -Wall
@@ -150,6 +151,19 @@ library
     , unordered-containers
     , uuid
     , vector
+    , yaml
+
+executable check-workflows
+  main-is:          check-workflows.hs
+  ghc-options:      -Wall
+  hs-source-dirs:   tools
+  default-language: Haskell2010
+  build-depends:
+      base
+    , Diff
+    , github-tools
+    , pretty
+    , text
     , yaml
 
 executable hub-automerge
