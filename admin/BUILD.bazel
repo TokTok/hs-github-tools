@@ -1,0 +1,15 @@
+sh_test(
+    name = "settings_test",
+    size = "small",
+    srcs = ["@perl"],
+    args = [
+        "$(location settings_test.pl)",
+        "$(location //:.gitmodules)",
+        "$(location settings.yaml)",
+    ],
+    data = [
+        "settings.yaml",
+        "settings_test.pl",
+        "//:.gitmodules",
+    ],
+)
