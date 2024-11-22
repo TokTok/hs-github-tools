@@ -7,9 +7,9 @@ _common:
     default_branch: "master"
     delete_branch_on_merge: true
     is_template: false
-    allow_squash_merge: true
+    allow_squash_merge: false
     allow_merge_commit: false
-    allow_rebase_merge: false
+    allow_rebase_merge: true
     archived: false
     security_and_analysis:
       secret_scanning:
@@ -414,6 +414,14 @@ dockerfiles:
           - "buildfarm (server)"
           - "buildfarm (worker)"
           - "CodeFactor"
+          - "qtox (alpine)"
+          - "qtox (android-builder)"
+          - "qtox (debian)"
+          - "qtox (fedora)"
+          - "qtox (flatpak-builder)"
+          - "qtox (ubuntu-lts)"
+          - "qtox (windows-builder.i686)"
+          - "qtox (windows-builder.x86_64)"
 
 experimental:
   editRepo:
@@ -975,6 +983,25 @@ qTox:
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
+          # Custom
+          - "bazel-opt"
+          - "Alpine (full, Debug)"
+          - "Android (arm64-v8a, Release)"
+          - "Check for translatable strings"
+          - "Clang-Tidy"
+          - "Debian (minimal, Debug)"
+          - "Docs"
+          - "Fedora with ASAN (full, Debug)"
+          - "Flatpak"
+          - "Ubuntu LTS (full, Release)"
+          - "Update nightly release tag"
+          - "Windows (i686, Debug)"
+          - "Windows (i686, Release)"
+          - "Windows (x86_64, Debug)"
+          - "Windows (x86_64, Release)"
+          - "macOS distributable (arm64)"
+          - "macOS distributable (x86_64)"
+          - "macOS user (x86_64)"
 
 spec:
   editRepo:
