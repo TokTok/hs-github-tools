@@ -3,6 +3,8 @@ load("@rules_haskell//haskell:defs.bzl", "haskell_binary")
 haskell_binary(
     name = "webservice",
     srcs = glob(["**/*.hs"]),
+    # Needed to support higher file descriptor numbers.
+    ghcopts = ["-threaded"],
     tags = ["no-cross"],
     visibility = ["//visibility:public"],
     deps = [
