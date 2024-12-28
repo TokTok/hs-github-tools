@@ -43,6 +43,44 @@ _common:
           - "common / restyled"
           - "release / update_release_draft"
 
+  rulesets: &rulesets
+    "master":
+      target: "branch"
+      enforcement: "active"
+      conditions:
+        ref_name:
+          exclude: []
+          include:
+            - "~ALL"
+      rules:
+        - type: "deletion"
+        - type: "non_fast_forward"
+        - type: "creation"
+        - type: "required_linear_history"
+        - type: "required_signatures"
+        - type: "required_status_checks"
+        - type: "pull_request"
+          parameters:
+            required_approving_review_count: 1
+            dismiss_stale_reviews_on_push: false
+            require_code_owner_review: true
+            require_last_push_approval: false
+            required_review_thread_resolution: true
+            automatic_copilot_code_review_enabled: false
+            allowed_merge_methods:
+              - "squash"
+              - "rebase"
+      bypass_actors:
+        # Imgbot
+        - actor_id: 4706
+          actor_type: "Integration"
+          bypass_mode: "always"
+        # Dependabot
+        - actor_id: 29110
+          actor_type: "Integration"
+          bypass_mode: "always"
+      current_user_can_bypass: "never"
+
   # GitHub Issue/PR labels.
   labels: &labels
     #############################################################################
@@ -187,6 +225,7 @@ _common:
     topics: tox
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -215,6 +254,7 @@ btox:
       color: "ededed"
       description: "Work in progress"
 
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -247,6 +287,7 @@ ci-tools:
     topics: haskell, ci
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -298,6 +339,7 @@ c-toxcore:
       color: "0052cc"
       description: "Audio/video"
 
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -313,35 +355,43 @@ c-toxcore:
           - "release / update_release_draft"
           # Custom
           - "CodeFactor"
+          - "TokTok.c-toxcore"
+          - "TokTok.c-toxcore (vcpkg shared)"
+          - "TokTok.c-toxcore (vcpkg static)"
           - "analysis (autotools)"
           - "analysis (clang-tidy)"
           - "analysis (compcert)"
           - "analysis (cppcheck)"
           - "analysis (doxygen)"
+          - "analysis (freebsd)"
           - "analysis (goblint)"
           - "analysis (infer)"
           - "analysis (misra)"
           - "analysis (modules)"
+          - "analysis (pkgsrc)"
           - "analysis (rpm)"
+          - "analysis (slimcc)"
+          - "analysis (sparse)"
           - "analysis (tcc)"
           - "analysis (tokstyle)"
+          - "build-freebsd"
+          - "build-netbsd"
           - "build-windows-msvc (2019)"
           - "build-windows-msvc (2022)"
           - "bazel-dbg"
           - "bazel-opt"
           - "build-android"
           - "build-macos"
-          - "ci/circleci: asan"
+          - "checks / check-release"
           - "ci/circleci: bazel-asan"
           - "ci/circleci: bazel-msan"
-          - "ci/circleci: bazel-tsan"
+          - "ci/circleci: cimplefmt"
           - "ci/circleci: clang-analyze"
           - "ci/circleci: cpplint"
+          - "ci/circleci: generate-events"
           - "ci/circleci: static-analysis"
-          - "ci/circleci: tsan"
-          - "ci/circleci: ubsan"
           - "cimple"
-          - "cimplefmt"
+          - "circleci"
           - "coverage-linux"
           - "docker-bootstrap-node"
           - "docker-bootstrap-node-websocket"
@@ -353,7 +403,9 @@ c-toxcore:
           - "docker-windows-mingw (64)"
           - "freebsd"
           - "mypy"
-          - "program-analysis"
+          - "sanitizer (asan)"
+          - "sanitizer (tsan)"
+          - "sanitizer (ubsan)"
           - "sonar-scan"
 
 c-toxcore-hs:
@@ -364,6 +416,7 @@ c-toxcore-hs:
     topics: toxcore
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -388,6 +441,7 @@ dockerfiles:
     topics: docker, android, windows, qt, buildfarm, bazel
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -415,13 +469,24 @@ dockerfiles:
           - "buildfarm (worker)"
           - "CodeFactor"
           - "qtox (alpine)"
-          - "qtox (android-builder)"
+          - "qtox (alpine-appimage)"
+          - "qtox (alpine-static)"
           - "qtox (debian)"
           - "qtox (fedora)"
           - "qtox (flatpak-builder)"
           - "qtox (ubuntu-lts)"
           - "qtox (windows-builder.i686)"
           - "qtox (windows-builder.x86_64)"
+          - "qtox-android (arm64-v8a, debug, 6.2.4)"
+          - "qtox-android (arm64-v8a, debug, 6.8.1)"
+          - "qtox-android (arm64-v8a, release, 6.2.4)"
+          - "qtox-android (arm64-v8a, release, 6.8.1)"
+          - "qtox-android (armeabi-v7a, debug, 6.2.4)"
+          - "qtox-android (armeabi-v7a, debug, 6.8.1)"
+          - "qtox-android (armeabi-v7a, release, 6.2.4)"
+          - "qtox-android (armeabi-v7a, release, 6.8.1)"
+          - "qtox-host-qt (6.2.4)"
+          - "qtox-host-qt (6.8.1)"
 
 experimental:
   editRepo:
@@ -431,6 +496,7 @@ experimental:
     homepage: "https://toktok.ltd"
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -451,6 +517,7 @@ go-toxcore-c:
     topics: toxcore
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -475,6 +542,7 @@ hs-apigen:
     topics: c, ffi, codegen
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -501,6 +569,7 @@ hs-cimple:
     topics: c, dsl, parser
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -527,6 +596,7 @@ hs-github-tools:
     topics: github, haskell
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -553,6 +623,7 @@ hs-happy-arbitrary:
     topics: grammar, parsers
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -579,6 +650,7 @@ hs-msgpack-arbitrary:
     topics: msgpack, haskell
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -606,6 +678,7 @@ hs-msgpack-binary:
     topics: msgpack, haskell
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -632,6 +705,7 @@ hs-msgpack-json:
     topics: json, msgpack
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -658,6 +732,7 @@ hs-msgpack-rpc-conduit:
     topics: msgpack, rpc, protocol, network
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -685,6 +760,7 @@ hs-msgpack-testsuite:
     topics: msgpack, haskell
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -711,6 +787,7 @@ hs-msgpack-types:
     topics: msgpack, haskell
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -737,6 +814,7 @@ hs-schema:
     homepage: https://hackage.haskell.org/package/schema
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -763,6 +841,7 @@ hs-tokstyle:
     topics: linter, style, c
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -789,6 +868,7 @@ hs-toxcore-c:
     topics: toxcore
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -816,6 +896,7 @@ hs-toxcore:
     topics: haskell, toxcore, network, p2p
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -851,6 +932,7 @@ hs-toxcore:
 #    homepage: https://hackage.haskell.org/package/toxxi
 #
 #  labels: *labels
+#  rulesets: *rulesets
 #  branches:
 #    "master":
 #      <<: *branchProtection
@@ -878,6 +960,7 @@ js-toxcore-c:
     topics: "toxcore, js, ffi"
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -910,6 +993,7 @@ jvm-toxcore-c:
     topics: "toxcore, tox, java, kotlin, ffi"
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -942,6 +1026,7 @@ py-toxcore-c:
       color: "ededed"
       description: "Error"
 
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -970,6 +1055,7 @@ qTox:
     has_wiki: true
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -986,21 +1072,19 @@ qTox:
           # Custom
           - "bazel-opt"
           - "Alpine (full, Debug)"
-          - "Android (arm64-v8a, Release)"
+          - "Alpine (static) (Release)"
+          - "Android (arm64-v8a, Release, 6.2.4)"
           - "Check for translatable strings"
           - "Clang-Tidy"
           - "Debian (minimal, Debug)"
           - "Docs"
           - "Fedora with ASAN (full, Debug)"
           - "Flatpak"
+          - "Test macOS distributable (arm64)"
           - "Ubuntu LTS (full, Release)"
           - "Update nightly release tag"
-          - "Windows (i686, Debug)"
-          - "Windows (i686, Release)"
-          - "Windows (x86_64, Debug)"
           - "Windows (x86_64, Release)"
           - "macOS distributable (arm64)"
-          - "macOS distributable (x86_64)"
           - "macOS user (x86_64)"
 
 spec:
@@ -1012,6 +1096,7 @@ spec:
     topics: tox, protocol, toxcore
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -1034,6 +1119,7 @@ toktok-stack:
     homepage: "https://toktok.ltd"
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -1061,6 +1147,7 @@ toxic:
     topics: tox, console, chat
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -1089,6 +1176,7 @@ toxins:
     topics: toxcore
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -1113,6 +1201,7 @@ website:
     topics: toktok, tox
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
@@ -1143,6 +1232,7 @@ zig-toxcore-c:
     homepage: "https://toktok.ltd"
 
   labels: *labels
+  rulesets: *rulesets
   branches:
     "master":
       <<: *branchProtection
