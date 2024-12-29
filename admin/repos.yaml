@@ -379,12 +379,12 @@ c-toxcore:
           - "build-windows-msvc (2019)"
           - "build-windows-msvc (2022)"
           - "bazel-dbg"
+          - "bazel-msan"
           - "bazel-opt"
           - "build-android"
           - "build-macos"
           - "checks / check-release"
           - "ci/circleci: bazel-asan"
-          - "ci/circleci: bazel-msan"
           - "ci/circleci: cimplefmt"
           - "ci/circleci: clang-analyze"
           - "ci/circleci: cpplint"
@@ -407,31 +407,6 @@ c-toxcore:
           - "sanitizer (tsan)"
           - "sanitizer (ubsan)"
           - "sonar-scan"
-
-c-toxcore-hs:
-  editRepo:
-    <<: *editRepo
-    name: c-toxcore-hs
-    description: C bindings to the Haskell implementation of the Tox protocol
-    topics: toxcore
-
-  labels: *labels
-  rulesets: *rulesets
-  branches:
-    "master":
-      <<: *branchProtection
-      required_status_checks:
-        strict: true
-        contexts:
-          # Common
-          - "Mergeable"
-          - "Milestone Check"
-          - "code-review/reviewable"
-          - "common / buildifier"
-          - "common / restyled"
-          - "release / update_release_draft"
-          # Custom
-          - "bazel-opt"
 
 dockerfiles:
   editRepo:
@@ -1110,6 +1085,40 @@ spec:
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
+
+tokhub:
+  editRepo:
+    <<: *editRepo
+    name: tokhub
+    description: TokTok GitHub companion app
+    homepage: https://tox.chat/
+    topics: android, ios, web, development, github
+
+  labels: *labels
+  rulesets: *rulesets
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Mergeable"
+          - "Milestone Check"
+          - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
+          - "release / update_release_draft"
+          # Custom
+          - "analyze"
+          - "android-build"
+          - "format"
+          - "ios-build"
+          - "linux-build"
+          - "macos-build"
+          - "test"
+          - "web-build"
+          - "windows-build"
 
 toktok-stack:
   editRepo:
