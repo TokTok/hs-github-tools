@@ -986,7 +986,6 @@ jvm-toxcore-c:
           - "CodeFactor"
           - "bazel-opt"
           - "docker (jvm)"
-          - "docker (native)"
 
 py-toxcore-c:
   editRepo:
