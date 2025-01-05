@@ -1047,6 +1047,7 @@ qTox:
           - "bazel-opt"
           - "Alpine (full, Debug)"
           - "Alpine (static) (Release)"
+          - "AppImage on Alpine (full, Release)"
           - "Android (arm64-v8a, Release, 6.2.4)"
           - "Check for translatable strings"
           - "Clang-Tidy"
@@ -1054,12 +1055,18 @@ qTox:
           - "Docs"
           - "Fedora with ASAN (full, Debug)"
           - "Flatpak"
+          - "Test AppImage"
+          - "Test Flatpak"
+          - "Test Windows (x86_64, Release)"
           - "Test macOS distributable (arm64)"
           - "Ubuntu LTS (full, Release)"
           - "Update nightly release tag"
+          - "Validate PR"
+          - "Verify release/signatures"
           - "Windows (x86_64, Release)"
           - "macOS distributable (arm64)"
           - "macOS user (x86_64)"
+          - "release-soon / check"
 
 spec:
   editRepo:
