@@ -408,6 +408,31 @@ c-toxcore:
           - "sanitizer (ubsan)"
           - "sonar-scan"
 
+cyclone:
+  editRepo:
+    <<: *editRepo
+    name: cyclone
+    description: Cyclone is a safe dialect of C.
+    homepage: https://cyclone.thelanguage.org/
+    topics: c, language, safety, security
+
+  labels: *labels
+  rulesets: *rulesets
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Mergeable"
+          - "Milestone Check"
+          - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
+          - "release / update_release_draft"
+          # Custom
+
 dockerfiles:
   editRepo:
     <<: *editRepo
