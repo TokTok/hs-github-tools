@@ -12,7 +12,10 @@ haskell_library(
     ]),
     ghcopts = ["-j4"],
     src_strip_prefix = "src",
-    tags = ["no-cross"],
+    tags = [
+        "haskell",
+        "no-cross",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//third_party/haskell:QuickCheck",
@@ -33,7 +36,10 @@ haskell_library(
     ]),
     ghcopts = ["-j4"],
     src_strip_prefix = "src",
-    tags = ["no-cross"],
+    tags = [
+        "haskell",
+        "no-cross",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":github-base",
@@ -56,7 +62,10 @@ haskell_library(
         ],
     ),
     src_strip_prefix = "src",
-    tags = ["no-cross"],
+    tags = [
+        "haskell",
+        "no-cross",
+    ],
     version = "0.1.3",
     visibility = ["//visibility:public"],
     deps = [

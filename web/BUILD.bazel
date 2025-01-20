@@ -5,7 +5,10 @@ haskell_binary(
     srcs = glob(["**/*.hs"]),
     # Needed to support higher file descriptor numbers.
     ghcopts = ["-threaded"],
-    tags = ["no-cross"],
+    tags = [
+        "haskell",
+        "no-cross",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//hs-github-tools",
