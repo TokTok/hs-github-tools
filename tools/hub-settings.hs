@@ -18,8 +18,9 @@ main = do
         Nothing -> fail "GITHUB_TOKEN environment variable must be set"
         Just (GitHub.OAuth . BS8.pack -> token) ->
             case args of
-                file:repoFilter -> do
-                    yaml <- decodeFileThrow file
-                    validateSettings yaml
-                    syncSettings token yaml (Text.pack . fromMaybe "" . listToMaybe $ repoFilter)
-                _      -> fail "Usage: hub-settings <settings.yml>"
+                orgFile:reposFile:repoFilter -> do
+                    orgYaml <- decodeFileThrow orgFile
+                    reposYaml <- decodeFileThrow reposFile
+                    validateSettings reposYaml
+                    syncSettings token orgYaml reposYaml (Text.pack . fromMaybe "" . listToMaybe $ repoFilter)
+                _      -> fail "Usage: hub-settings <org.yml> <repos.yml>"

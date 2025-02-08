@@ -1,0 +1,127 @@
+login: TokTok
+
+editOrg:
+  description: "#toktok on Libera.Chat"
+  name: "TokTok Project"
+  company: null
+  blog: "https://toktok.ltd/"
+  location: "Earth"
+  email: "iphydf@gmail.com"
+  twitter_username: null
+  has_organization_projects: false
+  has_repository_projects: false
+  default_repository_permission: read
+  dependabot_alerts_enabled_for_new_repositories: true
+  dependabot_security_updates_enabled_for_new_repositories: true
+  dependency_graph_enabled_for_new_repositories: true
+  deploy_keys_enabled_for_repositories: true
+  members_allowed_repository_creation_type: none
+  members_can_create_pages: true
+  members_can_create_private_pages: true
+  members_can_create_private_repositories: false
+  members_can_create_public_pages: true
+  members_can_create_public_repositories: false
+  members_can_create_repositories: false
+  members_can_fork_private_repositories: false
+  secret_scanning_enabled_for_new_repositories: true
+  secret_scanning_push_protection_custom_link: null
+  secret_scanning_push_protection_custom_link_enabled: false
+  secret_scanning_push_protection_enabled_for_new_repositories: true
+  secret_scanning_validity_checks_enabled: false
+  two_factor_requirement_enabled: false
+  web_commit_signoff_required: true
+
+x-base-team: &team
+  privacy: closed
+  notification_setting: notifications_enabled
+  permission: pull
+
+teams:
+  "Contributors":
+    <<: *team
+    description: "Review and contribute code"
+    members:
+      Ansa89: member
+      anthonybilinski: member
+      antis81: member
+      cebe: member
+      Chiitoo: member
+      cleverca22: member
+      cotox: member
+      Diadlo: member
+      dvor: member
+      e0ff: member
+      Encrypt: member
+      freylax: member
+      gjedeer: member
+      goldroom: member
+      gordon-quad: member
+      Green-Sky: member
+      hqwrong: member
+      hugbubby: member
+      initramfs: member
+      iphydf: maintainer
+      irungentoo: member
+      isotoxin: member
+      JFreegman: member
+      jin-eld: member
+      kitech: member
+      Mikhael-Danilov: member
+      nbraud: member
+      nurupo: member
+      Nyoroon: member
+      robinlinden: maintainer
+      SkyzohKey: member
+      SomeoneSerge: member
+      Sorunome: member
+      subliun: member
+      sudden6: member
+      Tha14: member
+      toktok-releaser: member
+      tox-user: member
+      toxbot: member
+      tux3: member
+      tvladyslav: member
+      wiiaam: member
+      xhebox: member
+      yurivict: member
+      Zer0-One: member
+      zetok: member
+      zoff99: member
+      zugz: member
+
+  "Admins":
+    <<: *team
+    description: "People with admin access on all repos"
+    parent: { name: "Contributors" }
+    members:
+      Green-Sky: member
+      iphydf: maintainer
+      JFreegman: member
+      nurupo: member
+      robinlinden: maintainer
+      sudden6: member
+      zugz: member
+
+  "Automation":
+    <<: *team
+    description: "Release automation"
+    parent: { name: "Contributors" }
+    members:
+      toktok-releaser: member
+      iphydf: maintainer
+
+  "Reviewers":
+    <<: *team
+    description: "Review code and merge pull requests"
+    parent: { name: "Contributors" }
+    members:
+      Green-Sky: member
+      iphydf: maintainer
+      JFreegman: member
+      nurupo: member
+      robinlinden: maintainer
+      sudden6: member
+      toktok-releaser: member
+      zugz: member
+      zoff99: member

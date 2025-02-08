@@ -18,7 +18,8 @@ import qualified Data.Text.Encoding         as Text
 import qualified Data.Text.IO               as Text
 import           Data.Yaml                  (Value (..), decodeFileThrow,
                                              encode)
-import           GitHub.Types.Workflow
+import           GitHub.Types.Workflow      (Spec, parseSpec, removeNulls,
+                                             specIntersection)
 import           System.Environment         (getArgs)
 import           System.Exit                (exitFailure)
 import qualified Text.PrettyPrint           as PP

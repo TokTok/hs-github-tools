@@ -3,6 +3,9 @@ module GitHub.Types.Settings
   ( Label (..)
   , Ruleset (..)
   , RepoSettings (..)
+  , Team (..)
+  , TeamMembership (..)
+  , OrgSettings (..)
   ) where
 
 import           Data.Aeson          (Value)
@@ -44,3 +47,29 @@ data RepoSettings = RepoSettings
   , repoSettingsLabels   :: HashMap Text Label
   } deriving (Show)
 $(deriveJSON defaultOptions{fieldLabelModifier = camel . drop (length "RepoSettings")} ''RepoSettings)
+
+data Team = Team
+  { teamId                  :: Maybe Int
+  , teamName                :: Maybe Text
+  , teamDescription         :: Maybe Text
+  , teamPrivacy             :: Maybe Text
+  , teamNotificationSetting :: Maybe Text
+  , teamParent              :: Maybe Team
+  , teamParentTeamId        :: Maybe Int
+  , teamPermission          :: Maybe Text
+  , teamMembers             :: Maybe (HashMap Text Text)
+  } deriving (Show)
+$(deriveJSON defaultOptions{fieldLabelModifier = quietSnake . drop (length "Team")} ''Team)
+
+newtype TeamMembership = TeamMembership
+  { teamMembershipRole     :: Text
+  } deriving (Show)
+$(deriveJSON defaultOptions{fieldLabelModifier = quietSnake . drop (length "TeamMembership")} ''TeamMembership)
+
+data OrgSettings = OrgSettings
+  { orgSettingsEditOrg :: Value
+    -- ^ https://docs.github.com/en/rest/orgs/orgs?apiVersion=2022-11-28#update-an-organization
+  , orgSettingsLogin   :: Text
+  , orgSettingsTeams   :: HashMap Text Team
+  } deriving (Show)
+$(deriveJSON defaultOptions{fieldLabelModifier = camel . drop (length "OrgSettings")} ''OrgSettings)

@@ -6,10 +6,10 @@ import           Data.Aeson            (Value, encode)
 import           Data.Text             (Text)
 import qualified Data.Text             as Text
 import           Data.Vector           (Vector)
-import           GitHub.Data.Request   (CommandMethod (Patch, Post, Put),
+import           GitHub.Data.Request   (CommandMethod (Post, Put),
                                         FetchCount (FetchAll), RW (..), Request,
                                         command, pagedQuery)
-import           GitHub.Types.Settings (Ruleset (Ruleset, rulesetId))
+import           GitHub.Types.Settings (Ruleset)
 
 addRulesetR :: Text -> Text -> Ruleset -> Request 'RW Value
 addRulesetR user repo =

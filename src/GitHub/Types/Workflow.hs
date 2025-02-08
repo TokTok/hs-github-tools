@@ -6,7 +6,6 @@ import           Control.Applicative ((<|>))
 import           Data.Aeson          (FromJSON (..), ToJSON (toJSON),
                                       Value (..))
 import qualified Data.Aeson.Key      as Key
-import           Data.Aeson.KeyMap   (KeyMap)
 import qualified Data.Aeson.KeyMap   as KeyMap
 import           Data.Aeson.TH       (Options (..), defaultOptions, deriveJSON)
 import           Data.Aeson.Types    (parseEither)
@@ -14,7 +13,6 @@ import           Data.HashMap.Strict (HashMap)
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
 import qualified Data.Vector         as V
-import           Debug.Trace         (trace)
 import           Text.Casing         (kebab, quietSnake)
 
 data Input = Input
@@ -134,6 +132,7 @@ data Job = Job
     , jobSteps       :: Maybe [Step]
     , jobStrategy    :: Maybe Strategy
     , jobUses        :: Maybe Text
+    , jobWith        :: Maybe (HashMap Text Value)
     }
     deriving (Show, Eq)
 $(deriveJSON defaultOptions{fieldLabelModifier = kebab . drop (Text.length "Job")} ''Job)

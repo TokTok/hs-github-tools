@@ -58,7 +58,6 @@ _common:
         - type: "creation"
         - type: "required_linear_history"
         - type: "required_signatures"
-        - type: "required_status_checks"
         - type: "pull_request"
           parameters:
             required_approving_review_count: 1
@@ -415,6 +414,31 @@ cyclone:
     description: Cyclone is a safe dialect of C.
     homepage: https://cyclone.thelanguage.org/
     topics: c, language, safety, security
+
+  labels: *labels
+  rulesets: *rulesets
+  branches:
+    "master":
+      <<: *branchProtection
+      required_status_checks:
+        strict: true
+        contexts:
+          # Common
+          - "Mergeable"
+          - "Milestone Check"
+          - "code-review/reviewable"
+          - "common / buildifier"
+          - "common / restyled"
+          - "release / update_release_draft"
+          # Custom
+
+debugtox:
+  editRepo:
+    <<: *editRepo
+    name: debugtox
+    description: Very simple Tox client to help debug and play with the API
+    homepage: https://tox.chat/
+    topics: toxcore, network, p2p, security, encryption, cryptography, web, wasm
 
   labels: *labels
   rulesets: *rulesets
@@ -918,11 +942,6 @@ hs-toxcore:
           - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
-          # Netlify tests:
-          - "Header rules - hs-toxcore"
-          - "Pages changed - hs-toxcore"
-          - "Redirect rules - hs-toxcore"
-          - "netlify/hs-toxcore/deploy-preview"
 
 #hs-toxxi:
 #  editRepo:
@@ -1258,8 +1277,3 @@ website:
           # Custom
           - "Hound"
           - "docker"
-          # Netlify tests:
-          - "Header rules - toktok"
-          - "Pages changed - toktok"
-          - "Redirect rules - toktok"
-          - "netlify/toktok/deploy-preview"

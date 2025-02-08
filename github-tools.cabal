@@ -19,12 +19,20 @@ source-repository head
 
 library
   exposed-modules:
+    GitHub.Paths.Orgs.Teams.Members
+    GitHub.Paths.Orgs.Teams
+    GitHub.Paths.Orgs
+    GitHub.Paths.Repos
+    GitHub.Paths.Repos.Branches
+    GitHub.Paths.Repos.Labels
+    GitHub.Paths.Repos.Rulesets
     GitHub.Tools.AutoMerge
     GitHub.Tools.Changelogs
     GitHub.Tools.NetworkGraph
     GitHub.Tools.PullRequestInfo
     GitHub.Tools.PullStatus
     GitHub.Tools.Requests
+    GitHub.Tools.Settings
     GitHub.Types
     GitHub.Types.Base
     GitHub.Types.Base.Author
@@ -119,6 +127,7 @@ library
     GitHub.Types.Events.WorkflowJobEvent
     GitHub.Types.Events.WorkflowRunEvent
     GitHub.Types.PayloadParser
+    GitHub.Types.Settings
     GitHub.Types.Workflow
     GitHub.WebHook.Handler
 
@@ -224,6 +233,19 @@ executable hub-roadmap
     , github
     , github-tools
     , text
+
+executable hub-settings
+  main-is:          hub-settings.hs
+  ghc-options:      -Wall
+  hs-source-dirs:   tools
+  default-language: Haskell2010
+  build-depends:
+      base
+    , bytestring
+    , github
+    , github-tools
+    , text
+    , yaml
 
 executable webservice
   main-is:          webservice.hs
