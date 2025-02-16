@@ -67,6 +67,7 @@ teams:
       jin-eld: member
       kitech: member
       Mikhael-Danilov: member
+      nickolay168: member
       nbraud: member
       nurupo: member
       Nyoroon: member
@@ -109,7 +110,6 @@ teams:
     parent: { name: "Contributors" }
     members:
       toktok-releaser: member
-      iphydf: maintainer
 
   "Reviewers":
     <<: *team

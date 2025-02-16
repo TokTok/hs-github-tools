@@ -49,7 +49,8 @@ _common:
       enforcement: "active"
       conditions:
         ref_name:
-          exclude: []
+          exclude:
+            - "refs/heads/release/v*"
           include:
             - "~ALL"
       rules:
@@ -77,6 +78,38 @@ _common:
         # Dependabot
         - actor_id: 29110
           actor_type: "Integration"
+          bypass_mode: "always"
+      current_user_can_bypass: "never"
+
+    "releases":
+      target: "branch"
+      enforcement: "active"
+      conditions:
+        ref_name:
+          exclude: []
+          include:
+            - "refs/heads/release/v*"
+      rules:
+        - type: "deletion"
+        - type: "non_fast_forward"
+        - type: "creation"
+        - type: "required_linear_history"
+        - type: "required_signatures"
+        - type: "pull_request"
+          parameters:
+            required_approving_review_count: 1
+            dismiss_stale_reviews_on_push: false
+            require_code_owner_review: true
+            require_last_push_approval: false
+            required_review_thread_resolution: true
+            automatic_copilot_code_review_enabled: false
+            allowed_merge_methods:
+              - "squash"
+              - "rebase"
+      bypass_actors:
+        # Automation
+        - actor_id: 3772038
+          actor_type: "Team"
           bypass_mode: "always"
       current_user_can_bypass: "never"
 
@@ -301,7 +334,6 @@ ci-tools:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "checks / check-release"
 
 c-toxcore:
   editRepo:
@@ -353,16 +385,30 @@ c-toxcore:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
+          - "Android (arm64-v8a)"
+          - "Android (armeabi-v7a)"
+          - "Android (x86)"
+          - "Android (x86_64)"
           - "CodeFactor"
+          - "Fuzzing (address)"
+          - "Fuzzing (memory)"
+          - "Fuzzing (undefined)"
+          - "Linux (aarch64)"
+          - "Linux (x86_64)"
+          - "Prepare / Update nightly release tag"
+          - "Prepare / Validate PR"
+          - "Single file / Build"
+          - "Source tarball / Build"
           - "TokTok.c-toxcore"
           - "TokTok.c-toxcore (vcpkg shared)"
           - "TokTok.c-toxcore (vcpkg static)"
+          - "WebAssembly"
+          - "Xcode Framework"
           - "analysis (autotools)"
           - "analysis (clang-tidy)"
           - "analysis (compcert)"
           - "analysis (cppcheck)"
           - "analysis (doxygen)"
-          - "analysis (freebsd)"
           - "analysis (goblint)"
           - "analysis (infer)"
           - "analysis (misra)"
@@ -377,19 +423,18 @@ c-toxcore:
           - "build-netbsd"
           - "build-windows-msvc (2019)"
           - "build-windows-msvc (2022)"
-          - "bazel-dbg"
-          - "bazel-msan"
-          - "bazel-opt"
-          - "build-android"
           - "build-macos"
           - "checks / check-release"
           - "ci/circleci: bazel-asan"
+          - "ci/circleci: bazel-dbg"
+          - "ci/circleci: bazel-msan"
+          - "ci/circleci: bazel-opt"
           - "ci/circleci: cimplefmt"
           - "ci/circleci: clang-analyze"
           - "ci/circleci: cpplint"
           - "ci/circleci: generate-events"
           - "ci/circleci: static-analysis"
-          - "cimple"
+          - "ci/circleci: cimple"
           - "circleci"
           - "coverage-linux"
           - "docker-bootstrap-node"
@@ -397,10 +442,16 @@ c-toxcore:
           - "docker-clusterfuzz"
           - "docker-esp32"
           - "docker-fuzzer"
-          - "docker-toxcore-js"
           - "docker-windows-mingw (32)"
           - "docker-windows-mingw (64)"
           - "freebsd"
+          - "iOS (ios-arm64)"
+          - "iOS (ios-armv7)"
+          - "iOS (ios-armv7s)"
+          - "iOS (iphonesimulator-arm64)"
+          - "iOS (iphonesimulator-x86_64)"
+          - "macOS (arm64)"
+          - "macOS (x86_64)"
           - "mypy"
           - "sanitizer (asan)"
           - "sanitizer (tsan)"
@@ -608,7 +659,6 @@ hs-cimple:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -880,7 +930,6 @@ hs-tokstyle:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -996,11 +1045,6 @@ js-toxcore-c:
           # Custom
           - "DeepScan"
           - "Hound"
-          - "build (12.x)"
-          - "build (13.x)"
-          - "docker"
-          - "codecov/patch"
-          - "codecov/project"
           - "security/snyk (TokTok)"
 
 jvm-toxcore-c:
@@ -1059,8 +1103,6 @@ py-toxcore-c:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
-          - "build_linux"
           - "docker"
 
 qTox:
@@ -1088,29 +1130,30 @@ qTox:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "Alpine (full, Debug)"
           - "Alpine (static) (Release)"
-          - "AppImage on Alpine (full, Release)"
-          - "Android (arm64-v8a, Release, 6.2.4)"
+          - "Android / Build (arm64-v8a, Release, 6.2.4)"
+          - "AppImage / Build on Alpine (x86_64)"
+          - "AppImage / Test on Ubuntu (x86_64)"
+          - "Build RPM package on Fedora"
           - "Check for translatable strings"
           - "Clang-Tidy"
           - "Debian (minimal, Debug)"
           - "Docs"
           - "Fedora with ASAN (full, Debug)"
-          - "Flatpak"
-          - "Test AppImage"
-          - "Test Flatpak"
-          - "Test Windows (x86_64, Release)"
-          - "Test macOS distributable (arm64)"
+          - "Flatpak / Build (x86_64)"
+          - "Flatpak / Test (x86_64)"
+          - "Prepare / Update nightly release tag"
+          - "Prepare / Validate PR"
           - "Ubuntu LTS (full, Release)"
-          - "Update nightly release tag"
-          - "Validate PR"
-          - "Verify release/signatures"
-          - "Windows (x86_64, Release)"
-          - "macOS distributable (arm64)"
+          - "WebAssembly"
+          - "Windows / Build (x86_64, Release)"
+          - "Windows / Test (x86_64, Release)"
+          - "ci/circleci: bazel-opt"
+          - "circleci"
+          - "macOS / Build (arm64, 10.15)"
           - "macOS user (x86_64)"
-          - "release-soon / check"
+          - "netlify / deploy"
 
 spec:
   editRepo:
@@ -1223,7 +1266,6 @@ toxic:
           # Custom
           - "build"
           - "build-static"
-          - "bazel-opt"
           - "infer"
           - "integration-test"
 

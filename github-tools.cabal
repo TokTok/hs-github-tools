@@ -126,6 +126,8 @@ library
     GitHub.Types.Events.WatchEvent
     GitHub.Types.Events.WorkflowJobEvent
     GitHub.Types.Events.WorkflowRunEvent
+    GitHub.Types.IssueTemplate
+    GitHub.Types.Json
     GitHub.Types.PayloadParser
     GitHub.Types.Settings
     GitHub.Types.Workflow

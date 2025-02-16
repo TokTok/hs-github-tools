@@ -13,6 +13,7 @@ import           Data.HashMap.Strict (HashMap)
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
 import qualified Data.Vector         as V
+import           GitHub.Types.Json   (removeNulls, valueIntersection)
 import           Text.Casing         (kebab, quietSnake)
 
 data Input = Input
@@ -45,7 +46,8 @@ newtype OnSchedule = OnSchedule
 $(deriveJSON defaultOptions{fieldLabelModifier = kebab . drop (Text.length "OnSchedule")} ''OnSchedule)
 
 data OnMap = OnMap
-    { onMapPullRequest       :: Maybe OnSpec
+    { onMapIssues            :: Maybe OnSpec
+    , onMapPullRequest       :: Maybe OnSpec
     , onMapPullRequestTarget :: Maybe OnSpec
     , onMapPush              :: Maybe OnSpec
     , onMapRelease           :: Maybe OnSpec
@@ -159,24 +161,6 @@ $(deriveJSON defaultOptions{fieldLabelModifier = kebab . drop (Text.length "Spec
 
 parseSpec :: Value -> Either String Spec
 parseSpec = parseEither parseJSON
-
-removeNulls :: ToJSON a => a -> Value
-removeNulls = go . toJSON
-  where
-    go (Array  x) = Array . V.map go $ x
-    go (Object x) = Object . KeyMap.map go . KeyMap.filterWithKey validPair $ x
-    go         x  = x
-
-    isEmpty Null      = True
-    isEmpty (Array x) = null x
-    isEmpty _         = False
-
-    validPair k v = not (isEmpty v || "x-" `Text.isPrefixOf` Key.toText k)
-
-valueIntersection :: Value -> Value -> Value
-valueIntersection (Object x) (Object y) = Object $ KeyMap.intersectionWith valueIntersection x y
-valueIntersection (Array  x) (Array  y) = Array  $ V.filter (/= Null) $ V.zipWith valueIntersection x y
-valueIntersection _ y = y
 
 specIntersection :: Spec -> Spec -> Spec
 specIntersection a b =
