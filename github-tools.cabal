@@ -251,7 +251,7 @@ executable hub-settings
 
 executable webservice
   main-is:          webservice.hs
-  ghc-options:      -Wall
+  ghc-options:      -Wall -threaded
   hs-source-dirs:   web
   default-language: Haskell2010
   other-modules:
