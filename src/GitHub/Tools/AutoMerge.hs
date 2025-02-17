@@ -6,6 +6,7 @@ module GitHub.Tools.AutoMerge
     , trustedAuthors
     ) where
 
+import           Control.Monad                (unless)
 import qualified Data.ByteString.Char8        as BS8
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
@@ -26,11 +27,12 @@ trustedAuthors :: [Text]
 trustedAuthors =
     [ "Green-Sky"
     , "JFreegman"
-    , "TokTok"
+    , "dependabot[bot]"
     , "iphydf"
     , "nurupo"
     , "robinlinden"
     , "sudden6"
+    , "toktok-releaser"
     , "zugz"
     ]
 
@@ -68,9 +70,13 @@ autoMerge token ownerName PullRequestInfo{prRepoName, prUser, prBranch, prOrigin
     setCurrentDirectory workDir
 
 
-mergeable :: PullRequestInfo -> Bool
-mergeable PullRequestInfo{prState, prTrustworthy, prUser} =
-    prState == "clean" && (prTrustworthy || prUser `elem` trustedAuthors)
+clean :: PullRequestInfo -> Bool
+clean PullRequestInfo{prState} = prState == "clean"
+
+
+trustworthy :: PullRequestInfo -> Bool
+trustworthy PullRequestInfo{prTrustworthy, prUser} =
+    prTrustworthy || prUser `elem` trustedAuthors
 
 
 autoMergePullRequest
@@ -81,16 +87,21 @@ autoMergePullRequest
 autoMergePullRequest token ownerName repoName = do
     let auth = Just . GitHub.OAuth . BS8.pack $ token
     mgr <- newManager tlsManagerSettings
-    pulls <- (V.toList <$>
-        request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll))
-        >>= fmap (map $ makePullRequestInfo repoName) . getPrInfos auth mgr ownerName repoName
-    putStrLn $ "found " <> show (length pulls) <> " pulls"
+    pulls <- request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
+                >>= (fmap (map $ makePullRequestInfo repoName) . getPrInfos auth mgr ownerName repoName) . V.toList
+    putStrLn $ "found " <> show (length pulls) <> " pulls in " <> Text.unpack (GitHub.untagName repoName)
 
-    let mergeablePulls = filter mergeable pulls
-    putStrLn $ "selected " <> show (length mergeablePulls) <> " mergeable pulls:"
-    mapM_ print mergeablePulls
+    let cleanPulls = filter clean pulls
+    putStrLn $ "out of these, " <> show (length cleanPulls) <> " are clean pulls"
 
-    mapM_ (autoMerge token ownerName) mergeablePulls
+    let trustworthyPulls = filter trustworthy cleanPulls
+    if null trustworthyPulls
+        then putStrLn "no clean, trustworthy pulls found"
+        else do
+            putStrLn $ "selected " <> show (length trustworthyPulls) <> " clean, trustworthy pulls:"
+            mapM_ print trustworthyPulls
+
+            mapM_ (autoMerge token ownerName) trustworthyPulls
 
 
 autoMergeAll
@@ -100,5 +111,5 @@ autoMergeAll
   -> IO ()
 autoMergeAll orgName ownerName token = do
     let auth = Just . GitHub.OAuth . BS8.pack $ token
-    pulls <- filter mergeable . concat <$> getPullInfos orgName ownerName auth
-    mapM_ (autoMerge token ownerName) pulls
+    trustworthyPulls <- filter (\p -> clean p && trustworthy p) . concat <$> getPullInfos orgName ownerName auth
+    mapM_ (autoMerge token ownerName) trustworthyPulls
