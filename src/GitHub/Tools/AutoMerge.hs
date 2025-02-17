@@ -90,6 +90,7 @@ autoMergePullRequest token ownerName repoName = do
     pulls <- request auth mgr (GitHub.pullRequestsForR ownerName repoName GitHub.stateOpen GitHub.FetchAll)
                 >>= (fmap (map $ makePullRequestInfo repoName) . getPrInfos auth mgr ownerName repoName) . V.toList
     putStrLn $ "found " <> show (length pulls) <> " pulls in " <> Text.unpack (GitHub.untagName repoName)
+    mapM_ print pulls
 
     let cleanPulls = filter clean pulls
     putStrLn $ "out of these, " <> show (length cleanPulls) <> " are clean pulls"
