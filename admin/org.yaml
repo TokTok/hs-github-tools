@@ -67,8 +67,8 @@ teams:
       jin-eld: member
       kitech: member
       Mikhael-Danilov: member
-      nickolay168: member
       nbraud: member
+      nickolay168: member
       nurupo: member
       Nyoroon: member
       robinlinden: maintainer
@@ -79,8 +79,8 @@ teams:
       sudden6: member
       Tha14: member
       toktok-releaser: member
-      tox-user: member
       toxbot: member
+      tox-user: member
       tux3: member
       tvladyslav: member
       wiiaam: member
@@ -101,8 +101,6 @@ teams:
       JFreegman: member
       nurupo: member
       robinlinden: maintainer
-      sudden6: member
-      zugz: member
 
   "Automation":
     <<: *team
@@ -116,12 +114,12 @@ teams:
     description: "Review code and merge pull requests"
     parent: { name: "Contributors" }
     members:
+      goldroom: member
       Green-Sky: member
       iphydf: maintainer
       JFreegman: member
       nurupo: member
       robinlinden: maintainer
       sudden6: member
-      toktok-releaser: member
-      zugz: member
       zoff99: member
+      zugz: member
