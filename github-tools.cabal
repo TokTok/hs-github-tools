@@ -146,7 +146,7 @@ library
     , directory
     , exceptions
     , generic-arbitrary
-    , github                >=0.25   && <0.29
+    , github                >=0.25   && <0.30
     , html
     , http-client           >=0.4.30
     , http-client-tls
