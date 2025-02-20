@@ -27,12 +27,12 @@ trustedAuthors :: [Text]
 trustedAuthors =
     [ "Green-Sky"
     , "JFreegman"
+    , "TokTok"
     , "dependabot[bot]"
     , "iphydf"
     , "nurupo"
     , "robinlinden"
     , "sudden6"
-    , "toktok-releaser"
     , "zugz"
     ]
 

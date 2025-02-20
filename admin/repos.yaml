@@ -272,10 +272,10 @@ _common:
           - "common / restyled"
           - "release / update_release_draft"
 
-btox:
+bTox:
   editRepo:
     <<: *editRepo
-    name: btox
+    name: bTox
     description: Official TokTok mobile Tox client
     homepage: https://tox.chat/
     topics: toxcore, network, p2p, security, encryption, cryptography, android, ios, web
@@ -426,9 +426,9 @@ c-toxcore:
           - "build-macos"
           - "checks / check-release"
           - "ci/circleci: bazel-asan"
-          - "ci/circleci: bazel-dbg"
+          - "ci/circleci: bazel-debug"
           - "ci/circleci: bazel-msan"
-          - "ci/circleci: bazel-opt"
+          - "ci/circleci: bazel-release"
           - "ci/circleci: cimplefmt"
           - "ci/circleci: clang-analyze"
           - "ci/circleci: cpplint"
