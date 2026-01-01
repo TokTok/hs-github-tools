@@ -1,0 +1,7 @@
+---
+source: hs-github-tools/tools/gitui/test/cli_output_tests.rs
+expression: clean_output
+---
+Plan to submit feat:
+  git push upstream feat:main && git push origin --delete feat && git checkout main && git merge --ff-only feat && git push origin main
+  git branch -d feat

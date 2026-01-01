@@ -1,0 +1,8 @@
+---
+source: hs-github-tools/tools/gitui/test/cli_output_tests.rs
+expression: clean_output
+---
+  feat1
+    feat1-child
+* main
+    feat2 [MERGED]

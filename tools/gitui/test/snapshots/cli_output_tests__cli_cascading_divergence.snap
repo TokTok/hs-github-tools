@@ -1,0 +1,8 @@
+---
+source: hs-github-tools/tools/gitui/test/cli_output_tests.rs
+expression: clean_output
+---
+* main
+    branch-a
+      branch-b [DIVERGED]
+        branch-c
