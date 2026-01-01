@@ -1,6 +1,7 @@
 ---
 packages: [.]
-resolver: lts-21.9
+resolver: lts-21.25
 extra-deps:
+  - Diff-1.0.2
   - suspend-0.2.0.0
   - timers-0.2.0.4
