@@ -1,11 +1,13 @@
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
 sh_test(
     name = "repos_test",
     size = "small",
     srcs = ["@perl"],
     args = [
-        "$(location repos_test.pl)",
-        "$(location //:.gitmodules)",
-        "$(location repos.yaml)",
+        "$(rootpath repos_test.pl)",
+        "$(rootpath //:.gitmodules)",
+        "$(rootpath repos.yaml)",
     ],
     data = [
         "repos.yaml",

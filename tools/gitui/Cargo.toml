@@ -1,0 +1,178 @@
+[package]
+name = "gitui"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+anyhow = "1.0.100"
+clap = { version = "4.5.54", features = ["derive"] }
+crossterm = "0.29.0"
+git2 = "0.20.3"
+indexmap = "2.13.0"
+itertools = "0.14.0"
+petgraph = "0.8.3"
+ratatui = "0.30.0"
+tempfile = "3.24.0"
+tokio = { version = "1.49.0", features = ["full"] }
+unicode-segmentation = "1.12.0"
+
+[dev-dependencies]
+insta = { version = "1.46.1", features = ["yaml"] }
+proptest = "1.9.0"
+regex = "1.12.2"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "gitui"
+path = "src/main.rs"
+
+[[test]]
+name = "amend_integration_tests"
+path = "test/amend_integration_tests.rs"
+
+[[test]]
+name = "atomicity_integration_tests"
+path = "test/atomicity_integration_tests.rs"
+
+[[test]]
+name = "branch_integration_tests"
+path = "test/branch_integration_tests.rs"
+
+[[test]]
+name = "cli_output_tests"
+path = "test/cli_output_tests.rs"
+
+[[test]]
+name = "component_tests"
+path = "test/component_tests.rs"
+
+[[test]]
+name = "conflict_integration_tests"
+path = "test/conflict_integration_tests.rs"
+
+[[test]]
+name = "diff_utils_tests"
+path = "test/diff_utils_tests.rs"
+
+[[test]]
+name = "diverge_integration_tests"
+path = "test/diverge_integration_tests.rs"
+
+[[test]]
+name = "heuristic_integration_tests"
+path = "test/heuristic_integration_tests.rs"
+
+[[test]]
+name = "heuristic_tests"
+path = "test/heuristic_tests.rs"
+
+[[test]]
+name = "misc_integration_tests"
+path = "test/misc_integration_tests.rs"
+
+[[test]]
+name = "move_integration_tests"
+path = "test/move_integration_tests.rs"
+
+[[test]]
+name = "patch_utils_tests"
+path = "test/patch_utils_tests.rs"
+
+[[test]]
+name = "plan_proptests"
+path = "test/plan_proptests.rs"
+
+[[test]]
+name = "planner_logic_tests"
+path = "test/planner_logic_tests.rs"
+
+[[test]]
+name = "push_flow_integration_tests"
+path = "test/push_flow_integration_tests.rs"
+
+[[test]]
+name = "rebase_integration_tests"
+path = "test/rebase_integration_tests.rs"
+
+[[test]]
+name = "repro_issue_noise_ik"
+path = "test/repro_issue_noise_ik.rs"
+
+[[test]]
+name = "runtime_logic_tests"
+path = "test/runtime_logic_tests.rs"
+
+[[test]]
+name = "split_execution_tests"
+path = "test/split_execution_tests.rs"
+
+[[test]]
+name = "split_integration_tests"
+path = "test/split_integration_tests.rs"
+
+[[test]]
+name = "split_state_proptests"
+path = "test/split_state_proptests.rs"
+
+[[test]]
+name = "split_tui_integration_tests"
+path = "test/split_tui_integration_tests.rs"
+
+[[test]]
+name = "split_ui_tests"
+path = "test/split_ui_tests.rs"
+
+[[test]]
+name = "submit_integration_tests"
+path = "test/submit_integration_tests.rs"
+
+[[test]]
+name = "sync_conflict_tests"
+path = "test/sync_conflict_tests.rs"
+
+[[test]]
+name = "sync_integration_tests"
+path = "test/sync_integration_tests.rs"
+
+[[test]]
+name = "sync_tui_integration_tests"
+path = "test/sync_tui_integration_tests.rs"
+
+[[test]]
+name = "topology_proptests"
+path = "test/topology_proptests.rs"
+
+[[test]]
+name = "topology_tests"
+path = "test/topology_tests.rs"
+
+[[test]]
+name = "transaction_tests"
+path = "test/transaction_tests.rs"
+
+[[test]]
+name = "tui_integration_tests"
+path = "test/tui_integration_tests.rs"
+
+[[test]]
+name = "ui_error_tests"
+path = "test/ui_error_tests.rs"
+
+[[test]]
+name = "ui_tests"
+path = "test/ui_tests.rs"
+
+[[test]]
+name = "unit_tests"
+path = "test/unit_tests.rs"
+
+[[test]]
+name = "virtual_layer_proptests"
+path = "test/virtual_layer_proptests.rs"
+
+[[test]]
+name = "virtual_layer_tests"
+path = "test/virtual_layer_tests.rs"

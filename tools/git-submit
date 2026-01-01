@@ -14,12 +14,23 @@ fi
 if [ -n "$REMOTE" ] && ! (git branch | grep "^..$BRANCH\$" >/dev/null); then
   git checkout --track "$REMOTE/$BRANCH"
 else
-  REMOTE=origin
   git checkout "$BRANCH"
 fi
+
+# The remote the branch came from, before "git branch -d" forgets it.
+REMOTE="$(git config "branch.$BRANCH.remote" || echo origin)"
 
 git push upstream "$BRANCH:master"
 git sync
 git branch -d "$BRANCH"
-sleep 2
-git push "$REMOTE" ":$BRANCH"
+
+# Someone else's branch is theirs to delete.
+case "$REMOTE" in
+  origin | upstream)
+    sleep 2
+    git push "$REMOTE" ":$BRANCH"
+    ;;
+  *)
+    echo "Leaving $BRANCH on $REMOTE"
+    ;;
+esac
