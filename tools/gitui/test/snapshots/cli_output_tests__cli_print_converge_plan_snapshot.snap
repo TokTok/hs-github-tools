@@ -1,0 +1,6 @@
+---
+source: hs-github-tools/tools/gitui/test/cli_output_tests.rs
+expression: clean_output
+---
+Plan to converge feat2:
+  git rebase --onto feat1 44875c1660a43225930982cfb5d86ec8b52e5a62 feat2 [CONFLICT]

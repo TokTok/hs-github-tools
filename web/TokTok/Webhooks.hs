@@ -48,9 +48,9 @@ showDiff a b = Text.pack . PP.render . toDoc $ diff
   where
     toDoc = Diff.prettyContextDiff (PP.text "payload")
                                    (PP.text "value")
-                                   (PP.text . Text.unpack)
+                                   (\(Diff.Numbered _ t) -> PP.text . Text.unpack $ t)
     diff = Diff.getContextDiff linesOfContext (Text.lines a) (Text.lines b)
-    linesOfContext = 3
+    linesOfContext = Just 3
 
 
 showError :: Error -> Text
