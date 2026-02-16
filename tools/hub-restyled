@@ -7,7 +7,7 @@ import subprocess
 import urllib.parse
 import urllib.request
 import zipfile
-from typing import Optional
+from typing import Any
 
 token = os.environ["GITHUB_TOKEN"]
 
@@ -30,7 +30,7 @@ def get_remotes() -> dict[str, str]:
     return remotes
 
 
-def get_upstream() -> Optional[str]:
+def get_upstream() -> str | None:
     """Get the upstream remote URL."""
     remotes = get_remotes()
     if "upstream" in remotes:
@@ -38,7 +38,7 @@ def get_upstream() -> Optional[str]:
     return None
 
 
-def get_origin() -> Optional[str]:
+def get_origin() -> str | None:
     """Get the origin remote URL."""
     remotes = get_remotes()
     if "origin" in remotes:
@@ -46,7 +46,7 @@ def get_origin() -> Optional[str]:
     return None
 
 
-def get_slug() -> Optional[str]:
+def get_slug() -> str | None:
     """Get the GitHub slug of the current repository."""
     upstream = get_upstream()
     if not upstream:
@@ -58,7 +58,7 @@ def get_slug() -> Optional[str]:
     return None
 
 
-def get_github_user() -> Optional[str]:
+def get_github_user() -> str | None:
     """Get the GitHub user of the origin repository."""
     origin = get_origin()
     if not origin:
@@ -85,7 +85,7 @@ def get_head_sha() -> str:
     ]).decode("utf-8").strip())
 
 
-def get(url: str) -> dict:
+def get(url: str) -> dict[str, Any]:
     """GET and parse JSON from a URL."""
     req = urllib.request.Request(
         url,
@@ -96,10 +96,13 @@ def get(url: str) -> dict:
         },
     )
     with urllib.request.urlopen(req) as f:
-        return json.loads(f.read().decode("utf-8"))
+        data = json.loads(f.read().decode("utf-8"))
+        if not isinstance(data, dict):
+            raise TypeError(f"Expected dict from {url}, got {type(data)}")
+        return data
 
 
-def download_redirect(url: Optional[str]) -> Optional[bytes]:
+def download_redirect(url: str | None) -> bytes | None:
     """Recursively follow redirects until we get the final URL."""
     if not url:
         print("Error: no download URL")
@@ -122,7 +125,7 @@ def download_redirect(url: Optional[str]) -> Optional[bytes]:
     return resp.read()
 
 
-def download(url: str) -> Optional[bytes]:
+def download(url: str) -> bytes | None:
     """Download a file from a URL."""
     host = urllib.parse.urlparse(url).netloc
     h = http.client.HTTPSConnection(host)
