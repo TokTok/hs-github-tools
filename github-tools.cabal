@@ -56,6 +56,7 @@ library
     GitHub.Types.Base.Deployment
     GitHub.Types.Base.DeploymentPayload
     GitHub.Types.Base.DeploymentStatus
+    GitHub.Types.Base.EditRepo
     GitHub.Types.Base.Hook
     GitHub.Types.Base.HookConfig
     GitHub.Types.Base.Installation

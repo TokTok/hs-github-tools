@@ -10,7 +10,6 @@ haskell_library(
         "src/GitHub/Types/Base/*.hs",
         "src/GitHub/Types/Base*.hs",
     ]),
-    ghcopts = ["-j4"],
     src_strip_prefix = "src",
     tags = [
         "haskell",
@@ -34,7 +33,6 @@ haskell_library(
         "src/GitHub/Types/Events/*.hs",
         "src/GitHub/Types/Event*.hs",
     ]),
-    ghcopts = ["-j4"],
     src_strip_prefix = "src",
     tags = [
         "haskell",
@@ -101,9 +99,7 @@ haskell_library(
 
 hspec_test(
     name = "testsuite",
-    size = "small",
     args = [
-        "-j4",
         "+RTS",
         "-N4",
     ],

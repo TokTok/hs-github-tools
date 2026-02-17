@@ -17,96 +17,98 @@ import           GitHub.Types.Base.RepoOwner
 -- Repository
 
 data Repository = Repository
-    { repositoryAllowAutoMerge           :: Maybe Bool
-    , repositoryAllowForking             :: Bool
-    , repositoryAllowMergeCommit         :: Maybe Bool
-    , repositoryAllowRebaseMerge         :: Maybe Bool
-    , repositoryAllowSquashMerge         :: Maybe Bool
-    , repositoryAllowUpdateBranch        :: Maybe Bool
-    , repositoryArchived                 :: Bool
-    , repositoryArchiveUrl               :: Text
-    , repositoryAssigneesUrl             :: Text
-    , repositoryBlobsUrl                 :: Text
-    , repositoryBranchesUrl              :: Text
-    , repositoryCloneUrl                 :: Text
-    , repositoryCollaboratorsUrl         :: Text
-    , repositoryCommentsUrl              :: Text
-    , repositoryCommitsUrl               :: Text
-    , repositoryCompareUrl               :: Text
-    , repositoryContentsUrl              :: Text
-    , repositoryContributorsUrl          :: Text
-    , repositoryCreatedAt                :: DateTime
-    , repositoryCustomProperties         :: Value  -- TODO(iphydf): Figure out what this actually is.
-    , repositoryDefaultBranch            :: Text
-    , repositoryDeleteBranchOnMerge      :: Maybe Bool
-    , repositoryDeploymentsUrl           :: Text
-    , repositoryDescription              :: Maybe Text
-    , repositoryDisabled                 :: Bool
-    , repositoryDownloadsUrl             :: Text
-    , repositoryEventsUrl                :: Text
-    , repositoryFork                     :: Bool
-    , repositoryForks                    :: Int
-    , repositoryForksCount               :: Int
-    , repositoryForksUrl                 :: Text
-    , repositoryFullName                 :: Text
-    , repositoryGitCommitsUrl            :: Text
-    , repositoryGitRefsUrl               :: Text
-    , repositoryGitTagsUrl               :: Text
-    , repositoryGitUrl                   :: Text
-    , repositoryIsTemplate               :: Bool
-    , repositoryHasDiscussions           :: Bool
-    , repositoryHasDownloads             :: Bool
-    , repositoryHasIssues                :: Bool
-    , repositoryHasPages                 :: Bool
-    , repositoryHasProjects              :: Bool
-    , repositoryHasWiki                  :: Bool
-    , repositoryHomepage                 :: Maybe Text
-    , repositoryHooksUrl                 :: Text
-    , repositoryHtmlUrl                  :: Text
-    , repositoryId                       :: Int
-    , repositoryIssueCommentUrl          :: Text
-    , repositoryIssueEventsUrl           :: Text
-    , repositoryIssuesUrl                :: Text
-    , repositoryKeysUrl                  :: Text
-    , repositoryLabelsUrl                :: Text
-    , repositoryLanguage                 :: Maybe Text
-    , repositoryLanguagesUrl             :: Text
-    , repositoryLicense                  :: Maybe License
-    , repositoryMasterBranch             :: Maybe Text
-    , repositoryMergesUrl                :: Text
-    , repositoryMilestonesUrl            :: Text
-    , repositoryMirrorUrl                :: Maybe Text
-    , repositoryName                     :: Text
-    , repositoryNodeId                   :: Text
-    , repositoryNotificationsUrl         :: Text
-    , repositoryOpenIssues               :: Int
-    , repositoryOpenIssuesCount          :: Int
-    , repositoryOrganization             :: Maybe Text
-    , repositoryOwner                    :: RepoOwner
-    , repositoryPrivate                  :: Bool
-    , repositoryPublic                   :: Maybe Bool
-    , repositoryPullsUrl                 :: Text
-    , repositoryPushedAt                 :: Maybe DateTime
-    , repositoryReleasesUrl              :: Text
-    , repositorySize                     :: Int
-    , repositorySshUrl                   :: Text
-    , repositoryStargazers               :: Maybe Int
-    , repositoryStargazersCount          :: Int
-    , repositoryStargazersUrl            :: Text
-    , repositoryStatusesUrl              :: Text
-    , repositorySubscribersUrl           :: Text
-    , repositorySubscriptionUrl          :: Text
-    , repositorySvnUrl                   :: Text
-    , repositoryTagsUrl                  :: Text
-    , repositoryTeamsUrl                 :: Text
-    , repositoryTopics                   :: [Text]
-    , repositoryTreesUrl                 :: Text
-    , repositoryUpdatedAt                :: DateTime
-    , repositoryUrl                      :: Text
-    , repositoryVisibility               :: Text
-    , repositoryWatchers                 :: Int
-    , repositoryWatchersCount            :: Int
-    , repositoryWebCommitSignoffRequired :: Bool
+    { repositoryAllowAutoMerge            :: Maybe Bool
+    , repositoryAllowForking              :: Bool
+    , repositoryAllowMergeCommit          :: Maybe Bool
+    , repositoryAllowRebaseMerge          :: Maybe Bool
+    , repositoryAllowSquashMerge          :: Maybe Bool
+    , repositoryAllowUpdateBranch         :: Maybe Bool
+    , repositoryArchived                  :: Bool
+    , repositoryArchiveUrl                :: Text
+    , repositoryAssigneesUrl              :: Text
+    , repositoryBlobsUrl                  :: Text
+    , repositoryBranchesUrl               :: Text
+    , repositoryCloneUrl                  :: Text
+    , repositoryCollaboratorsUrl          :: Text
+    , repositoryCommentsUrl               :: Text
+    , repositoryCommitsUrl                :: Text
+    , repositoryCompareUrl                :: Text
+    , repositoryContentsUrl               :: Text
+    , repositoryContributorsUrl           :: Text
+    , repositoryCreatedAt                 :: DateTime
+    , repositoryCustomProperties          :: Value  -- TODO(iphydf): Figure out what this actually is.
+    , repositoryDefaultBranch             :: Text
+    , repositoryDeleteBranchOnMerge       :: Maybe Bool
+    , repositoryDeploymentsUrl            :: Text
+    , repositoryDescription               :: Maybe Text
+    , repositoryDisabled                  :: Bool
+    , repositoryDownloadsUrl              :: Text
+    , repositoryEventsUrl                 :: Text
+    , repositoryFork                      :: Bool
+    , repositoryForks                     :: Int
+    , repositoryForksCount                :: Int
+    , repositoryForksUrl                  :: Text
+    , repositoryFullName                  :: Text
+    , repositoryGitCommitsUrl             :: Text
+    , repositoryGitRefsUrl                :: Text
+    , repositoryGitTagsUrl                :: Text
+    , repositoryGitUrl                    :: Text
+    , repositoryIsTemplate                :: Bool
+    , repositoryHasDiscussions            :: Bool
+    , repositoryHasDownloads              :: Bool
+    , repositoryHasIssues                 :: Bool
+    , repositoryHasPages                  :: Bool
+    , repositoryHasProjects               :: Bool
+    , repositoryHasPullRequests           :: Maybe Bool
+    , repositoryHasWiki                   :: Bool
+    , repositoryHomepage                  :: Maybe Text
+    , repositoryHooksUrl                  :: Text
+    , repositoryHtmlUrl                   :: Text
+    , repositoryId                        :: Int
+    , repositoryIssueCommentUrl           :: Text
+    , repositoryIssueEventsUrl            :: Text
+    , repositoryIssuesUrl                 :: Text
+    , repositoryKeysUrl                   :: Text
+    , repositoryLabelsUrl                 :: Text
+    , repositoryLanguage                  :: Maybe Text
+    , repositoryLanguagesUrl              :: Text
+    , repositoryLicense                   :: Maybe License
+    , repositoryMasterBranch              :: Maybe Text
+    , repositoryMergesUrl                 :: Text
+    , repositoryMilestonesUrl             :: Text
+    , repositoryMirrorUrl                 :: Maybe Text
+    , repositoryName                      :: Text
+    , repositoryNodeId                    :: Text
+    , repositoryNotificationsUrl          :: Text
+    , repositoryOpenIssues                :: Int
+    , repositoryOpenIssuesCount           :: Int
+    , repositoryOrganization              :: Maybe Text
+    , repositoryOwner                     :: RepoOwner
+    , repositoryPrivate                   :: Bool
+    , repositoryPullRequestCreationPolicy :: Maybe Text
+    , repositoryPublic                    :: Maybe Bool
+    , repositoryPullsUrl                  :: Text
+    , repositoryPushedAt                  :: Maybe DateTime
+    , repositoryReleasesUrl               :: Text
+    , repositorySize                      :: Int
+    , repositorySshUrl                    :: Text
+    , repositoryStargazers                :: Maybe Int
+    , repositoryStargazersCount           :: Int
+    , repositoryStargazersUrl             :: Text
+    , repositoryStatusesUrl               :: Text
+    , repositorySubscribersUrl            :: Text
+    , repositorySubscriptionUrl           :: Text
+    , repositorySvnUrl                    :: Text
+    , repositoryTagsUrl                   :: Text
+    , repositoryTeamsUrl                  :: Text
+    , repositoryTopics                    :: [Text]
+    , repositoryTreesUrl                  :: Text
+    , repositoryUpdatedAt                 :: DateTime
+    , repositoryUrl                       :: Text
+    , repositoryVisibility                :: Text
+    , repositoryWatchers                  :: Int
+    , repositoryWatchersCount             :: Int
+    , repositoryWebCommitSignoffRequired  :: Bool
     } deriving (Eq, Show, Read)
 
 
@@ -154,6 +156,7 @@ instance FromJSON Repository where
         <*> x .: "has_issues"
         <*> x .: "has_pages"
         <*> x .: "has_projects"
+        <*> x .:? "has_pull_requests"
         <*> x .: "has_wiki"
         <*> x .: "homepage"
         <*> x .: "hooks_url"
@@ -179,6 +182,7 @@ instance FromJSON Repository where
         <*> x .:? "organization"
         <*> x .: "owner"
         <*> x .: "private"
+        <*> x .:? "pull_request_creation_policy"
         <*> x .:? "public"
         <*> x .: "pulls_url"
         <*> x .: "pushed_at"
@@ -249,6 +253,7 @@ instance ToJSON Repository where
         , "has_issues"                  .= repositoryHasIssues
         , "has_pages"                   .= repositoryHasPages
         , "has_projects"                .= repositoryHasProjects
+        , "has_pull_requests"           .= repositoryHasPullRequests
         , "has_wiki"                    .= repositoryHasWiki
         , "homepage"                    .= repositoryHomepage
         , "hooks_url"                   .= repositoryHooksUrl
@@ -271,38 +276,41 @@ instance ToJSON Repository where
         , "notifications_url"           .= repositoryNotificationsUrl
         , "open_issues"                 .= repositoryOpenIssues
         , "open_issues_count"           .= repositoryOpenIssuesCount
-        , "organization"                .= repositoryOrganization
-        , "owner"                       .= repositoryOwner
-        , "private"                     .= repositoryPrivate
-        , "public"                      .= repositoryPublic
-        , "pulls_url"                   .= repositoryPullsUrl
-        , "pushed_at"                   .= repositoryPushedAt
-        , "releases_url"                .= repositoryReleasesUrl
-        , "size"                        .= repositorySize
-        , "ssh_url"                     .= repositorySshUrl
-        , "stargazers"                  .= repositoryStargazers
-        , "stargazers_count"            .= repositoryStargazersCount
-        , "stargazers_url"              .= repositoryStargazersUrl
-        , "statuses_url"                .= repositoryStatusesUrl
-        , "subscribers_url"             .= repositorySubscribersUrl
-        , "subscription_url"            .= repositorySubscriptionUrl
-        , "svn_url"                     .= repositorySvnUrl
-        , "tags_url"                    .= repositoryTagsUrl
-        , "teams_url"                   .= repositoryTeamsUrl
-        , "topics"                      .= repositoryTopics
-        , "trees_url"                   .= repositoryTreesUrl
-        , "updated_at"                  .= repositoryUpdatedAt
-        , "url"                         .= repositoryUrl
-        , "visibility"                  .= repositoryVisibility
-        , "watchers"                    .= repositoryWatchers
-        , "watchers_count"              .= repositoryWatchersCount
-        , "web_commit_signoff_required" .= repositoryWebCommitSignoffRequired
+        , "organization"                 .= repositoryOrganization
+        , "owner"                        .= repositoryOwner
+        , "private"                      .= repositoryPrivate
+        , "pull_request_creation_policy" .= repositoryPullRequestCreationPolicy
+        , "public"                       .= repositoryPublic
+        , "pulls_url"                    .= repositoryPullsUrl
+        , "pushed_at"                    .= repositoryPushedAt
+        , "releases_url"                 .= repositoryReleasesUrl
+        , "size"                         .= repositorySize
+        , "ssh_url"                      .= repositorySshUrl
+        , "stargazers"                   .= repositoryStargazers
+        , "stargazers_count"             .= repositoryStargazersCount
+        , "stargazers_url"               .= repositoryStargazersUrl
+        , "statuses_url"                 .= repositoryStatusesUrl
+        , "subscribers_url"              .= repositorySubscribersUrl
+        , "subscription_url"             .= repositorySubscriptionUrl
+        , "svn_url"                      .= repositorySvnUrl
+        , "tags_url"                     .= repositoryTagsUrl
+        , "teams_url"                    .= repositoryTeamsUrl
+        , "topics"                       .= repositoryTopics
+        , "trees_url"                    .= repositoryTreesUrl
+        , "updated_at"                   .= repositoryUpdatedAt
+        , "url"                          .= repositoryUrl
+        , "visibility"                   .= repositoryVisibility
+        , "watchers"                     .= repositoryWatchers
+        , "watchers_count"               .= repositoryWatchersCount
+        , "web_commit_signoff_required"  .= repositoryWebCommitSignoffRequired
         ]
 
 
 instance Arbitrary Repository where
     arbitrary = Repository
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary
