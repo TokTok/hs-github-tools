@@ -2,4 +2,7 @@
 restylers:
   - pyment:
       enabled: false
+  - rustfmt:
+      image: "toxchat/restylers:rustfmt"
+      arguments: ["--edition=2024"]
   - "*"

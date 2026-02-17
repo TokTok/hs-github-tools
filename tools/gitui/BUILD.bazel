@@ -1,0 +1,100 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_clippy", "rust_library", "rust_test")
+
+rust_library(
+    name = "gitui_lib",
+    srcs = [
+        "src/diff_utils.rs",
+        "src/engine/executor.rs",
+        "src/engine/git.rs",
+        "src/engine/mod.rs",
+        "src/engine/planner.rs",
+        "src/engine/topology.rs",
+        "src/engine/transaction.rs",
+        "src/engine/types.rs",
+        "src/lib.rs",
+        "src/patch_utils.rs",
+        "src/runtime.rs",
+        "src/split_state.rs",
+        "src/state/actions.rs",
+        "src/state/input.rs",
+        "src/state/mod.rs",
+        "src/state/reducer.rs",
+        "src/state/types.rs",
+        "src/testing.rs",
+        "src/topology/mod.rs",
+        "src/topology/virtual_layer.rs",
+        "src/ui/common.rs",
+        "src/ui/main_view.rs",
+        "src/ui/mod.rs",
+        "src/ui/preview_view.rs",
+        "src/ui/prompt_view.rs",
+        "src/ui/split_view.rs",
+    ],
+    crate_name = "gitui",
+    edition = "2024",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@crates//:anyhow",
+        "@crates//:crossterm",
+        "@crates//:git2",
+        "@crates//:indexmap",
+        "@crates//:itertools",
+        "@crates//:petgraph",
+        "@crates//:ratatui",
+        "@crates//:tempfile",
+        "@crates//:tokio",
+        "@crates//:unicode-segmentation",
+    ],
+)
+
+rust_binary(
+    name = "gitui",
+    srcs = ["src/main.rs"],
+    edition = "2024",
+    rustc_flags = ["-Clink-arg=-fuse-ld=bfd"],
+    deps = [
+        ":gitui_lib",
+        "@crates//:anyhow",
+        "@crates//:clap",
+        "@crates//:tokio",
+    ],
+)
+
+TEST_SRCS = glob(["test/*.rs"])
+
+[
+    rust_test(
+        name = test_file.replace("test/", "").replace(".rs", ""),
+        size = "small",
+        srcs = [test_file],
+        data = glob(["test/snapshots/**"]),
+        edition = "2024",
+        rustc_flags = ["-Clink-arg=-fuse-ld=bfd"],
+        deps = [
+            ":gitui_lib",
+            "@crates//:anyhow",
+            "@crates//:crossterm",
+            "@crates//:git2",
+            "@crates//:insta",
+            "@crates//:petgraph",
+            "@crates//:proptest",
+            "@crates//:ratatui",
+            "@crates//:regex",
+            "@crates//:tempfile",
+            "@crates//:tokio",
+        ],
+    )
+    for test_file in TEST_SRCS
+]
+
+rust_clippy(
+    name = "clippy",
+    testonly = True,
+    deps = [
+        ":gitui",
+        ":gitui_lib",
+    ] + [
+        ":" + src.replace("test/", "").replace(".rs", "")
+        for src in TEST_SRCS
+    ],
+)
