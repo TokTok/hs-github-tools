@@ -15,10 +15,12 @@ import           Test.QuickCheck.Arbitrary (Arbitrary (..))
 data Permissions = Permissions
     { permissionsActions                      :: Maybe Text
     , permissionsAdministration               :: Maybe Text
+    , permissionsArtifactMetadata             :: Maybe Text
     , permissionsAttestations                 :: Maybe Text
     , permissionsChecks                       :: Maybe Text
     , permissionsContents                     :: Maybe Text
     , permissionsContentReferences            :: Maybe Text
+    , permissionsCopilotRequests              :: Maybe Text
     , permissionsDeployments                  :: Maybe Text
     , permissionsDiscussions                  :: Maybe Text
     , permissionsEmails                       :: Maybe Text
@@ -27,6 +29,7 @@ data Permissions = Permissions
     , permissionsMembers                      :: Maybe Text
     , permissionsMergeQueues                  :: Maybe Text
     , permissionsMetadata                     :: Maybe Text
+    , permissionsModels                       :: Maybe Text
     , permissionsOrganizationAdministration   :: Maybe Text
     , permissionsOrganizationCustomProperties :: Maybe Text
     , permissionsOrganizationHooks            :: Maybe Text
@@ -49,10 +52,12 @@ instance FromJSON Permissions where
     parseJSON (Object x) = Permissions
         <$> x .:? "actions"
         <*> x .:? "administration"
+        <*> x .:? "artifact_metadata"
         <*> x .:? "attestations"
         <*> x .:? "checks"
         <*> x .:? "contents"
         <*> x .:? "content_references"
+        <*> x .:? "copilot_requests"
         <*> x .:? "deployments"
         <*> x .:? "discussions"
         <*> x .:? "emails"
@@ -61,6 +66,7 @@ instance FromJSON Permissions where
         <*> x .:? "members"
         <*> x .:? "merge_queues"
         <*> x .:? "metadata"
+        <*> x .:? "models"
         <*> x .:? "organization_administration"
         <*> x .:? "organization_custom_properties"
         <*> x .:? "organization_hooks"
@@ -84,10 +90,12 @@ instance ToJSON Permissions where
     toJSON Permissions{..} = object
         [ "actions"                        .= permissionsActions
         , "administration"                 .= permissionsAdministration
+        , "artifact_metadata"              .= permissionsArtifactMetadata
         , "attestations"                   .= permissionsAttestations
         , "checks"                         .= permissionsChecks
         , "contents"                       .= permissionsContents
         , "content_references"             .= permissionsContentReferences
+        , "copilot_requests"               .= permissionsCopilotRequests
         , "deployments"                    .= permissionsDeployments
         , "discussions"                    .= permissionsDiscussions
         , "emails"                         .= permissionsEmails
@@ -96,6 +104,7 @@ instance ToJSON Permissions where
         , "members"                        .= permissionsMembers
         , "merge_queues"                   .= permissionsMergeQueues
         , "metadata"                       .= permissionsMetadata
+        , "models"                         .= permissionsModels
         , "organization_administration"    .= permissionsOrganizationAdministration
         , "organization_custom_properties" .= permissionsOrganizationCustomProperties
         , "organization_hooks"             .= permissionsOrganizationHooks
@@ -117,6 +126,9 @@ instance ToJSON Permissions where
 instance Arbitrary Permissions where
     arbitrary = Permissions
         <$> arbitrary
+        <*> arbitrary
+        <*> arbitrary
+        <*> arbitrary
         <*> arbitrary
         <*> arbitrary
         <*> arbitrary

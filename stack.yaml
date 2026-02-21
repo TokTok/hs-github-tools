@@ -1,6 +1,6 @@
 ---
 packages: [.]
-resolver: lts-21.25
+resolver: lts-23.9
 extra-deps:
   - Diff-1.0.2
   - suspend-0.2.0.0
