@@ -1,0 +1,7 @@
+---
+source: hs-github-tools/tools/gitui/test/cli_output_tests.rs
+expression: clean_output
+---
+* main
+    feat1
+      feat2 [DIVERGED]
