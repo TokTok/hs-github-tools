@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PackageImports    #-}
 {-# LANGUAGE StrictData        #-}
 {-# LANGUAGE TupleSections     #-}
 module GitHub.WebHook.Handler
@@ -9,19 +8,19 @@ module GitHub.WebHook.Handler
   , removeNulls
   ) where
 
-import           "cryptohash" Crypto.Hash (HMAC, SHA1, digestToHexByteString,
-                                           hmac, hmacGetDigest)
-import           Data.Aeson               (ToJSON (..), Value (..),
-                                           eitherDecodeStrict')
-import qualified Data.Aeson.KeyMap        as KeyMap
-import           Data.Aeson.Types         (parseEither)
-import           Data.ByteString          (ByteString)
-import qualified Data.ByteString.Char8    as BC8
-import           Data.Text                (Text)
-import qualified Data.Text                as Text
-import           Data.Text.Encoding       (decodeUtf8)
-import           Data.UUID                (UUID, fromASCIIBytes)
-import qualified Data.Vector              as Vector
+import qualified Crypto.Hash.SHA1       as SHA1
+import           Data.Aeson             (ToJSON (..), Value (..),
+                                         eitherDecodeStrict')
+import qualified Data.Aeson.KeyMap      as KeyMap
+import           Data.Aeson.Types       (parseEither)
+import           Data.ByteString        (ByteString)
+import qualified Data.ByteString.Base16 as Base16
+import qualified Data.ByteString.Char8  as BC8
+import           Data.Text              (Text)
+import qualified Data.Text              as Text
+import           Data.Text.Encoding     (decodeUtf8)
+import           Data.UUID              (UUID, fromASCIIBytes)
+import qualified Data.Vector            as Vector
 
 import           GitHub.Types
 
@@ -94,8 +93,7 @@ toSuccess value payload =
 
 
 verifySecretKey :: ByteString -> ByteString -> String -> Bool
-verifySecretKey rawBody sig key = sig == ("sha1=" <> digestToHexByteString
-    (hmacGetDigest (hmac (BC8.pack key) rawBody :: HMAC SHA1)))
+verifySecretKey rawBody sig key = sig == ("sha1=" <> Base16.encode (SHA1.hmac (BC8.pack key) rawBody))
 
 
 runHandler :: (Applicative m, Monad m) => Handler m -> m (Either Error (UUID, Payload))
