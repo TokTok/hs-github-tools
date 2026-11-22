@@ -115,6 +115,9 @@ hspec_test(
         "//third_party/haskell:QuickCheck",
         "//third_party/haskell:aeson",
         "//third_party/haskell:base",
+        "//third_party/haskell:containers",
         "//third_party/haskell:hspec",
+        "//third_party/haskell:text",
+        "//third_party/haskell:yaml",
     ],
 )
