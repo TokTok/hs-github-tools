@@ -71,13 +71,14 @@ instance (FromJSON a, FromJSON b) => FromJSON (OneOf a b) where
     parseJSON x = A <$> parseJSON x <|> B <$> parseJSON x
 
 data Step = Step
-    { stepId   :: Maybe Text
-    , stepIf   :: Maybe Text
-    , stepName :: Maybe Text
-    , stepEnv  :: Maybe (HashMap Text Text)
-    , stepRun  :: Maybe Text
-    , stepWith :: Maybe (HashMap Text Value)
-    , stepUses :: Maybe Text
+    { stepId    :: Maybe Text
+    , stepIf    :: Maybe Text
+    , stepName  :: Maybe Text
+    , stepEnv   :: Maybe (HashMap Text Text)
+    , stepRun   :: Maybe Text
+    , stepShell :: Maybe Text
+    , stepWith  :: Maybe (HashMap Text Value)
+    , stepUses  :: Maybe Text
     }
     deriving (Show, Eq)
 $(deriveJSON defaultOptions{fieldLabelModifier = kebab . drop (Text.length "Step")} ''Step)
@@ -126,6 +127,7 @@ data Job = Job
     { jobDefaults    :: Maybe JobDefaults
     , jobEnv         :: Maybe (HashMap Text Text)
     , jobContainer   :: Maybe Text
+    , jobIf          :: Maybe Text
     , jobName        :: Maybe Text
     , jobNeeds       :: Maybe [Text]
     , jobPermissions :: Maybe Permissions
