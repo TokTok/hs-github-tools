@@ -961,7 +961,6 @@ jvm-toxcore-c:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "CodeFactor"
           - "docker (jvm)"
 
 py-toxcore-c:
