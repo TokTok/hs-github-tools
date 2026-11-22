@@ -8,12 +8,16 @@ import qualified Data.Text             as Text
 import           Data.Vector           (Vector)
 import           GitHub.Data.Request   (CommandMethod (Delete, Patch, Post),
                                         FetchCount (FetchAll), RW (..), Request,
-                                        command, pagedQuery)
+                                        command, pagedQuery, query)
 import           GitHub.Types.Settings (Team)
 
 getTeamsR :: Text -> Request 'RO (Vector Team)
 getTeamsR org =
     pagedQuery ["orgs", org, "teams"] [] FetchAll
+
+getTeamR :: Text -> Text -> Request 'RO Value
+getTeamR org team =
+    query ["orgs", org, "teams", team] []
 
 createTeamR :: Text -> Team -> Request 'RW Value
 createTeamR org =

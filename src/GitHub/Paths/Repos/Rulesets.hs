@@ -8,7 +8,7 @@ import qualified Data.Text             as Text
 import           Data.Vector           (Vector)
 import           GitHub.Data.Request   (CommandMethod (Post, Put),
                                         FetchCount (FetchAll), RW (..), Request,
-                                        command, pagedQuery)
+                                        command, pagedQuery, query)
 import           GitHub.Types.Settings (Ruleset)
 
 addRulesetR :: Text -> Text -> Ruleset -> Request 'RW Value
@@ -18,6 +18,10 @@ addRulesetR user repo =
 getRulesetsR :: Text -> Text -> Request 'RO (Vector Ruleset)
 getRulesetsR user repo =
     pagedQuery ["repos", user, repo, "rulesets"] [] FetchAll
+
+getRulesetR :: Text -> Text -> Int -> Request 'RO Value
+getRulesetR user repo rId =
+    query ["repos", user, repo, "rulesets", Text.pack $ show rId] []
 
 updateRulesetR :: Text -> Text -> Int -> Ruleset -> Request 'RW Value
 updateRulesetR user repo rId =

@@ -56,7 +56,7 @@ teams:
       gjedeer: member
       goldroom: member
       gordon-quad: member
-      Green-Sky: member
+      Green-Sky: maintainer
       hqwrong: member
       hugbubby: member
       initramfs: member
@@ -67,8 +67,9 @@ teams:
       jin-eld: member
       kitech: member
       Mikhael-Danilov: member
-      nbraud: member
+      Monsterovich: member
       nickolay168: member
+      nicoonoclaste: member
       nurupo: member
       Nyoroon: member
       robinlinden: maintainer
@@ -96,17 +97,21 @@ teams:
     description: "People with admin access on all repos"
     parent: { name: "Contributors" }
     members:
-      Green-Sky: member
+      Green-Sky: maintainer
       iphydf: maintainer
       JFreegman: member
       nurupo: member
       robinlinden: maintainer
+      sudden6: member
+      zoff99: member
+      zugz: member
 
   "Automation":
     <<: *team
     description: "Release automation"
     parent: { name: "Contributors" }
     members:
+      iphydf: maintainer
       toktok-releaser: member
 
   "Reviewers":
@@ -115,11 +120,12 @@ teams:
     parent: { name: "Contributors" }
     members:
       goldroom: member
-      Green-Sky: member
+      Green-Sky: maintainer
       iphydf: maintainer
       JFreegman: member
       nurupo: member
       robinlinden: maintainer
       sudden6: member
+      toktok-releaser: member
       zoff99: member
       zugz: member

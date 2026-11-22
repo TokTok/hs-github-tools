@@ -172,11 +172,15 @@ executable check-workflows
   hs-source-dirs:   tools
   default-language: Haskell2010
   build-depends:
-      base
+      aeson
+    , base
+    , containers
     , Diff
+    , filepath
     , github-tools
     , pretty
     , text
+    , vector
     , yaml
 
 executable hub-automerge

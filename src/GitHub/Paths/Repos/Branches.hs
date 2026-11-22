@@ -5,8 +5,12 @@ module GitHub.Paths.Repos.Branches where
 import           Data.Aeson          (Value, encode)
 import           Data.Text           (Text)
 import           GitHub.Data.Request (CommandMethod (Put), RW (..), Request,
-                                      command)
+                                      command, query)
 
 addProtectionR :: Text -> Text -> Text -> Value -> Request 'RW Value
 addProtectionR user repo branch =
     command Put ["repos", user, repo, "branches", branch, "protection"] . encode
+
+getProtectionR :: Text -> Text -> Text -> Request 'RO Value
+getProtectionR user repo branch =
+    query ["repos", user, repo, "branches", branch, "protection"] []

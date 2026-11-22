@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+set -eux
+
+bazel run //hs-github-tools/tools:hub-settings -- \
+  --dry-run \
+  "$SCRIPT_DIR/org.yaml" \
+  "$SCRIPT_DIR/repos.yaml" \
+  "$@"

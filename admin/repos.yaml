@@ -36,7 +36,6 @@ _common:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -265,7 +264,6 @@ _common:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -294,22 +292,11 @@ bTox:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
-          # Custom
-          - "analyze"
-          - "android-build"
-          - "format"
-          - "ios-build"
-          - "linux-build"
-          - "macos-build"
-          - "test"
-          - "web-build"
-          - "windows-build"
 
 ci-tools:
   editRepo:
@@ -327,13 +314,11 @@ ci-tools:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
-          # Custom
 
 c-toxcore:
   editRepo:
@@ -378,7 +363,6 @@ c-toxcore:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -389,7 +373,6 @@ c-toxcore:
           - "Android (armeabi-v7a)"
           - "Android (x86)"
           - "Android (x86_64)"
-          - "CodeFactor"
           - "Fuzzing (address)"
           - "Fuzzing (memory)"
           - "Fuzzing (undefined)"
@@ -406,48 +389,31 @@ c-toxcore:
           - "Xcode Framework"
           - "analysis (autotools)"
           - "analysis (clang-tidy)"
-          - "analysis (compcert)"
           - "analysis (cppcheck)"
           - "analysis (doxygen)"
-          - "analysis (goblint)"
           - "analysis (infer)"
           - "analysis (misra)"
           - "analysis (modules)"
           - "analysis (pkgsrc)"
           - "analysis (rpm)"
           - "analysis (slimcc)"
-          - "analysis (sparse)"
           - "analysis (tcc)"
-          - "analysis (tokstyle)"
-          - "build-freebsd"
           - "build-netbsd"
-          - "build-windows-msvc (2019)"
           - "build-windows-msvc (2022)"
           - "build-macos"
           - "checks / check-release"
-          - "ci/circleci: bazel-asan"
-          - "ci/circleci: bazel-debug"
-          - "ci/circleci: bazel-msan"
-          - "ci/circleci: bazel-release"
-          - "ci/circleci: cimplefmt"
           - "ci/circleci: clang-analyze"
           - "ci/circleci: cpplint"
           - "ci/circleci: generate-events"
           - "ci/circleci: static-analysis"
-          - "ci/circleci: cimple"
-          - "circleci"
           - "coverage-linux"
           - "docker-bootstrap-node"
-          - "docker-bootstrap-node-websocket"
           - "docker-clusterfuzz"
           - "docker-esp32"
           - "docker-fuzzer"
           - "docker-windows-mingw (32)"
           - "docker-windows-mingw (64)"
-          - "freebsd"
           - "iOS (ios-arm64)"
-          - "iOS (ios-armv7)"
-          - "iOS (ios-armv7s)"
           - "iOS (iphonesimulator-arm64)"
           - "iOS (iphonesimulator-x86_64)"
           - "macOS (arm64)"
@@ -475,13 +441,11 @@ cyclone:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
-          # Custom
 
 debugtox:
   editRepo:
@@ -500,13 +464,11 @@ debugtox:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
-          # Custom
 
 dockerfiles:
   editRepo:
@@ -524,7 +486,6 @@ dockerfiles:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -537,31 +498,15 @@ dockerfiles:
           - "build (doxygen)"
           - "build (flutter-web)"
           - "build (frama-c)"
-          - "build (freebsd)"
           - "build (haskell)"
-          - "build (pkgsrc)"
           - "buildfarm (server)"
           - "buildfarm (worker)"
-          - "CodeFactor"
-          - "qtox (alpine)"
           - "qtox (alpine-appimage)"
-          - "qtox (alpine-static)"
           - "qtox (debian)"
           - "qtox (fedora)"
           - "qtox (flatpak-builder)"
           - "qtox (ubuntu-lts)"
-          - "qtox (windows-builder.i686)"
-          - "qtox (windows-builder.x86_64)"
-          - "qtox-android (arm64-v8a, debug, 6.2.4)"
-          - "qtox-android (arm64-v8a, debug, 6.8.1)"
-          - "qtox-android (arm64-v8a, release, 6.2.4)"
-          - "qtox-android (arm64-v8a, release, 6.8.1)"
-          - "qtox-android (armeabi-v7a, debug, 6.2.4)"
-          - "qtox-android (armeabi-v7a, debug, 6.8.1)"
-          - "qtox-android (armeabi-v7a, release, 6.2.4)"
-          - "qtox-android (armeabi-v7a, release, 6.8.1)"
           - "qtox-host-qt (6.2.4)"
-          - "qtox-host-qt (6.8.1)"
 
 experimental:
   editRepo:
@@ -581,7 +526,6 @@ experimental:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
 
 go-toxcore-c:
@@ -600,7 +544,6 @@ go-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -625,7 +568,6 @@ hs-apigen:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -652,7 +594,6 @@ hs-cimple:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -678,15 +619,12 @@ hs-github-tools:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
-          - "build / stack"
           - "checks / check-release"
 
 hs-happy-arbitrary:
@@ -705,7 +643,6 @@ hs-happy-arbitrary:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -732,7 +669,6 @@ hs-msgpack-arbitrary:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -760,14 +696,12 @@ hs-msgpack-binary:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -787,7 +721,6 @@ hs-msgpack-json:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -814,7 +747,6 @@ hs-msgpack-rpc-conduit:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -842,7 +774,6 @@ hs-msgpack-testsuite:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -869,7 +800,6 @@ hs-msgpack-types:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -896,14 +826,12 @@ hs-schema:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -923,7 +851,6 @@ hs-tokstyle:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -931,7 +858,6 @@ hs-tokstyle:
           - "release / update_release_draft"
           # Custom
           - "build / stack"
-          - "checks / check-release"
 
 hs-toxcore-c:
   editRepo:
@@ -949,7 +875,6 @@ hs-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -977,18 +902,12 @@ hs-toxcore:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "android-aarch64"
-          - "android-arm"
-          - "android-i686"
-          - "android-x86_64"
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -1019,34 +938,6 @@ hs-toxcore:
 #          - "build / stack"
 #          - "checks / check-release"
 
-js-toxcore-c:
-  editRepo:
-    <<: *editRepo
-    name: "js-toxcore-c"
-    description: "Node bindings for toxcore"
-    homepage: "https://toktok.ltd"
-    topics: "toxcore, js, ffi"
-
-  labels: *labels
-  rulesets: *rulesets
-  branches:
-    "master":
-      <<: *branchProtection
-      required_status_checks:
-        strict: true
-        contexts:
-          # Common
-          - "Mergeable"
-          - "Milestone Check"
-          - "code-review/reviewable"
-          - "common / buildifier"
-          - "common / restyled"
-          - "release / update_release_draft"
-          # Custom
-          - "DeepScan"
-          - "Hound"
-          - "security/snyk (TokTok)"
-
 jvm-toxcore-c:
   editRepo:
     <<: *editRepo
@@ -1064,7 +955,6 @@ jvm-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1072,7 +962,6 @@ jvm-toxcore-c:
           - "release / update_release_draft"
           # Custom
           - "CodeFactor"
-          - "bazel-opt"
           - "docker (jvm)"
 
 py-toxcore-c:
@@ -1096,7 +985,6 @@ py-toxcore-c:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1123,7 +1011,6 @@ qTox:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1149,11 +1036,8 @@ qTox:
           - "WebAssembly"
           - "Windows / Build (x86_64, Release)"
           - "Windows / Test (x86_64, Release)"
-          - "ci/circleci: bazel-opt"
-          - "circleci"
           - "macOS / Build (arm64, 10.15)"
           - "macOS user (x86_64)"
-          - "netlify / deploy"
 
 spec:
   editRepo:
@@ -1172,7 +1056,6 @@ spec:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1196,22 +1079,11 @@ tokhub:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
           - "common / restyled"
           - "release / update_release_draft"
-          # Custom
-          - "analyze"
-          - "android-build"
-          - "format"
-          - "ios-build"
-          - "linux-build"
-          - "macos-build"
-          - "test"
-          - "web-build"
-          - "windows-build"
 
 toktok-stack:
   editRepo:
@@ -1229,7 +1101,6 @@ toktok-stack:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1257,7 +1128,6 @@ toxic:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1285,7 +1155,6 @@ toxins:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"
@@ -1294,10 +1163,10 @@ toxins:
           # Custom
           - "bazel-opt"
 
-website:
+toktok.github.io:
   editRepo:
     <<: *editRepo
-    name: website
+    name: toktok.github.io
     description: The TokTok website
     topics: toktok, tox
 
@@ -1310,7 +1179,6 @@ website:
         strict: true
         contexts:
           # Common
-          - "Mergeable"
           - "Milestone Check"
           - "code-review/reviewable"
           - "common / buildifier"

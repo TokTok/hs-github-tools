@@ -30,9 +30,13 @@ haskell_binary(
     deps = [
         "//hs-github-tools",
         "//third_party/haskell:Diff",
+        "//third_party/haskell:aeson",
         "//third_party/haskell:base",
+        "//third_party/haskell:containers",
+        "//third_party/haskell:filepath",
         "//third_party/haskell:pretty",
         "//third_party/haskell:text",
+        "//third_party/haskell:vector",
         "//third_party/haskell:yaml",
     ],
 )

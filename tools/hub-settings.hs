@@ -13,7 +13,9 @@ import           System.Environment    (getArgs, lookupEnv)
 main :: IO ()
 main = do
     -- Get auth token from the $GITHUB_TOKEN environment variable.
-    args <- getArgs
+    rawArgs <- getArgs
+    let dryRun = "--dry-run" `elem` rawArgs
+        args   = filter (/= "--dry-run") rawArgs
     lookupEnv "GITHUB_TOKEN" >>= \case
         Nothing -> fail "GITHUB_TOKEN environment variable must be set"
         Just (GitHub.OAuth . BS8.pack -> token) ->
@@ -22,5 +24,5 @@ main = do
                     orgYaml <- decodeFileThrow orgFile
                     reposYaml <- decodeFileThrow reposFile
                     validateSettings reposYaml
-                    syncSettings token orgYaml reposYaml (Text.pack . fromMaybe "" . listToMaybe $ repoFilter)
-                _      -> fail "Usage: hub-settings <org.yml> <repos.yml>"
+                    syncSettings token orgYaml reposYaml (Text.pack . fromMaybe "" . listToMaybe $ repoFilter) dryRun
+                _      -> fail "Usage: hub-settings [--dry-run] <org.yml> <repos.yml> [repoFilter]"
