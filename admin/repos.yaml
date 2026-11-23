@@ -550,7 +550,6 @@ go-toxcore-c:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
 
 hs-apigen:
   editRepo:
@@ -574,7 +573,6 @@ hs-apigen:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -649,7 +647,6 @@ hs-happy-arbitrary:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -675,7 +672,6 @@ hs-msgpack-arbitrary:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -727,7 +723,6 @@ hs-msgpack-json:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -753,7 +748,6 @@ hs-msgpack-rpc-conduit:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -780,7 +774,6 @@ hs-msgpack-testsuite:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -806,7 +799,6 @@ hs-msgpack-types:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -881,7 +873,6 @@ hs-toxcore-c:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
           - "build / stack"
           - "checks / check-release"
 
@@ -934,7 +925,6 @@ hs-toxcore:
 #          - "common / restyled"
 #          - "release / update_release_draft"
 #          # Custom
-#          - "bazel-opt"
 #          - "build / stack"
 #          - "checks / check-release"
 
@@ -961,7 +951,6 @@ jvm-toxcore-c:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "CodeFactor"
           - "docker (jvm)"
 
 py-toxcore-c:
@@ -1161,7 +1150,6 @@ toxins:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "bazel-opt"
 
 toktok.github.io:
   editRepo:
@@ -1185,5 +1173,4 @@ toktok.github.io:
           - "common / restyled"
           - "release / update_release_draft"
           # Custom
-          - "Hound"
           - "docker"
