@@ -1,0 +1,24 @@
+---
+source: hs-github-tools/tools/gitui/test/tui_integration_tests.rs
+expression: output
+---
+┌Branches────────────────────┐┌Recent Commits────┐
+│>>main                      ││                  │
+│    branch_1                ││                  │
+│    branch_2                ││                  │
+│    branch_3                ││                  │
+│    branch_4                ││                  │
+│    stack_root              ││                  │
+│      stack_child_1         ││                  │
+│        stack_child_2       ││                  │
+│          stack_child_3     ││                  │
+│    z_branch                ││                  │
+│                            ││                  │
+│                            ││                  │
+│                            ││                  │
+│                            ││                  │
+│                            ││                  │
+└────────────────────────────┘└──────────────────┘
+┌Help────────────────────────────────────────────┐
+│q: quit | j/k: navigate | v: preview | c: commit│
+└────────────────────────────────────────────────┘
